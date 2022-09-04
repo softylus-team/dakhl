@@ -99,6 +99,8 @@ class PropertiesController extends Controller
                 $review["author_photo"] = $user->photo_path;
                 $review["author_name"] = $user->first_name . " " . $user->last_name;
             }
+
+            // we need to edit this to match the new class digram
             $property['financialPlan'] = FinancialPlan::filter($request)->where('property_id', $id)->get()->first();
             $property['photos'] = Photo::where('property_id', $id)->get();
             $property['attachments'] = Attachment::where('property_id', $id)->get();
@@ -330,11 +332,13 @@ class PropertiesController extends Controller
         return redirect()->back()->with('success', 'Property deleted from saved properties!!');
 
     }
-    public function add()
+    public function add($locale = 'ar')
     { //this is the slug
-        return Inertia::render('Add-Property');
+        return Inertia::render('Add-Property', [
+            'locale' => $locale,
+        ]);
     }
-    public function updateView($id)
+    public function updateView($id,$locale)
     { //this is the slug
         $reviews = Review::where('property_id', $id)->get();
         foreach ($reviews as $review) {
@@ -350,6 +354,8 @@ class PropertiesController extends Controller
             'Attachments' => Attachment::where('property_id', $id)->get(),
             'Amenity' => Amenity::where('property_id', $id)->get(),
             'Reviews' => $reviews,
+            'locale' => $locale,
+           
         ]);
     }
     public function deleteView($id)
@@ -556,6 +562,7 @@ class PropertiesController extends Controller
             "price" => 'required|integer|digits_between:0,10',
             "minimum_investment" => 'required|integer|digits_between:0,10',
             "progress" => 'required|integer|max:100',
+            "stakes_limit" => 'required|integer|max:100',
             "report_description" => 'required|string|max:255',
         ]);
 
@@ -568,6 +575,8 @@ class PropertiesController extends Controller
             'bulding_name' => $request->bulding_name,
             'community_name' => $request->community_name,
             'description' => $request->description,
+            'stakes_limit' => $request->stakes_limit,
+
         ]);
         Address::create([
             "property_id" => $Property->id,
@@ -660,6 +669,7 @@ class PropertiesController extends Controller
             "zip_code" => 'required|integer|digits_between:0,10',
             "longitude" => 'required|integer',
             "latitude" => 'required|integer',
+            "stakes_limit" => 'required|integer',
             "price" => 'required|integer|digits_between:0,10',
             "minimum_investment" => 'required|integer|digits_between:0,10',
 
@@ -670,6 +680,7 @@ class PropertiesController extends Controller
         $Property->bedrooms = $request->bedrooms;
         $Property->status = $request->status;
         $Property->nighborhood = $request->nighborhood;
+        $Property->stakes_limit = $request->stakes_limit;
         $Property->bulding_name = $request->bulding_name;
         $Property->community_name = $request->community_name;
         $Property->description = $request->description;

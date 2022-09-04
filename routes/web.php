@@ -149,15 +149,16 @@ Route::get('/property/unsave/{id}',[PropertiesController::class, 'unsave'] )->se
 Route::get('/property/{id}/{locale?}',[PropertiesController::class, 'view'] )->setDefaults(['locale' => 'ar'])->name('viewproperty');//->name is a nickname to use it in route() insted of a complex slugs
 
 
-Route::post('/addproperty', [PropertiesController::class, 'store'])->middleware(['auth', 'verified'])->name('addproperty');
-Route::get('/add/property',[PropertiesController::class, 'add'] )->middleware(['auth', 'verified'])->name('Add-Property');
+Route::post('/admin/addproperty', [PropertiesController::class, 'store'])->middleware(['auth', 'verified'])->name('addproperty');
+Route::get('/admin/add/property/{locale?}',[PropertiesController::class, 'add'] )->middleware(['auth', 'verified'])->name('Add-Property');
 
 
-Route::post('/updateproperty', [PropertiesController::class, 'update'])->middleware(['auth', 'verified'])->name('updateproperty');
-Route::get('/property/{id}/update', [PropertiesController::class, 'updateView'])->middleware(['auth', 'verified'])->name('Update-Property');
 
-Route::post('/deleteproperty', [PropertiesController::class, 'delete'])->middleware(['auth', 'verified'])->name('deleteproperty');
-Route::get('/property/{id}/delete',[PropertiesController::class, 'deleteView'] )->middleware(['auth', 'verified'])->name('Delete-Property');
+Route::post('/admin/updateproperty', [PropertiesController::class, 'update'])->middleware(['auth', 'verified'])->name('updateproperty');
+Route::get('/admin/property/{id}/update/{locale?}', [PropertiesController::class, 'updateView'])->middleware(['auth', 'verified'])->name('Update-Property');
+
+Route::post('/admin/deleteproperty', [PropertiesController::class, 'delete'])->middleware(['auth', 'verified'])->name('deleteproperty');
+Route::get('/admin/property/{id}/delete',[PropertiesController::class, 'deleteView'] )->middleware(['auth', 'verified'])->name('Delete-Property');
 
 Route::post('/addphotos', [PropertiesController::class, 'addPhotos'])->middleware(['auth', 'verified'])->name('addphotos');
 Route::post('/addattachs', [PropertiesController::class, 'addattachs'])->middleware(['auth', 'verified'])->name('addattachs');

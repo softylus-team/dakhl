@@ -363,7 +363,6 @@ class UserController extends Controller
         $user = User::findOrFail($request->user_id);
         $user->withdraw($request->amount,["type"=>"user_withdraw","description" =>$request->description]);
         $tarnsactionData=[
-                    
             'type' => "user_withdrawal",
             'amount' => $request->amount,
             'property' =>null
@@ -407,6 +406,7 @@ class UserController extends Controller
             'openedInvestments' =>0,
             'closedInvestments' =>0,
             'stakes' => $outputstakes,
+            'reserved_stakes' =>count($outputstakes),
         ];
     }
     public function walletOperationsEP(Request $request,$id){
