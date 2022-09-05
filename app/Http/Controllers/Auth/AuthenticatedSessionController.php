@@ -69,6 +69,7 @@ class AuthenticatedSessionController extends Controller
          */
     public function ApiAuth(LoginRequest $request)
     {
+        
         $request->authenticate();
         $request->session()->regenerate();
         $user=$request->user();

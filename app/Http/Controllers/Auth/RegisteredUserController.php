@@ -61,6 +61,7 @@ $photo='/profiles/defaultProfile.png';
                 $photo="/profiles/" . $pic;
 
             }
+            
         }
 // print_r($photo);
         $user = User::create([

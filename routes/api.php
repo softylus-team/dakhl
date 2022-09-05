@@ -26,6 +26,8 @@ Route::post('/payment/paymentStatus', [PaymentController::class, 'paymentStatusE
 
 Route::post('/register', [RegisteredUserController::class, 'ApiRegister']);
 Route::post('/login', [AuthenticatedSessionController::class, 'ApiAuth']);
+Route::post('/loginAPI', [AuthController::class, 'create']);
+Route::post('/verifyLoginAPI', [AuthController::class, 'verify']);
 Route::post('/logout', [AuthenticatedSessionController::class, 'ApiAuthDestroy'])->middleware('Sanctum');
 
 Route::get('/properties', [PropertiesController::class, 'allPropertiesEP'])->middleware('Sanctum');
