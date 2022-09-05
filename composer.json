@@ -18,7 +18,8 @@
         "mariuzzo/laravel-js-localization": "^1.9",
         "psr/simple-cache": "1.0",
         "questocat/laravel-referral": "^1.0",
-        "tightenco/ziggy": "^1.0"
+        "tightenco/ziggy": "^1.0",
+        "twilio/sdk": "^6.41"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
