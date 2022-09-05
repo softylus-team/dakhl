@@ -376,7 +376,7 @@ class UserController extends Controller
         $contracts = Contract::where('investor_id', $id)->get();
         foreach ($contracts as $contract) {
             $stakes = Stake::where('contract_id', $contract->id)->get();
-
+            $value_stakes=Stake::where('contract_id', $contract->id)->get("value");
             foreach ($stakes as $stake) {
                 $stake["property"] =Properties::find($contract->property_id)->name;
                 $stake["status"] = $contract->contract_status;
@@ -393,12 +393,14 @@ class UserController extends Controller
                     );
                 }
                 $stake['investments'] = $output;
-
                 array_push($outputstakes, $stake);
             }
         }
-        $user = User::findOrFail($id);
+        
 
+        $user = User::findOrFail($id);
+        $reserved_stakes=count($outputstakes);
+     
         return [
             'balance' => $user->balance,
             'monthlyReturn' =>0,
@@ -406,6 +408,7 @@ class UserController extends Controller
             'openedInvestments' =>0,
             'closedInvestments' =>0,
             'stakes' => $outputstakes,
+            // 'reserved_stakes1' =>$outputstakes["value"],
             'reserved_stakes' =>count($outputstakes),
         ];
     }

@@ -24,7 +24,8 @@ class Property extends JsonResource
             'bulding_name'  => $this->bulding_name,
             'community_name'=> $this->community_name,
             'description'   => $this->description,
-            'stakes_limit'   => $this->stakes_limit,
+            'stakes_limit'  => $this->stakes_limit,
+            'available_days'=> $this->available_days,
             'created_at'    => $this->created_at,
             'updated_at'    => $this->updated_at,
         ];

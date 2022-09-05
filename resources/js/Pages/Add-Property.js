@@ -254,6 +254,18 @@ export default function AddProperty(props) {
 
                         />
                     </div>
+                    <div className="mt-4">
+                        <Label forInput="available_days" value="Available days" />
+
+                        <Input
+                            type="number"
+                            name="available_days"
+                            value={data.available_days}
+                            className="mt-1 block w-full"
+                            handleChange={onHandleChange}
+                            required
+                        />
+                    </div>
                     <div>
                         <Label forInput="status" value="Status" />
 

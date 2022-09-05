@@ -45,6 +45,7 @@ export default function UpdateProperty(props) {
         latitude: props.Address[0].latitude,
         price: props.Plan[0].price,
         stakes_limit: props.Property.stakes_limit,
+        available_days: props.Property.available_days,
         minimum_investment: props.Plan[0].minimum_investment,
         picture: '',
         attach: '',
@@ -450,6 +451,18 @@ var iddsfs=getRandomString(5);
                             handleChange={onHandleChange}
                             items={[{ value: "available", label: "Available" }, { value: "under-construction", label: "Under Construction" }, { value: "repair", label: "Repair" },{ value: "sold", label: "Sold" }]} />
 
+                    </div>
+                    <div className="mt-4">
+                        <Label forInput="available_days" value="Available days" />
+
+                        <Input
+                            type="number"
+                            name="available_days"
+                            value={data.available_days}
+                            className="mt-1 block w-full"
+                            handleChange={onHandleChange}
+                            required
+                        />
                     </div>
                     <div className="mt-4">
                         <Label forInput="nighborhood" value="Nighborhood" />

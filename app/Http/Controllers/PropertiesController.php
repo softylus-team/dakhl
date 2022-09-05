@@ -87,6 +87,7 @@ class PropertiesController extends Controller
     }
     public function allPropertiesEP(Request $request)
     {
+        // Properties::whereIn("id",$properties_ids)->get(),
         $properties = Properties::filter($request)->orderBy('status', 'asc')->get();
         foreach ($properties as $key => $property) {
             $id = $property->id;
@@ -100,7 +101,7 @@ class PropertiesController extends Controller
                 $review["author_name"] = $user->first_name . " " . $user->last_name;
             }
 
-            // we need to edit this to match the new class digram
+           
             $property['financialPlan'] = FinancialPlan::filter($request)->where('property_id', $id)->get()->first();
             $property['photos'] = Photo::where('property_id', $id)->get();
             $property['attachments'] = Attachment::where('property_id', $id)->get();
@@ -110,13 +111,36 @@ class PropertiesController extends Controller
             foreach ($contracts as $contract) {
                 array_push($Cids, $contract->id);
             }
+            // $property['stake_value1'] =json_encode($property['stake_value']);
+            
+            
             $property['stakes'] = Stake::whereIn('contract_id', $Cids)->get();
+            $stak_value;
             foreach ($property['stakes'] as $stake) {
                 $stake['investments'] = Investment::where('stake_id', $stake->id)->get();
+            }
+            foreach ($property['stakes'] as $stake) {
+                $stak_value=$stake->value;
+                break;
             }
             if (!$property['financialPlan']) {
                 unset($properties[$key]);
             }
+            $property['stakes_investment_value'] = count($property['stakes'])*$stak_value;
+
+            
+
+            //reminning_days
+            $reminning_days =$property['available_days']-(strtotime(date("Y-m-d"))-strtotime($property['created_at']))/60/60/24;
+            if($reminning_days>0){
+                $property['Reminning_days']=(int)$reminning_days;
+            }
+            else
+            {
+                    $property['Reminning_days']=0;
+                
+            }
+
         }
         return $properties;
 
@@ -563,6 +587,7 @@ class PropertiesController extends Controller
             "minimum_investment" => 'required|integer|digits_between:0,10',
             "progress" => 'required|integer|max:100',
             "stakes_limit" => 'required|integer|max:100',
+            "available_days" => 'required|integer',
             "report_description" => 'required|string|max:255',
         ]);
 
@@ -576,6 +601,7 @@ class PropertiesController extends Controller
             'community_name' => $request->community_name,
             'description' => $request->description,
             'stakes_limit' => $request->stakes_limit,
+            'available_days' => $request->available_days,
 
         ]);
         Address::create([
@@ -670,6 +696,7 @@ class PropertiesController extends Controller
             "longitude" => 'required|integer',
             "latitude" => 'required|integer',
             "stakes_limit" => 'required|integer',
+            "available_days" => 'required|integer',
             "price" => 'required|integer|digits_between:0,10',
             "minimum_investment" => 'required|integer|digits_between:0,10',
 
@@ -681,6 +708,7 @@ class PropertiesController extends Controller
         $Property->status = $request->status;
         $Property->nighborhood = $request->nighborhood;
         $Property->stakes_limit = $request->stakes_limit;
+        $Property->available_days = $request->available_days;
         $Property->bulding_name = $request->bulding_name;
         $Property->community_name = $request->community_name;
         $Property->description = $request->description;
