@@ -30,14 +30,14 @@ export default function Guest({ strings, locale, auth, header, children, menu })
                                 <NavLink href={route('properties')} active={route().current('properties')} className="m-0">
                                     {strings.properties}
                                 </NavLink>
-                                <NavLink href={route('dashboard')} active={route().current('dashboard')} className="m-0">
+                                <NavLink href="/#aboutUSDesc" active={route().current('/')} className="m-0">
                                     {strings.aboutUS}
                                 </NavLink>
 
-                                <NavLink href={route('properties')} active={route().current('properties')} className="m-0">
+                                <NavLink href="/#howWorkdesc" active={route().current('/')} className="m-0">
                                     {strings.howWork}
                                 </NavLink>
-                                <NavLink href={route('dashboard')} active={route().current('dashboard')} className="m-0">
+                                <NavLink href={route('/')} active={route().current('/')} className="m-0">
                                     {strings.terms}
                                 </NavLink>
 
@@ -59,12 +59,13 @@ export default function Guest({ strings, locale, auth, header, children, menu })
                                         <Link className="mr-2 font-bold" href={route('login1')}>
                                             {strings.login}
                                         </Link>
+                                        <Link className="mr-2 font-bold" href={route('register')}>
+                                            {strings.register}
+                                        </Link>
                                         <Link className="mr-2" href="/">
                                             <Button type="button" >{strings.startInvest}
                                             </Button>
                                         </Link>
-
-
                                         {/* <NotificationIcon /> */}
                                     </div>}
                                 <div className="-mr-2 flex items-center gap-2.5 sm:hidden">

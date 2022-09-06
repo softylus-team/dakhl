@@ -9,9 +9,11 @@ import AboutCard from "@/components/aboutCard";
 import HowWeWork from "@/components/HowWeWork";
 import Button from '@/Components/Button';
 import Carousel from '@/Components/Carousels';
-import Reviews from '@/Components/homeReviews'
+import Reviews from '@/Components/homeReviews';
+
 // import App from "../components/App";
 export default function Welcome(props) {
+
     let strings = new LocalizedStrings(stringss);
     strings.setLanguage(props.locale);
 
@@ -66,16 +68,16 @@ export default function Welcome(props) {
                         })}
 
                     </div>}
-                <div className="shrink-0 flex items-center">
-                    <Link className="my-50 mx-auto sm:w-1/4" href="/">
+                <div className="shrink-0 flex items-center" id="properties1">
+                    <Link className="my-50 mx-auto sm:w-1/4" href={route('properties')}>
                         <Button type="button" className='flex justify-center w-full'>{strings.viewAll}
                         </Button>
                     </Link>
                 </div>
             </Container>
-            <Container className={"sm:my-100 dir-ltr"}>
+            <Container className={"sm:my-100 dir-ltr"} >
 
-                <div className='text-center sm:w-2/5 mx-auto my-50'>
+                <div className='text-center sm:w-2/5 mx-auto my-50' id="aboutUSDesc">
                     <h2 className='sm:text-3xl text-xl text-d-gray font-bold'>
                         {strings.aboutUS}
                     </h2>
@@ -101,7 +103,7 @@ export default function Welcome(props) {
             </Container>
             <Container className={"sm:my-100 dir-ltr"}>
 
-                <div className='text-center sm:w-2/5 mx-auto my-50'>
+                <div className='text-center sm:w-2/5 mx-auto my-50' id="howWorkdesc">
                     <h2 className='sm:text-3xl text-xl text-d-gray font-bold'>
                         {strings.howWork}
                     </h2>
@@ -112,17 +114,31 @@ export default function Welcome(props) {
                     <HowWeWork howWorkCards={props.howWorkCards} locale={props.locale}/>
                 }
                 <div className="shrink-0 flex items-center">
-                    <Link className="my-50 mx-auto sm:w-1/4" href="/">
-                        <Button type="button" className='flex justify-center w-full'>{strings.viewAll}
+                    
+                    <Link className="my-50 mx-auto sm:w-1/4" href={route('properties')}>
+                        <Button type="button" className='flex justify-center w-full'>{strings.startNow}
                         </Button>
                     </Link>
                 </div>
 
             </Container>
+            <Container className={"phone_background text-center dir-ltr flex items-center align-self-center sm:my-100 "}>
+            <div className='flex items-end my-50'>
+                <div className='my-50' >
+                    <h1 className='flex sm:text-3xl text-xl text-d-gray font-bold'>{strings.startInvest}</h1>
+                    <h3 className='flex align-self-sm-center'>{strings.The_application_is_now_available}</h3>
+                <div className=' sm:flex flex-row gap-2.5'>
+                    <img className="w-40 h-47" src="/appIcons/google_play.svg"  />
+                    <img className="w-40 h-47" src="/appIcons/app_store.svg" />
+                </div>
+                </div>
+                
+            </div>
+            </Container>
             {(props.Reviews) &&
                 <Container className={"sm:my-100"}>
                     <h2 className='sm:text-3xl text-xl text-center text-d-gray font-bold'>
-                        {strings.ourInvestor}
+                        {strings.ourInvestor }
                     </h2>
 
                     <Carousel

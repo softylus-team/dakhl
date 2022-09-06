@@ -86,7 +86,7 @@ Route::get('/ForgotPassword', function () {//this is the slug
 Route::get('/ResetPassword', function () {//this is the slug
     return Inertia::render('Auth/ResetPassword');//this is the page name
 })->name('ResetPassword');
-Route::get('/dashboard/{locale?}', function ($locale = 'ar') {//this is the slug
+Route::get('/investments/{locale?}', function ($locale = 'ar') {//this is the slug
     $user=Auth::user();
     $outputstakes = array();
         $contracts = Contract::where('investor_id', $user->id)->get();

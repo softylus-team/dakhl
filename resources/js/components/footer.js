@@ -39,10 +39,14 @@ export default function Footer({ locale, strings }) {
                             <div><img className="w-20 mx-auto" src="/appIcons/contactus.png" /></div>
                         </div>
                         <p className='text-sm text-l-gray'>{strings.contactUsdesc}</p>
-                        <div className='flex justify-center sm:justify-start gap-2.5 pt-2'>
+                        <div className='flex sm:justify-start gap-2.5 pt-2'>
                         <img className="w-4 h-4" src="/appIcons/facebook.svg" />
                                 <img className="w-4 h-4" src="/appIcons/instagram.svg" />
                                 <img className="w-5 h-4" src="/appIcons/youtub.svg" />
+                        </div>
+                        <div className='flex sm:justify-start gap-2.5 '>
+                                <img className="w-20 h-27" src="/appIcons/google_play.svg"  />
+                                <img className="w-20 h-27" src="/appIcons/app_store.svg" />
                         </div>
                     </div>
                 </div>

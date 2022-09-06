@@ -44,6 +44,13 @@ body {
     height: fit-content;
     padding-top: 9rem;
 }
+.phone_background {
+    background-image: url("/images/i-phone-02.png");
+    background-size: cover;
+    height: 81vh;
+    background-repeat: no-repeat;
+
+  }
 .workCard {
     background-position: center;
     background-size: contain;

@@ -44,6 +44,7 @@
         "react-light-accordion": "^0.1.4",
         "react-localization": "^1.0.19",
         "react-multi-carousel": "^2.8.0",
+        "react-router-hash-link": "^2.4.3",
         "react-select-country-list": "^2.2.3",
         "react-share": "^4.4.0",
         "react-tabs": "^3.2.3",

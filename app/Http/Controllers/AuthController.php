@@ -3,6 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\User;
+use Illuminate\Support\Facades\DB;
+use Twilio\Rest\Client;
+use Illuminate\Support\Facades\Auth;
+
 
 class AuthController extends Controller
 {
@@ -16,14 +21,20 @@ class AuthController extends Controller
     protected function create(Request $request)
     {
 
-        if(! User::find($request->phone)){
-            return response()->json([
-                'status' => 'not exist',
-            ]);
-        }
-        $data = $request->validate([
-            'phone' => ['required', 'numeric', 'unique:users'],
-        ]);
+        // if(User::whereIn('phone',$request->phone)->get()){
+            // return response()->json([
+            //     // 'status' => 'not exist',
+            //     // $request->phone
+            //     User::findOrFail($request->phone)
+            // ]);
+        // }
+        // else{
+        //     return response()->json([
+        //         'status' => 'not exist',
+        //         // $request->phone
+        //     ]);
+        // }
+        
         /* Get credentials from .env */
         $token = getenv("TWILIO_AUTH_TOKEN");
         $twilio_sid = getenv("TWILIO_SID");
@@ -31,7 +42,7 @@ class AuthController extends Controller
         $twilio = new Client($twilio_sid, $token);
         $twilio->verify->v2->services($twilio_verify_sid)
             ->verifications
-            ->create($data['phone'], "sms");
+            ->create($request->phone, "sms");
         // User::create([
         //     'phone' => $data['phone'],
         // ]);
@@ -53,7 +64,10 @@ class AuthController extends Controller
         $twilio = new Client($twilio_sid, $token);
         $verification = $twilio->verify->v2->services($twilio_verify_sid)
             ->verificationChecks
-            ->create($data['verification_code'], array('to' => $data['phone']));
+            ->create([
+                         'To' => $data['phone'],
+                        'Code' =>$data['verification_code']
+                    ]);
         if ($verification->valid) {
             $user = tap(User::where('phone', $data['phone']))->update(['isVerified' => true]);
             /* Authenticate user */

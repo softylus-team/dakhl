@@ -407,9 +407,7 @@ class UserController extends Controller
             'returnOnConversion' =>0,
             'openedInvestments' =>0,
             'closedInvestments' =>0,
-            'stakes' => $outputstakes,
-            // 'reserved_stakes1' =>$outputstakes["value"],
-            'reserved_stakes' =>count($outputstakes),
+            'stakes' => $outputstakes
         ];
     }
     public function walletOperationsEP(Request $request,$id){
