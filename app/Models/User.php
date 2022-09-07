@@ -33,7 +33,9 @@ class User extends Authenticatable implements Customer
         'password',
         'role',
         'photo_path',
-        'isVerified'
+        'isVerified',
+        "national_id",
+        "status"
     ];
 
     /**

@@ -91,6 +91,7 @@ class PropertiesController extends Controller
         $properties = Properties::filter($request)->orderBy('status', 'asc')->get();
         foreach ($properties as $key => $property) {
             $id = $property->id;
+            // $properties['risk_level']=$property->risk_level;
             // $propertyObj=Properties::findOrFail($id);
             $property['address'] = Address::where('property_id', $id)->get()->first();
             $property['amenities'] = Amenity::where('property_id', $id)->get();

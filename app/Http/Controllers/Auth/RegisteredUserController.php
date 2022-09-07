@@ -83,27 +83,38 @@ $photo='/profiles/defaultProfile.png';
         // return redirect(RouteServiceProvider::HOME);
         return redirect(route('dashboard'));
     }
+
     public function ApiRegister(Request $request)
     {
         $request->validate([
-            // 'first_name' => 'required|string|max:255',
-            // 'last_name' => 'required|string|max:255',
-            // 'birth_date' => 'date',
-            // 'gender' => 'string',
-            // 'phone' => 'string',
-            'email' => 'required|string|email|max:255|unique:users',
-            // 'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            // 'photo' => 'mimes:png,jpeg,jpg,gif,svg'
-
+            'phone' => ['string'],
+            'email' => ['required'],
+            'birth_date' => ['date'],
+            'national_id' => ['string'],
+            'password' => ['required'],
         ]);
+        // return "fff";
+
+        $user = User::create([
+            'first_name'=>"first_name",
+            'last_name'=>"last_name",
+            'photo_path'=>"photo_path",
+            'role'=>"role",
+            'phone' => $request->phone,
+            'email' => $request->email,
+            'birth_date' => $request->birth_date,
+            'national_id' => $request->national_id,
+            'password' => Hash::make($request->password),
+        ]);
+        
         // $files = $request->file('photo');
         // print_r($files);
-$photo='/profiles/defaultProfile.png';
+            // $photo='/profiles/defaultProfile.png';
         
-        if($request->photo_path){
-            $photo=$request->photo_path;
+        // if($request->photo_path){
+        //     $photo=$request->photo_path;
 
-        }
+        // }
         // if ($files) {
         //     foreach ($files as $picture) {
 
@@ -117,17 +128,6 @@ $photo='/profiles/defaultProfile.png';
         //     }
         // }
 // print_r($photo);
-        $user = User::create([
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
-            'birth_date' => $request->birth_date,
-            'gender' => $request->gender,
-            'phone' => $request->phone,
-            'email' => $request->email,
-            'photo_path'=>$photo,
-            'password' => Hash::make($request->password),
-        ]);
-        
 
         event(new Registered($user));
 

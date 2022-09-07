@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\General_questions;
 use Illuminate\Support\Facades\DB;
 use Twilio\Rest\Client;
 use Illuminate\Support\Facades\Auth;
@@ -88,6 +89,44 @@ class AuthController extends Controller
       
     }
 
-    
+    protected function infouserEP(Request $request,$id)
+    {
+        $infoUser =$request->validate([
+            'marital_status'=>[  'string'],
+            'number_of_family_members'=>[  'numeric'],
+            'educational_level'=>[  'string'],
+            'email'=>[  'string'],
+            'phone'=>['string'],
+            'annual_income'=>[  'string'],
+            'net_worth'=>[  'string'],
+            'question1'=>[  'numeric'],
+            'question2'=>[  'numeric'],
+            'question3'=>[  'numeric'],
+            'question4'=>[  'numeric'],
+            'question5'=>[  'numeric'],
+            'question6'=>[  'numeric'],
+        ]);
 
+        $info = General_questions::create([
+            'user_id'=>$id,
+            'marital_status' => $request->marital_status,
+            'number_of_family_members' => $request->number_of_family_members,
+            'educational_level' => $request->educational_level,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'annual_income' => $request->annual_income,
+            'net_worth' => $request->net_worth,
+            'question1' => $request->question1,
+            'question2' => $request->question2,
+            'question3' => $request->question3,
+            'question4' => $request->question4,
+            'question5' => $request->question5,
+            'question6' => $request->question6,
+        ]);
+        User::where('id', $id)->update(['status' => "pending"]);
+
+        return response()->json([
+            'status' => 'Done',
+        ]);
+    }
 }

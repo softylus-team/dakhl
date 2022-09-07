@@ -9,6 +9,8 @@ use App\Models\Stake;
 use App\Models\User;
 use App\Models\bankAccount;
 use App\Models\Review;
+use App\Models\ConstructionReport;
+use App\Models\Photo;
 use Bavix\Wallet\Models\Transaction;
 use App\Models\TransactionFiltered;
 use Illuminate\Http\Request;
@@ -20,6 +22,8 @@ use App\Models\HomepageReview;
 use App\Models\InvestorSavedProperty;
 use App\Models\FinancialPlan;
 use App\Notifications\InvoiceTransaction;
+use Illuminate\Support\Facades\DB;
+
 
 class UserController extends Controller
 {
@@ -376,9 +380,13 @@ class UserController extends Controller
         $contracts = Contract::where('investor_id', $id)->get();
         foreach ($contracts as $contract) {
             $stakes = Stake::where('contract_id', $contract->id)->get();
-            $value_stakes=Stake::where('contract_id', $contract->id)->get("value");
             foreach ($stakes as $stake) {
+                $stake["property_id"] = $contract->property_id;
                 $stake["property"] =Properties::find($contract->property_id)->name;
+                $stake["property_desc"] =Properties::find($contract->property_id)->description;
+                $stake["property_photos"] = Photo::where('property_id', $contract->property_id)->get("photo_path");
+                $PP=DB::select("SELECT progress_percentage FROM property_construction_report where property_id = $contract->property_id" );
+                $stake["progress_percentage"]=$PP[0]->progress_percentage;
                 $stake["status"] = $contract->contract_status;
 
                 $output = array();
