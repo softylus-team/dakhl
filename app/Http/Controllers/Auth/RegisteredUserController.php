@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\DB;
+use Twilio\Rest\Client;
+
 class RegisteredUserController extends Controller
 {
     /**
@@ -84,6 +86,61 @@ $photo='/profiles/defaultProfile.png';
         return redirect(route('dashboard'));
     }
 
+    protected function createEP(Request $request)
+    {
+
+        $request->validate([
+            'phone' => ['string','required']
+        ]);
+
+        $phoneNumper=DB::select("SELECT * FROM users where phone = $request->phone" );
+        if(count($phoneNumper)==0){
+                    /* Get credentials from .env */
+            $token = getenv("TWILIO_AUTH_TOKEN");
+            $twilio_sid = getenv("TWILIO_SID");
+            $twilio_verify_sid = getenv("TWILIO_VERIFY_SID");
+            $twilio = new Client($twilio_sid, $token);
+            $twilio->verify->v2->services($twilio_verify_sid)
+            ->verifications
+            ->create($request->phone, "sms");
+        
+            return response()->json([
+                'status' => 'watting',
+            ]);
+        }
+        
+        return response()->json([
+            'status' => 'phone number is exist',
+        ]);
+
+    }
+    protected function verify(Request $request)
+    {
+        $data = $request->validate([
+            'verification_code' => ['required', 'numeric'],
+            'phone' => ['required', 'string'],
+        ]);
+        /* Get credentials from .env */
+        $token = getenv("TWILIO_AUTH_TOKEN");
+        $twilio_sid = getenv("TWILIO_SID");
+        $twilio_verify_sid = getenv("TWILIO_VERIFY_SID");
+        $twilio = new Client($twilio_sid, $token);
+        $verification = $twilio->verify->v2->services($twilio_verify_sid)
+            ->verificationChecks
+            ->create([
+                         'To' => $data['phone'],
+                        'Code' =>$data['verification_code']
+                    ]);
+        if ($verification->valid) {
+            return response()->json([
+                'status' => 'verified',
+            ]);
+        }
+        return response()->json([
+            'status' => 'Invalid OTP',
+        ]);
+      
+    }
     public function ApiRegister(Request $request)
     {
         $request->validate([
@@ -91,9 +148,8 @@ $photo='/profiles/defaultProfile.png';
             'email' => ['required'],
             'birth_date' => ['date'],
             'national_id' => ['string'],
-            'password' => ['required'],
         ]);
-        // return "fff";
+
 
         $user = User::create([
             'first_name'=>"first_name",
@@ -104,35 +160,10 @@ $photo='/profiles/defaultProfile.png';
             'email' => $request->email,
             'birth_date' => $request->birth_date,
             'national_id' => $request->national_id,
-            'password' => Hash::make($request->password),
         ]);
-        
-        // $files = $request->file('photo');
-        // print_r($files);
-            // $photo='/profiles/defaultProfile.png';
-        
-        // if($request->photo_path){
-        //     $photo=$request->photo_path;
-
-        // }
-        // if ($files) {
-        //     foreach ($files as $picture) {
-
-        //         $filename = $picture->getClientOriginalName();
-        // $extension = $picture->getClientOriginalExtension();
-        //         $pic = date('His') . '-' . $filename;
-        //         //move image to public/img folder
-        //         $picture->move(public_path('profiles'), $pic);
-        //         $photo="/profiles/" . $pic;
-
-        //     }
-        // }
-// print_r($photo);
 
         event(new Registered($user));
-
         Auth::login($user);
-
         $user->createToken($request->email);
         $token = DB::table('personal_access_tokens')->where('tokenable_id', $user->id)->first();
         $user['token'] =$token->token;

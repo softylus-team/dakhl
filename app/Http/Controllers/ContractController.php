@@ -256,6 +256,9 @@ class ContractController extends Controller
         //     'amount' => 'required|integer',
         //     'period' => 'required|integer',
         // ]);
+
+
+        
         $user = User::find($request->user_id);
         $financialPlan = FinancialPlan::where("property_id", $request->property_id)->first();
         $property = Properties::find($request->property_id);

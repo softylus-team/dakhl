@@ -57,6 +57,10 @@ export default function AddBankPopup({locale, strings, triggerBtn }) {
 
                         <form onSubmit={submit} encType="multipart/form-data">
 
+                            <div className='my-4 '>
+                                <h1 className='font-bold'>{strings.AddBankAccount}</h1>
+                                <hr className='font-bold'/>
+                            </div>
                             <div className='my-4'>
                                 <Label forInput="full_name" value={strings.full_name} />
                                 <Input

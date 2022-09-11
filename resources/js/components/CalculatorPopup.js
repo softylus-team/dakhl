@@ -70,7 +70,7 @@ export default function AddBankPopup({ locale, strings, triggerBtn }) {
             {close => (
                 <div className={`modal w-36rem mx-auto p-6 sm:px-6 lg:px-8 bg-white rounded fav-shadow ${locale == "ar" ? "rtl dir-rtl" : "ltr dir-ltr"}`}>
                     <div className='flex mb-4 justify-between'>
-                    
+            
                     <h3 className='font-bold text-base text-gray'>{strings.calculator}</h3> 
                     <button className="close focus:outline-none" onClick={close}>
                         <img src="/appIcons/close.svg" />

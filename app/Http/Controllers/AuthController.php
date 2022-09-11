@@ -22,20 +22,12 @@ class AuthController extends Controller
     protected function create(Request $request)
     {
 
-        // if(User::whereIn('phone',$request->phone)->get()){
-            // return response()->json([
-            //     // 'status' => 'not exist',
-            //     // $request->phone
-            //     User::findOrFail($request->phone)
-            // ]);
-        // }
-        // else{
-        //     return response()->json([
-        //         'status' => 'not exist',
-        //         // $request->phone
-        //     ]);
-        // }
-        
+        $phoneNumper=DB::select("SELECT * FROM users where phone = $request->phone" );
+        if(count($phoneNumper)==0){
+            return response()->json([
+                'status' => 'not exist',
+            ]);
+        }
         /* Get credentials from .env */
         $token = getenv("TWILIO_AUTH_TOKEN");
         $twilio_sid = getenv("TWILIO_SID");
@@ -44,9 +36,6 @@ class AuthController extends Controller
         $twilio->verify->v2->services($twilio_verify_sid)
             ->verifications
             ->create($request->phone, "sms");
-        // User::create([
-        //     'phone' => $data['phone'],
-        // ]);
         
         return response()->json([
             'status' => 'watting',
@@ -73,7 +62,6 @@ class AuthController extends Controller
             $user = tap(User::where('phone', $data['phone']))->update(['isVerified' => true]);
             /* Authenticate user */
             Auth::login($user->first());
-            // $request->authenticate();
             $request->session()->regenerate();
             $user=$request->user();
             $user->tokens()->delete();
@@ -81,7 +69,6 @@ class AuthController extends Controller
             $token = DB::table('personal_access_tokens')->where('tokenable_id', $user->id)->first();
             $user['token'] =$token->token;
             return $user;
- 
         }
         return response()->json([
             'status' => 'Invalid OTP',

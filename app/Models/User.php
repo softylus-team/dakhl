@@ -6,6 +6,7 @@ use Bavix\Wallet\Interfaces\Customer;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+// use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Bavix\Wallet\Traits\HasWallet;
@@ -30,7 +31,6 @@ class User extends Authenticatable implements Customer
         'gender',
         'phone',
         'email',
-        'password',
         'role',
         'photo_path',
         'isVerified',
@@ -44,7 +44,6 @@ class User extends Authenticatable implements Customer
      * @var array<int, string>
      */
     protected $hidden = [
-        'password',
         'remember_token',
     ];
 

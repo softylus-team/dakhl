@@ -56,10 +56,10 @@ export default function Guest({ strings, locale, auth, header, children, menu })
                                     </div>
                                 ) :
                                     <div className="shrink-0 hidden sm:flex sm:items-center">
-                                        <Link className="mr-2 font-bold" href={route('login1')}>
+                                        <Link className="mr-2 font-bold" href={route('phoneNumberLogin')}>
                                             {strings.login}
                                         </Link>
-                                        <Link className="mr-2 font-bold" href={route('register')}>
+                                        <Link className="mr-2 font-bold border border-black-2" href={route('register')}>
                                             {strings.register}
                                         </Link>
                                         <Link className="mr-2" href="/">
@@ -157,7 +157,7 @@ export default function Guest({ strings, locale, auth, header, children, menu })
                         </ResponsiveNavLink>
                         {auth && auth.user != null ? ""
                             : <div className="pt-4 pb-1 border-t border-gray-200 flex flex-col">
-                                <ResponsiveNavLink href={route('login1')} className={"font-bold"}>
+                                <ResponsiveNavLink href={route('phoneNumberLogin')} className={"font-bold"}>
                                     {strings.login}
                                 </ResponsiveNavLink>
                                 <ResponsiveNavLink href={route('properties')} >

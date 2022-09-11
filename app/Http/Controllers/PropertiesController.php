@@ -87,6 +87,8 @@ class PropertiesController extends Controller
     }
     public function allPropertiesEP(Request $request)
     {
+
+        
         // Properties::whereIn("id",$properties_ids)->get(),
         $properties = Properties::filter($request)->orderBy('status', 'asc')->get();
         foreach ($properties as $key => $property) {

@@ -14,14 +14,26 @@ Route::get('/register/{locale?}', [RegisteredUserController::class, 'create'])
                 ->setDefaults(['locale' => 'ar'])->middleware('guest')
                 ->middleware('referral')->name('register');
 
-Route::get('/login/{locale?}', [AuthenticatedSessionController::class, 'create'])
-->setDefaults(['locale' => 'ar'])->middleware('guest')
-                ->name('login1');
-                
 Route::post('/register', [RegisteredUserController::class, 'store'])
                 ->middleware('guest')->name('register1');
-Route::post('/login', [AuthenticatedSessionController::class, 'store'])
-                ->middleware('guest')->name('login');
+
+// Route::post('/login', [AuthenticatedSessionController::class, 'createLogin'])
+//                 ->middleware('guest')->name('login');
+
+Route::get('/login/{locale?}', [AuthenticatedSessionController::class, 'loginbyPhoneNumber'])
+->setDefaults(['locale' => 'ar'])->middleware('guest')
+                ->name('phoneNumberLogin');
+Route::post('/LoginOTP/{locale?}', [AuthenticatedSessionController::class, 'createLoginOTP'])
+->setDefaults(['locale' => 'ar'])->middleware('guest')->name('LoginOTP');
+
+
+Route::post('/VerifyOTP/{locale?}', [AuthenticatedSessionController::class, 'VerifyOTP'])->name('VerifyOTP');
+
+// Route::get('/Login/{locale?}', [AuthenticatedSessionController::class, 'Verifypage'])
+// ->setDefaults(['locale' => 'ar'])->middleware('guest')->name('Verifypage');
+
+// Route::post('/VerifyOTP/{locale?}', [AuthenticatedSessionController::class, 'store'])
+//                 ->middleware('guest')->name('logintest');
 
 Route::get('/forgot-password/{locale?}', [PasswordResetLinkController::class, 'create'])
 ->setDefaults(['locale' => 'ar'])->middleware('guest')

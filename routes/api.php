@@ -25,10 +25,14 @@ use App\Http\Controllers\PaymentController;
 Route::post('/payment/prepareCheckout', [PaymentController::class, 'prepareCheckoutEP']);
 Route::post('/payment/paymentStatus', [PaymentController::class, 'paymentStatusEP']);
 
+Route::post('/registerOTP', [RegisteredUserController::class, 'createEP']);
+Route::post('/registerVerifyOTP', [RegisteredUserController::class, 'verify']);
 Route::post('/register', [RegisteredUserController::class, 'ApiRegister']);
+
 Route::post('/login', [AuthenticatedSessionController::class, 'ApiAuth']);
-Route::post('/loginAPI', [AuthController::class, 'create']);
 Route::post('/infoUserAPI/{id}', [AuthController::class, 'infouserEP'])->middleware('Sanctum');
+
+Route::post('/loginAPI', [AuthController::class, 'create']);
 Route::post('/verifyLoginAPI', [AuthController::class, 'verify']);
 Route::post('/logout', [AuthenticatedSessionController::class, 'ApiAuthDestroy'])->middleware('Sanctum');
 

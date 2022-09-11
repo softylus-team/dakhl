@@ -29,8 +29,7 @@ export default function ForgotPassword({ locale,status }) {
             <Head title="Forgot Password" />
 
             <div className="mb-4 text-sm text-gray-500 leading-normal">
-                Forgot your password? No problem. Just let us know your email address and we will email you a password
-                reset link that will allow you to choose a new one.
+                {strings.ForgotYourPassword}
             </div>
 
             {status && <div className="mb-4 font-medium text-sm text-green-600">{status}</div>}
@@ -49,7 +48,7 @@ export default function ForgotPassword({ locale,status }) {
 
                 <div className="flex items-center justify-end mt-4">
                     <Button className="ml-4" processing={processing}>
-                        Email Password Reset Link
+                        {strings.EmailPasswordResetLink}
                     </Button>
                 </div>
             </form>

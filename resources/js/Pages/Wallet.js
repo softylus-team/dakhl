@@ -49,6 +49,7 @@ export default function Wallet(props) {
                             </Link>
                         </div>
                     </div>
+
                     <div className='sm:w-1/5 sm:my-0 my-4 h-44 flex flex-col justify-between items-start'>
                         <StaticsCard imgClass="w-10 h-10" className="w-full h-20" icon={"/appIcons/totalDeposites.svg"} title={strings.totalDeposites} amount={props.totalDeposites} currency={strings.currency} />
                         <StaticsCard imgClass="w-10 h-10" className="w-full h-20" icon={"/appIcons/totalWithdrawals.svg"} title={strings.totalWithdrawals} amount={props.totalWithdrawals} currency={strings.currency} />
@@ -59,6 +60,23 @@ export default function Wallet(props) {
                             <img className="w-10 h-10 object-contain" src={"/appIcons/savedAccounts.svg"} />
                             <div>
                                 <p className='text-l-gray text-sm font-normal'>{strings.savedAccounts}</p>
+                                <p className='text-d-gray text-xl font-semibold'>{props.savedAccounts}</p>
+                            </div>
+                        </div>
+                        <BankAccountsPopup
+                            locale={props.locale}
+                            strings={strings}
+                            accounts={props.bankAccounts}
+                            triggerBtn={
+                                <p className='underline text-l-gray text-sm font-normal cursor-pointer'>{strings.viewDetails}</p>
+                            } />
+                    </div>
+                    <div className="sm:w-1/5 sm:my-0 my-4 h-44 p-6 bg-white rounded fav-shadow relative flex flex-col justify-center gap-10">
+                        <img className='absolute top-0 left-0 m-4' src="/appIcons/optionsDotsH.svg" />
+                        <div className='flex justify-start gap-2.5 items-center'>
+                            <img className="w-10 h-10 object-contain" src={"/appIcons/PaymentCards.svg"} />
+                            <div>
+                                <p className='text-l-gray text-sm font-normal'>{strings.PaymentCards}</p>
                                 <p className='text-d-gray text-xl font-semibold'>{props.savedAccounts}</p>
                             </div>
                         </div>

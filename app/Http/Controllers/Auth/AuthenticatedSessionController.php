@@ -11,6 +11,10 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
+use Twilio\Rest\Client;
+use Illuminate\Http\RedirectResponse;
+
+
 
 class AuthenticatedSessionController extends Controller
 {
@@ -19,16 +23,69 @@ class AuthenticatedSessionController extends Controller
      *
      * @return \Inertia\Response
      */
-    public function create($locale='ar')
+    public function loginbyPhoneNumber($locale='ar')
     {
         return Inertia::render('Login', [
-            'canResetPassword' => Route::has('password.request'),
             'status' => session('status'),
             'locale'=>$locale,
 
         ]);
     }
 
+    protected function createLoginOTP(Request $request,$locale='ar')
+    {
+
+        $phoneNumper=DB::select("SELECT * FROM users where phone = $request->phone" );
+        if(count($phoneNumper)==0){
+            return route('login');
+        }
+        /* Get credentials from .env */
+        $token = getenv("TWILIO_AUTH_TOKEN");
+        $twilio_sid = getenv("TWILIO_SID");
+        $twilio_verify_sid = getenv("TWILIO_VERIFY_SID");
+        $twilio = new Client($twilio_sid, $token);
+        $twilio->verify->v2->services($twilio_verify_sid)
+            ->verifications
+            ->create($request->phone, "sms");
+
+            return Inertia::render('LoginVerify', [
+                'phone' =>$request->phone,
+                'locale'=>$locale,
+    
+            ]);
+    }
+    protected function VerifyOTP(Request $request,$locale='ar')
+    {
+        $data = $request->validate([
+            'verification_code' => ['required', 'numeric'],
+            'phone' => ['required', 'string'],
+        ]);
+
+        /* Get credentials from .env */
+        $token = getenv("TWILIO_AUTH_TOKEN");
+        $twilio_sid = getenv("TWILIO_SID");
+        $twilio_verify_sid = getenv("TWILIO_VERIFY_SID");
+        $twilio = new Client($twilio_sid, $token);
+        $verification = $twilio->verify->v2->services($twilio_verify_sid)
+            ->verificationChecks
+            ->create([
+                         'To' => $data['phone'],
+                        'Code' =>$data['verification_code']
+                    ]);
+        if ($verification->valid) {
+            $user=DB::select("SELECT * FROM users where phone = $request->phone" );
+            $idUser= $user[0]->id;
+            $userFind = User::find($idUser);
+            Auth::login($userFind);
+            return redirect()->route('/');
+            // return redirect(route('dashboard'));
+        }
+        return Inertia::render('/Login', [
+            'locale'=>$locale,
+            'status' => session('status'),
+        ]);
+      
+    }
     /**
      * Handle an incoming authentication request.
      *

@@ -43,7 +43,7 @@ export default function DepositMoney(props) {
         bank_id: '',
         amount: '',
         paymentBrand: '',
-        paymentMethod: '',
+        paymentMethod: 'wallet',
         fromWallet:true,
     });
     const onHandleChange = (event) => {
@@ -153,7 +153,7 @@ export default function DepositMoney(props) {
                         </div>
                         <hr />
                         <div className='flex justify-between items-center pointer-events-none'>
-                            <label forInput="paymentMethod" className={`w-18rem flex items-center gap-2.5 font-semibold text-lg  py-2 ${data.paymentMethod == 'bankAccount' ? "text-d-blue" : "text-l-gray"}`}>
+                            <label   className={`w-18rem flex items-center gap-2.5 font-semibold text-lg  py-2 ${data.paymentMethod == 'bankAccount' ? "text-d-blue" : "text-l-gray"}`}>
                                 <Radio
                                     name="paymentMethod"
                                     value="bankAccount"

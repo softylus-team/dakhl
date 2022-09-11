@@ -92,7 +92,7 @@ export default function Welcome(props) {
                                     key={index}
                                     image={aboutCard.icon}
                                     title={props.locale == 'ar' ? aboutCard.title_ar : aboutCard.title_en}
-                                    desciption={props.locale == 'ar' ? aboutCard.description_ar : aboutCard.description_er}
+                                    desciption={props.locale == 'ar' ? aboutCard.description_ar : aboutCard.description_en}
 
                                 />
                             )

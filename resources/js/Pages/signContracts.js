@@ -224,6 +224,7 @@ export default function signContracts(props) {
                             </label>
                         </div>
                         <hr />
+                        
                         <div className='flex justify-between items-center pointer-events-none'>
                             <label  className={`w-18rem flex items-center gap-2.5 font-semibold text-lg  py-2 ${data.paymentMethod == 'bankAccount' ? "text-d-blue" : "text-l-gray"}`}>
                                 <Radio
@@ -326,7 +327,12 @@ export default function signContracts(props) {
                         >
                             <form onSubmit={submit} className="w-1/3 mx-auto" encType="multipart/form-data">
                                 <div className={`p-4 h-56 flex flex-col justify-between items-center gap-6 text-center bg-white rounded fav-shadow ${props.locale == 'ar' ? "dir-rtl rtl" : ""}`}>
-                                    <p className='text-d-gray text-xl font-bold'>{strings.payConfirmation}</p>
+                                    <div className={`p-4 h-56 flex flex-ROW justify-between bg-white rounded fav-shadow`}>
+                                    <button className="close focus:outline-none" onClick={close}>
+                                        <img src="/appIcons/close.svg" />
+                                    </button>
+                                        <p className='text-d-gray text-xl font-bold'>{strings.payConfirmation}</p>
+                                    </div>
                                     <div className='text-d-gray text-base font-semibold'>{strings.ConfirmationMsg} {Property.name} {strings.and}{strings.pay} <input disabled
                                         value={data.investValue}
                                         name="investValue"
