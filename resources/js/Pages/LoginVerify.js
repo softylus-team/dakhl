@@ -10,6 +10,7 @@ import { Head, Link, useForm } from '@inertiajs/inertia-react';
 import stringss from "../../strings";
 import LocalizedStrings from 'react-localization';
 
+
 export default function LoginVerify(props ) {
     let strings = new LocalizedStrings(stringss);
     strings.setLanguage(props.locale);
@@ -31,7 +32,7 @@ export default function LoginVerify(props ) {
         post(route('VerifyOTP'));
     };
 
-
+    
     return (
         <Guest
             locale={props.locale}
@@ -45,24 +46,36 @@ export default function LoginVerify(props ) {
 
             
             <ValidationErrors errors={errors} />
+            <Container className={"header_background_login dir-ltr"}>
+                <div className='sm:w-1/4'>
+                </div>
 
-            <form onSubmit={submit}>
-
-                <div className="mt-4">
-                    <Label forInput="verification_code" value="OTP" />
-
+            </Container>
+            <form onSubmit={submit} className='d-flex align-items-center flex-column w-55 text-center sm:w-2/5 mx-auto'>
+            <div className="sm:text-3xl text-xl text-d-gray font-bold">
+                            <h2>{strings.Verificationcode} OTP</h2>
+                            <p className='sm:text-lg text-base text-l-gray font-normal  p-3'>{strings.Pleasesend} 
+                            <em className='text-d-blue p-3'>{props.phone}</em></p>
+                        </div>
+                <div className="d-flex flex-column">
+                    <Label forInput="verification_code"  className=" flex wh-full font-bold text-d-blue" value={strings.Verificationcode}/>
+                    <div className="flex ">
+                    <img src="/appIcons/verify.svg" className="w-10" />
                     <Input
                         type="number"
                         name="verification_code"
                         value={data.verification_code}
-                        className="mt-1 block w-full"
+                        className="flex items-center justify-center"
                         autoComplete="current-password"
                         handleChange={onHandleChange}
+                        placeholder="12345"
                     />
+                   <u className='w-32'> <Link className="mr-1 text-d-blue" href={route('LoginOTPResend',{"phone":props.phone})}>{strings.Resend}</Link></u>
                 </div>
-                
-                <div className="flex items-center justify-end mt-4">
-                    <Button className="ml-4 " processing={processing}>
+                </div>
+                <div id="clockdiv"></div>
+                <div className="flex items-center justify-center text-center w-full mt-8">
+                    <Button className="mt-1 block flex items-center justify-center w-full text-center" processing={processing}>
                     {strings.login}
                     </Button>
                 </div>
@@ -70,4 +83,30 @@ export default function LoginVerify(props ) {
             </Container>
         </Guest>
     );
+    
+    // 10 minutes from now
+    var time_in_minutes = 1;
+    var current_time = Date.parse(new Date());
+    var deadline = new Date(current_time + time_in_minutes*60*1000);
+    
+    
+    function time_remaining(endtime){
+        var t = Date.parse(endtime) - Date.parse(new Date());
+        var seconds = Math.floor( (t/1000) % 60 );
+        var minutes = Math.floor( (t/1000/60) % 60 );
+        var hours = Math.floor( (t/(1000*60*60)) % 24 );
+        var days = Math.floor( t/(1000*60*60*24) );
+        return {'total':t, 'days':days, 'hours':hours, 'minutes':minutes, 'seconds':seconds};
+    }
+    function run_clock(id,endtime){
+        var clock = document.getElementById(id);
+        function update_clock(){
+            var t = time_remaining(endtime);
+            clock.innerHTML = 'minutes: '+t.minutes+'<br>seconds: '+t.seconds;
+            if(t.total<=0){ clearInterval(timeinterval); }
+        }
+        update_clock(); // run function once at first to avoid delay
+        var timeinterval = setInterval(update_clock,1000);
+    }
+    run_clock('clockdiv',deadline);
 }

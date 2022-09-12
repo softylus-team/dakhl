@@ -26,8 +26,9 @@ Route::get('/login/{locale?}', [AuthenticatedSessionController::class, 'loginbyP
 Route::post('/LoginOTP/{locale?}', [AuthenticatedSessionController::class, 'createLoginOTP'])
 ->setDefaults(['locale' => 'ar'])->middleware('guest')->name('LoginOTP');
 
-
 Route::post('/VerifyOTP/{locale?}', [AuthenticatedSessionController::class, 'VerifyOTP'])->name('VerifyOTP');
+
+Route::get('/LoginOTPResend/{locale?}', [AuthenticatedSessionController::class, 'LoginOTPResend'])->name('LoginOTPResend');
 
 // Route::get('/Login/{locale?}', [AuthenticatedSessionController::class, 'Verifypage'])
 // ->setDefaults(['locale' => 'ar'])->middleware('guest')->name('Verifypage');

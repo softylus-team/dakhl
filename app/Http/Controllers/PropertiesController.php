@@ -21,6 +21,7 @@ use Inertia\Inertia;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\URL;
 use App\Models\bankAccount;
+use Illuminate\Support\Facades\DB;
 
 class PropertiesController extends Controller
 {
@@ -87,10 +88,12 @@ class PropertiesController extends Controller
     }
     public function allPropertiesEP(Request $request)
     {
-
+        // return DB::select("SELECT * FROM  properties" );
         
         // Properties::whereIn("id",$properties_ids)->get(),
         $properties = Properties::filter($request)->orderBy('status', 'asc')->get();
+        // $properties = Properties::get();
+        // return $properties;
         foreach ($properties as $key => $property) {
             $id = $property->id;
             // $properties['risk_level']=$property->risk_level;

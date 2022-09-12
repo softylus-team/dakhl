@@ -51,7 +51,7 @@ class RegisteredUserController extends Controller
         // ]);
         $files = $request->file('photo');
         // print_r($files);
-$photo='/profiles/defaultProfile.png';
+        $photo='/profiles/defaultProfile.png';
         if ($files) {
             foreach ($files as $picture) {
 

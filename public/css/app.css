@@ -525,6 +525,8 @@ Ensure the default browser behavior of the `hidden` attribute.
   margin-top: 2.5rem;
 }.mb-2{
   margin-bottom: 0.5rem;
+}.mr-1{
+  margin-right: 0.25rem;
 }.mr-4{
   margin-right: 1rem;
 }.mr-10{
@@ -848,6 +850,8 @@ Ensure the default browser behavior of the `hidden` attribute.
   padding: 0.375rem;
 }.p-1{
   padding: 0.25rem;
+}.p-3{
+  padding: 0.75rem;
 }.p-0{
   padding: 0px;
 }.px-4{
@@ -1111,6 +1115,11 @@ Ensure the default browser behavior of the `hidden` attribute.
     background-color: white;
 }.header_background {
     background-image: url("/images/header-background.png");
+    background-position: center;
+    background-size: cover;
+    height: 35vh;
+}.header_background_login {
+    background-image: url("/images/VectorLogin.png");
     background-position: center;
     background-size: cover;
     height: 35vh;
@@ -1675,6 +1684,9 @@ Ensure the default browser behavior of the `hidden` attribute.
     .header_background {
         height: 70vh;
     }
+    .header_background_login {
+        height: 55vh;
+    }
     .workCard {
         background-position: center;
         background-size: contain;
@@ -1894,10 +1906,10 @@ Ensure the default browser behavior of the `hidden` attribute.
     width: 18rem;
   }.sm\:w-1\/4{
     width: 25%;
-  }.sm\:w-32{
-    width: 8rem;
   }.sm\:w-2\/5{
     width: 40%;
+  }.sm\:w-32{
+    width: 8rem;
   }.sm\:w-1\/5{
     width: 20%;
   }.sm\:w-full{
@@ -1949,10 +1961,10 @@ Ensure the default browser behavior of the `hidden` attribute.
     font-size: 1rem;
   }.sm\:text-lg{
     font-size: 1.125rem;
-  }.sm\:text-4xl{
-    font-size: 2.25rem;
   }.sm\:text-3xl{
     font-size: 1.875rem;
+  }.sm\:text-4xl{
+    font-size: 2.25rem;
   }
 }@media (min-width: 768px){.md\:grid-cols-2{
     grid-template-columns: repeat(2, minmax(0, 1fr));

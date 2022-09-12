@@ -269,18 +269,22 @@ class ContractController extends Controller
             "investor_id" => $request->user_id,
             "property_id" => $request->property_id,
         ]);
+
         $stake = Stake::create([
             "owner_id" => $request->user_id,
             "contract_id" => $contract->id,
-            "value" => $request->amount,
+            "value" => $property->stake_amout,
             "state" => $request->state,
         ]);
-        Investment::create([
-            "contract_id" => $stake->contract_id,
-            "stake_id" => $stake->id,
-            "amount" => $request->amount,
-            "period" => $request->period,
-        ]);
+        $stakeInsert=$request->amount/ $property->stake_amout;
+        for($i=0;$i<$stakeInsert;$i++){
+            Investment::create([
+                "contract_id" => $stake->contract_id,
+                "stake_id" => $stake->id,
+                "amount" => $property->stake_amout,
+                "period" => $request->period,
+            ]);
+        }
         if ($request->paymentMethod == "wallet") {
             $user->withdraw($request->amount, ["property" => $property->name, "type" => "invest"]);
         }

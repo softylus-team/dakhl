@@ -36,6 +36,13 @@ body {
     height: 35vh;
 }
 
+.header_background_login {
+    background-image: url("/images/VectorLogin.png");
+    background-position: center;
+    background-size: cover;
+    height: 35vh;
+}
+
 .howWorkBg {
     background-image: url("/images/howWorkBg.png");
     background-position: right top;
@@ -902,6 +909,9 @@ button.wpwl-button.wpwl-button-pay {
     }
     .header_background {
         height: 70vh;
+    }
+    .header_background_login {
+        height: 55vh;
     }
     .workCard {
         background-position: center;
