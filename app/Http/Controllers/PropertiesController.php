@@ -30,6 +30,46 @@ class PropertiesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function allPropertiesEP(Request $request)
+    {
+        try{
+            $properties = Properties::filter($request)->orderBy('status', 'asc')->get();
+            foreach ($properties as $key => $property) {
+                $id =$property->id;
+                $property['address'] = Address::where('property_id', $id)->get()->first();
+                $property['amenities'] = Amenity::where('property_id', $id)->get();
+                $property['reviews'] = Review::where('property_id', $id)->get();
+                foreach ($property['reviews'] as $review) {
+                    $user = User::find($review->author_id);
+                    $review["author_photo"] = $user->photo_path;
+                    $review["author_name"] = $user->first_name . " " . $user->last_name;
+                }
+                $property['financialPlan'] = FinancialPlan::filter($request)->where('property_id', $id)->get()->first();
+                if (!$property['financialPlan']) {
+                    unset($properties[$key]);
+                }
+                $property['photos'] = Photo::where('property_id', $id)->get();
+                $property['attachments'] = Attachment::where('property_id', $id)->get();
+                $property['constructionReport'] = ConstructionReport::where('property_id', $id)->get();
+                $property['investments']=Investment::where('property_id',$id)->get();
+                $stakesCount=Stake::where('property_id',$id)->count();
+                $property['totalStakesinvestment']=$stakesCount*$property->stake_amout;
+                //reminning_days
+                $reminning_days =$property['available_days']-(strtotime(date("Y-m-d"))-strtotime($property['created_at']))/60/60/24;
+                if($reminning_days>0){
+                    $property['Reminning_days']=(int)$reminning_days;
+                }
+                else
+                {
+                        $property['Reminning_days']=0;
+                }
+            }
+            return $properties;
+        }catch(Exception $ex ){
+            return $ex->getMessage();
+        }
+    }
+
     public function invest($id, $locale = 'ar')
     {
         $user = Auth::user();
@@ -86,71 +126,7 @@ class PropertiesController extends Controller
         ]);
 
     }
-    public function allPropertiesEP(Request $request)
-    {
-        // return DB::select("SELECT * FROM  properties" );
-        
-        // Properties::whereIn("id",$properties_ids)->get(),
-        $properties = Properties::filter($request)->orderBy('status', 'asc')->get();
-        // $properties = Properties::get();
-        // return $properties;
-        foreach ($properties as $key => $property) {
-            $id = $property->id;
-            // $properties['risk_level']=$property->risk_level;
-            // $propertyObj=Properties::findOrFail($id);
-            $property['address'] = Address::where('property_id', $id)->get()->first();
-            $property['amenities'] = Amenity::where('property_id', $id)->get();
-            $property['reviews'] = Review::where('property_id', $id)->get();
-            foreach ($property['reviews'] as $review) {
-                $user = User::find($review->author_id);
-                $review["author_photo"] = $user->photo_path;
-                $review["author_name"] = $user->first_name . " " . $user->last_name;
-            }
 
-           
-            $property['financialPlan'] = FinancialPlan::filter($request)->where('property_id', $id)->get()->first();
-            $property['photos'] = Photo::where('property_id', $id)->get();
-            $property['attachments'] = Attachment::where('property_id', $id)->get();
-            $property['constructionReport'] = ConstructionReport::where('property_id', $id)->get();
-            $contracts = Contract::where('property_id', $id)->get();
-            $Cids = array();
-            foreach ($contracts as $contract) {
-                array_push($Cids, $contract->id);
-            }
-            // $property['stake_value1'] =json_encode($property['stake_value']);
-            
-            
-            $property['stakes'] = Stake::whereIn('contract_id', $Cids)->get();
-            $stak_value;
-            foreach ($property['stakes'] as $stake) {
-                $stake['investments'] = Investment::where('stake_id', $stake->id)->get();
-            }
-            foreach ($property['stakes'] as $stake) {
-                $stak_value=$stake->value;
-                break;
-            }
-            if (!$property['financialPlan']) {
-                unset($properties[$key]);
-            }
-            $property['stakes_investment_value'] = count($property['stakes'])*$stak_value;
-
-            
-
-            //reminning_days
-            $reminning_days =$property['available_days']-(strtotime(date("Y-m-d"))-strtotime($property['created_at']))/60/60/24;
-            if($reminning_days>0){
-                $property['Reminning_days']=(int)$reminning_days;
-            }
-            else
-            {
-                    $property['Reminning_days']=0;
-                
-            }
-
-        }
-        return $properties;
-
-    }
 
     public function singlePropertyEP($id)
     {

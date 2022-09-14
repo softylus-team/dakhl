@@ -36,7 +36,6 @@ Route::post('/loginAPI', [AuthController::class, 'create']);
 Route::post('/verifyLoginAPI', [AuthController::class, 'verify']);
 Route::post('/logout', [AuthenticatedSessionController::class, 'ApiAuthDestroy'])->middleware('Sanctum');
 
-Route::get('/properties', [PropertiesController::class, 'allPropertiesEP'])->middleware('Sanctum');
 Route::get('/property/{id}', [PropertiesController::class, 'singlePropertyEP'])->middleware('Sanctum');
 Route::get('/user/{id}', [UserController::class, 'singleUserEP'])->middleware('Sanctum');
 Route::get('/users', [UserController::class, 'allUsersEP'])->middleware('Sanctum');
@@ -45,10 +44,20 @@ Route::post('/saveProperty', [PropertiesController::class, 'savePropertyEP'])->m
 Route::delete('/unsaveProperty/{proprerty_id}/{user_id}', [PropertiesController::class, 'unsavePropertyEP'])->middleware('Sanctum');
 Route::post('/walletDeposit', [UserController::class, 'walletDepositEP'])->middleware('Sanctum');
 Route::post('/walletWithdrawal', [UserController::class, 'walletWithdrawalEP'])->middleware('Sanctum');;
-Route::get('/myInvestments/{id}', [UserController::class, 'myInvestmentsEP'])->middleware('Sanctum');
 Route::get('/walletOperations/{id}', [UserController::class, 'walletOperationsEP'])->middleware('Sanctum');
-Route::post('/addStake', [ContractController::class, 'add_stakeEP'])->middleware('Sanctum')->middleware('Sanctum');
-Route::post('/addInvestment', [ContractController::class, 'add_investmentEP'])->middleware('Sanctum');
+
+
+// investment sycle 
+Route::post('/addInvestment', [ContractController::class, 'add_investment'])->middleware('Sanctum');
+
+// get all props
+Route::get('/properties', [PropertiesController::class, 'allPropertiesEP'])->middleware('Sanctum');
+
+// myInvestments
+Route::get('/myInvestments/{id}', [UserController::class, 'myInvestmentsEP'])->middleware('Sanctum');
+
+
+// Route::post('/addInvestment', [ContractController::class, 'add_investmentEP'])->middleware('Sanctum');
 Route::post('/liquidizeInvestment', [ContractController::class, 'liquidize_investmentEP'])->middleware('Sanctum');
 Route::delete('/deleteInvestment/{investment_id}', [ContractController::class, 'delete_investmentEP'])->middleware('Sanctum');
 Route::get('/getNotifications/{id}', [notificationController::class,'get_notifications'])->middleware('Sanctum');

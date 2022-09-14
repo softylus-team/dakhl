@@ -57,17 +57,17 @@ class UserController extends Controller
                 $stake["property"] =Properties::find($contract->property_id)->name;
                 $stake["status"] = $contract->contract_status;
                 $output = array();
-                $investments = Investment::where('stake_id', $stake->id)->get();
-                foreach ($investments as $investment) {
-                    array_push($output, [
-                        "id" => $investment->id,
-                        "amount" => $investment->amount,
-                        "period" => $investment->period,
-                        "created_at" => $investment->created_at,
-                    ]
-                    );
-                }
-                $stake['investments'] = $output;
+                // $investments = Investment::where('stake_id', $stake->id)->get();
+                // foreach ($investments as $investment) {
+                //     array_push($output, [
+                //         "id" => $investment->id,
+                //         "amount" => $investment->amount,
+                //         "period" => $investment->period,
+                //         "created_at" => $investment->created_at,
+                //     ]
+                //     );
+                // }
+                // $stake['investments'] = $output;
 
                 array_push($outputstakes, $stake);
             }
@@ -375,48 +375,93 @@ class UserController extends Controller
         return $user;
     }
 
-    public function myInvestmentsEP($id){
-        $outputstakes = array();
+    public function myInvestmentsEP($id)
+    {
+        $propertiesArray=array();
+        // $Properties["Userbalance"]=User::find($id)->get('balance');
         $contracts = Contract::where('investor_id', $id)->get();
         foreach ($contracts as $contract) {
-            $stakes = Stake::where('contract_id', $contract->id)->get();
-            foreach ($stakes as $stake) {
-                $stake["property_id"] = $contract->property_id;
-                $stake["property"] =Properties::find($contract->property_id)->name;
-                $stake["property_desc"] =Properties::find($contract->property_id)->description;
-                $stake["property_photos"] = Photo::where('property_id', $contract->property_id)->get("photo_path");
-                $PP=DB::select("SELECT progress_percentage FROM property_construction_report where property_id = $contract->property_id" );
-                $stake["progress_percentage"]=$PP[0]->progress_percentage;
-                $stake["status"] = $contract->contract_status;
-
-                $output = array();
-                $investments = Investment::where('stake_id', $stake->id)->get();
-                foreach ($investments as $investment) {
-                    array_push($output, [
-                        "id" => $investment->id,
-                        "amount" => $investment->amount,
-                        "period" => $investment->period,
-                        "created_at" => $investment->created_at,
-                    ]
-                    );
-                }
-                $stake['investments'] = $output;
-                array_push($outputstakes, $stake);
+            $investment = Investment::where('contract_id', $contract->id)->get();
+            if(count($investment)==0){
+                continue;
+            }else{
+            $Properties;
+            $property=Properties::find($contract->property_id);
+            $Properties["property_id"]=$property->id;
+            $properties["property_name"]=$property->name;
+            $properties["property_desc"]=$property->description;
+            $properties["stake_amout"]=$property->stake_amout;
+            $properties["available_days"]=$property->available_days;
+            $photo_path = Photo::where('property_id', $contract->property_id)->get("photo_path");
+            if(count($photo_path)>0){
+                $properties["property_photos"] =$photo_path[0]->photo_path;
+            }else{
+                $properties["property_photos"] ='';
             }
+            // reminning_days
+            $reminning_days =$property->available_days-(strtotime(date("Y-m-d"))-strtotime($property->created_at))/60/60/24;
+            if($reminning_days>0){
+                $properties['Reminning_days']=(int)$reminning_days;
+            }
+            else
+            {
+                $properties['Reminning_days']=0;
+            }
+            $investment = Investment::where('contract_id', $contract->id)->get();
+            $properties['investments']=$investment;
+            
+            array_push($propertiesArray, $properties); 
         }
+
+        }
+        return $propertiesArray;
+
+
+
+
+        
+        // $outputstakes = array();
+        // $contracts = Contract::where('investor_id', $id)->get();
+        // return $contracts;
+        // foreach ($contracts as $contract) {
+        //     $stakes = Stake::where('contract_id', $contract->id)->get();
+        //     foreach ($stakes as $stake) {
+        //         $stake["property_id"] = $contract->property_id;
+        //         $stake["property"] =Properties::find($contract->property_id)->name;
+        //         $stake["property_desc"] =Properties::find($contract->property_id)->description;
+        //         $stake["property_photos"] = Photo::where('property_id', $contract->property_id)->get("photo_path");
+        //         $PP=DB::select("SELECT progress_percentage FROM property_construction_report where property_id = $contract->property_id" );
+        //         $stake["progress_percentage"]=$PP[0]->progress_percentage;
+        //         $stake["status"] = $contract->contract_status;
+
+        //         $output = array();
+        //         $investments = Investment::where('stake_id', $stake->id)->get();
+        //         foreach ($investments as $investment) {
+        //             array_push($output, [
+        //                 "id" => $investment->id,
+        //                 "amount" => $investment->amount,
+        //                 "period" => $investment->period,
+        //                 "created_at" => $investment->created_at,
+        //             ]
+        //             );
+        //         }
+        //         $stake['investments'] = $output;
+        //         array_push($outputstakes, $stake);
+        //     }
+        // }
         
 
-        $user = User::findOrFail($id);
-        $reserved_stakes=count($outputstakes);
+        // $user = User::findOrFail($id);
+        // $reserved_stakes=count($outputstakes);
      
-        return [
-            'balance' => $user->balance,
-            'monthlyReturn' =>0,
-            'returnOnConversion' =>0,
-            'openedInvestments' =>0,
-            'closedInvestments' =>0,
-            'stakes' => $outputstakes
-        ];
+        // return [
+        //     'balance' => $user->balance,
+        //     'monthlyReturn' =>0,
+        //     'returnOnConversion' =>0,
+        //     'openedInvestments' =>0,
+        //     'closedInvestments' =>0,
+        //     'stakes' => $outputstakes
+        // ];
     }
     public function walletOperationsEP(Request $request,$id){
         $user=User::find($id);

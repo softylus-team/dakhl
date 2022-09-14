@@ -14,8 +14,19 @@ Route::get('/register/{locale?}', [RegisteredUserController::class, 'create'])
                 ->setDefaults(['locale' => 'ar'])->middleware('guest')
                 ->middleware('referral')->name('register');
 
+
+
+Route::post('/registerOTP/{locale?}', [RegisteredUserController::class, 'createRegisterOTP'])
+->setDefaults(['locale' => 'ar'])->middleware('guest')->name('registerOTP');
+
+Route::post('/RegisterVerifyOTP/{locale?}', [RegisteredUserController::class, 'RegisterVerifyOTP'])->name('RegisterVerifyOTP');
+
 Route::post('/register', [RegisteredUserController::class, 'store'])
-                ->middleware('guest')->name('register1');
+                ->middleware('guest')->name('storerequest');
+Route::get('/RegisterOTPResend/{locale?}', [RegisteredUserController::class, 'RegisterOTPResend'])->name('RegisterOTPResend');
+
+
+
 
 // Route::post('/login', [AuthenticatedSessionController::class, 'createLogin'])
 //                 ->middleware('guest')->name('login');

@@ -9,6 +9,6 @@ class Contract extends Model
 {
     use HasFactory;
     protected $table="contracts";
-    protected $fillable = ["investor_id", "property_id", "contract_status","created_at"];
+    protected $fillable = ["investor_id", "property_id","created_at"];
 
 }

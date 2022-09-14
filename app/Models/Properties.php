@@ -22,8 +22,8 @@ class Properties extends Model implements Product
      * @var string
      */
     //we have an access to the table which is has the same name of the model , if the table isn't the same we need to define protected table
-    protected $dates=['deleted_at'];
     protected $table = 'properties';
+    protected $dates=['deleted_at'];
     protected $primaryKey = 'id';
     //allow data to be inserted and updated for create and update ELOQUENT methods 
     protected $fillable = ["name", "type", "bedrooms","status","nighborhood","bulding_name","community_name","description","stakes_limit","available_days"];

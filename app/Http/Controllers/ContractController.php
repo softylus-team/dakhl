@@ -19,49 +19,111 @@ use Inertia\Inertia;
 
 class ContractController extends Controller
 {
-    //
-
+    
     public function add_investment(Request $request)
     {
-        $request->validate([
-            'user_id' => 'required|integer',
-            'property_id' => 'required|integer',
-            'amount' => 'required|integer',
-            'period' => 'required|integer',
-            'stake' => 'required|integer',
-        ]);
-        $user = User::find($request->user_id);
-        $financialPlan = FinancialPlan::where("property_id", $request->property_id)->first();
-        $property = Properties::find($request->property_id);
-        if ($user->balance >= $request->amount) {
-            if ($financialPlan->minimum_investment <= $request->amount) {
-                $stake = Stake::find($request->stake);
-                Investment::create([
-                    "contract_id" => $stake->contract_id,
-                    "stake_id" => $stake->id,
-                    "amount" => $request['amount'],
-                    "period" => $request['period'],
-                ]);
-                $user->withdraw($request->amount, ["property" => $property->name, "type" => "invest"]);
-                $stake->value = $stake->value + $request->amount;
-                $stake->save();
-                $tarnsactionData = [
+        try{
+            $request->validate([
+                'user_id' => 'required|integer',
+                'property_id' => 'required|integer',
+                'amount' => 'required|integer',
+            ]);
+            $user = User::find($request->user_id);
+            $financialPlan = FinancialPlan::where("property_id", $request->property_id)->first();
+            $property = Properties::find($request->property_id);
+            // property status
+            $stakesCount=Stake::where('property_id',$request->property_id)->count();
+            $totalStakesinvestment=$stakesCount*$property->stake_amout+ $request->amount;
+            $propertyValue=$property->stakes_limit;
 
-                    'type' => "invest",
-                    'amount' => $request->amount,
-                    'property' => $property->name,
-                ];
-                $user->notify(new InvoiceTransaction($tarnsactionData));
-                return redirect()->back()->with('success', 'your investment is added successfully');
-
-            } else {
-                return redirect()->back()->with('success', 'your investment amount (' . $request->amount . ') is below the minimum investment amount ( ' . $financialPlan->minimum_investment . ' ) for this property');
+            if($propertyValue==$totalStakesinvestment){
+                 Properties::where('id', $request->property_id)->update('status',"close");
             }
-        } else {
-            return redirect()->back()->with('success', 'your balance is not enough');
-        }
 
+            if ($request->paymentMethod == "wallet") {
+                $user->withdraw($request->amount, ["property" => $property->name, "type" => "invest"]);
+            }
+
+            $contract = Contract::create([
+                "investor_id" => $request->user_id,
+                "property_id" => $request->property_id,
+            ]);
+            
+            $investment= Investment::create([
+                "contract_id" => $contract->id,
+                "amount" => $request->amount,
+                "property_id" => $request->property_id,
+            ]);
+
+            $stakeInsert=$request->amount/ $property->stake_amout;
+            for($i=0;$i<$stakeInsert;$i++){
+            $stake = Stake::create([
+                "owner_id" => $request->user_id,
+                "contract_id" => $contract->id,
+                "investment_id"=>$investment->id,
+                "value" => $property->stake_amout,
+                "property_id" => $request->property_id,
+            ]);
+            }
+            $tarnsactionData = [
+                'type' => "invest",
+                'amount' => $request->amount,
+                'property' => $property->name,
+            ];
+            $user->notify(new InvoiceTransaction($tarnsactionData));
+            return 'your stake is added successfully';
+        }
+        catch(Exception $ex)
+        {
+            return $ex->getMessage();
+        }    
     }
+
+
+    // public function add_investment(Request $request)
+    // {
+    //     $request->validate([
+    //         'user_id' => 'required|integer',
+    //         'property_id' => 'required|integer',
+    //         'amount' => 'required|integer',
+    //         'period' => 'required|integer',
+    //         'stake' => 'required|integer',
+    //     ]);
+    //     $user = User::find($request->user_id);
+    //     $financialPlan = FinancialPlan::where("property_id", $request->property_id)->first();
+    //     $property = Properties::find($request->property_id);
+    //     if ($user->balance >= $request->amount) {
+    //         if ($financialPlan->minimum_investment <= $request->amount) {
+    //             $stake = Stake::find($request->stake);
+    //             Investment::create([
+    //                 "contract_id" => $stake->contract_id,
+    //                 "stake_id" => $stake->id,
+    //                 "amount" => $request['amount'],
+    //                 "period" => $request['period'],
+    //             ]);
+    //             $user->withdraw($request->amount, ["property" => $property->name, "type" => "invest"]);
+    //             $stake->value = $stake->value + $request->amount;
+    //             $stake->save();
+    //             $tarnsactionData = [
+
+    //                 'type' => "invest",
+    //                 'amount' => $request->amount,
+    //                 'property' => $property->name,
+    //             ];
+    //             $user->notify(new InvoiceTransaction($tarnsactionData));
+    //             return redirect()->back()->with('success', 'your investment is added successfully');
+
+    //         } else {
+    //             return redirect()->back()->with('success', 'your investment amount (' . $request->amount . ') is below the minimum investment amount ( ' . $financialPlan->minimum_investment . ' ) for this property');
+    //         }
+    //     } else {
+    //         return redirect()->back()->with('success', 'your balance is not enough');
+    //     }
+
+    // }
+
+
+
     public function add_stake(Request $request, $locale = "ar")
     {
         $request->validate([
@@ -205,106 +267,49 @@ class ContractController extends Controller
             'status' => $tran["status"],
         ]);
     }
-    public function add_investmentEP(Request $request)
-    {
-        // $request->validate([
-        //     'user_id' => 'required|integer',
-        //     'property_id' => 'required|integer',
-        //     'amount' => 'required|integer',
-        //     'period' => 'required|integer',
-        //     'stake_id' => 'required|integer',
-        // ]);
-        $user = User::find($request->user_id);
-        $financialPlan = FinancialPlan::where("property_id", $request->property_id)->first();
-        $property = Properties::find($request->property_id);
+    // public function add_investmentEP(Request $request)
+    // {
+    //     // $request->validate([
+    //     //     'user_id' => 'required|integer',
+    //     //     'property_id' => 'required|integer',
+    //     //     'amount' => 'required|integer',
+    //     //     'period' => 'required|integer',
+    //     //     'stake_id' => 'required|integer',
+    //     // ]);
+    //     $user = User::find($request->user_id);
+    //     $financialPlan = FinancialPlan::where("property_id", $request->property_id)->first();
+    //     $property = Properties::find($request->property_id);
 
-        if ($user->balance >= $request->amount) {
-            if ($financialPlan->minimum_investment <= $request->amount) {
-                $stake = Stake::find($request->stake_id);
-                Investment::create([
-                    "contract_id" => $stake->contract_id,
-                    "stake_id" => $stake->id,
-                    "amount" => $request['amount'],
-                    "period" => $request['period'],
-                ]);
-                $user->withdraw($request->amount, ["property" => $property->name, "type" => "invest"]);
-                $stake->value = $stake->value + $request->amount;
-                $stake->save();
-                $tarnsactionData = [
+    //     if ($user->balance >= $request->amount) {
+    //         if ($financialPlan->minimum_investment <= $request->amount) {
+    //             $stake = Stake::find($request->stake_id);
+    //             Investment::create([
+    //                 "contract_id" => $stake->contract_id,
+    //                 "stake_id" => $stake->id,
+    //                 "amount" => $request['amount'],
+    //                 "period" => $request['period'],
+    //             ]);
+    //             $user->withdraw($request->amount, ["property" => $property->name, "type" => "invest"]);
+    //             $stake->value = $stake->value + $request->amount;
+    //             $stake->save();
+    //             $tarnsactionData = [
 
-                    'type' => "invest",
-                    'amount' => $request->amount,
-                    'property' => $property->name,
-                ];
-                $user->notify(new InvoiceTransaction($tarnsactionData));
-                return 'your investment is added successfully';
+    //                 'type' => "invest",
+    //                 'amount' => $request->amount,
+    //                 'property' => $property->name,
+    //             ];
+    //             $user->notify(new InvoiceTransaction($tarnsactionData));
+    //             return 'your investment is added successfully';
 
-            } else {
-                return 'your investment amount (' . $request->amount . ') is below the minimum investment amount ( ' . $financialPlan->minimum_investment . ' ) for this property';
-            }
-        } else {
-            return 'your balance is not enough';
-        }
+    //         } else {
+    //             return 'your investment amount (' . $request->amount . ') is below the minimum investment amount ( ' . $financialPlan->minimum_investment . ' ) for this property';
+    //         }
+    //     } else {
+    //         return 'your balance is not enough';
+    //     }
 
-    }
-    public function add_stakeEP(Request $request)
-    {
-        // $request->validate([
-        //     'user_id' => 'required|integer',
-        //     'property_id' => 'required|integer',
-        //     'state' => 'required|string',
-        //     'amount' => 'required|integer',
-        //     'period' => 'required|integer',
-        // ]);
-
-
-        
-        $user = User::find($request->user_id);
-        $financialPlan = FinancialPlan::where("property_id", $request->property_id)->first();
-        $property = Properties::find($request->property_id);
-
-        // if ($user->balance >= $request->amount) {
-        //     if ($financialPlan->minimum_investment <= $request->amount) {
-        $contract = Contract::create([
-            "investor_id" => $request->user_id,
-            "property_id" => $request->property_id,
-        ]);
-
-        $stake = Stake::create([
-            "owner_id" => $request->user_id,
-            "contract_id" => $contract->id,
-            "value" => $property->stake_amout,
-            "state" => $request->state,
-        ]);
-        $stakeInsert=$request->amount/ $property->stake_amout;
-        for($i=0;$i<$stakeInsert;$i++){
-            Investment::create([
-                "contract_id" => $stake->contract_id,
-                "stake_id" => $stake->id,
-                "amount" => $property->stake_amout,
-                "period" => $request->period,
-            ]);
-        }
-        if ($request->paymentMethod == "wallet") {
-            $user->withdraw($request->amount, ["property" => $property->name, "type" => "invest"]);
-        }
-        $tarnsactionData = [
-
-            'type' => "invest",
-            'amount' => $request->amount,
-            'property' => $property->name,
-        ];
-        $user->notify(new InvoiceTransaction($tarnsactionData));
-        return 'your stake is added successfully';
-
-        //     } else {
-        //         return 'your stake amount (' . $request->amount . ') is below the minimum investment amount ( ' . $financialPlan->minimum_investment . ' ) for this property';
-        //     }
-        // } else {
-        //     return 'your balance is not enough';
-        // }
-
-    }
+    // }
+ 
     public function delete_investment_view($id, $locale = "ar")
     {
         $investment = Investment::find($id);

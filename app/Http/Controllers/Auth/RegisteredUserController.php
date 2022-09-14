@@ -25,9 +25,88 @@ class RegisteredUserController extends Controller
     {
         return Inertia::render('Auth/Register',[
             'locale'=>$locale,
+            'status' => session('status'),
+
+        ]);
+    }
+    protected function createRegisterOTP(Request $request,$locale='ar')
+    {
+
+        // $phoneNumper=DB::select("SELECT * FROM users where phone = $request->phone" );
+        // // return $phoneNumper;
+        // if(count($phoneNumper)>0){
+        //     return redirect()->route('phoneNumberLogin');
+        // }
+        // /* Get credentials from .env */
+        // $token = getenv("TWILIO_AUTH_TOKEN");
+        // $twilio_sid = getenv("TWILIO_SID");
+        // $twilio_verify_sid = getenv("TWILIO_VERIFY_SID");
+        // $twilio = new Client($twilio_sid, $token);
+        // $twilio->verify->v2->services($twilio_verify_sid)
+        //     ->verifications
+        //     ->create($request->phone, "sms");
+        return Inertia::render('Auth/RegisterVerify', [
+                'phone' =>$request->phone,
+                'locale'=>$locale,
         ]);
     }
 
+    protected function RegisterVerifyOTP(Request $request,$locale='ar')
+    {
+        // return $request;
+        // $data = $request->validate([
+        //     'verification_code' => ['required', 'numeric'],
+        //     'phone' => ['required', 'string'],
+        // ]);
+
+        /* Get credentials from .env */
+        // $token = getenv("TWILIO_AUTH_TOKEN");
+        // $twilio_sid = getenv("TWILIO_SID");
+        // $twilio_verify_sid = getenv("TWILIO_VERIFY_SID");
+        // $twilio = new Client($twilio_sid, $token);
+        // $verification = $twilio->verify->v2->services($twilio_verify_sid)
+        //     ->verificationChecks
+        //     ->create([
+        //                  'To' => $data['phone'],
+        //                 'Code' =>$data['verification_code']
+        //             ]);
+        // if ($verification->valid) {
+        //     // return $request;
+            return Inertia::render('Auth/RegisterEmail', [
+                'phone' =>$request->phone,
+                'locale'=>$locale,
+        ]);
+            // return redirect()->route('/');
+            // return redirect(route('dashboard'));
+        // }
+        // return Inertia::render('/Login', [
+        //     'locale'=>$locale,
+        //     'status' => session('status'),
+        // ]);
+      
+    }
+
+    protected function RegisterOTPResend(Request $request,$locale='ar')
+    {
+        // $phoneNumper=DB::select("SELECT * FROM users where phone = $request->phone" );
+        // if(count($phoneNumper)==0){
+        //     return route('login');
+        // }
+        // /* Get credentials from .env */
+        // $token = getenv("TWILIO_AUTH_TOKEN");
+        // $twilio_sid = getenv("TWILIO_SID");
+        // $twilio_verify_sid = getenv("TWILIO_VERIFY_SID");
+        // $twilio = new Client($twilio_sid, $token);
+        // $twilio->verify->v2->services($twilio_verify_sid)
+        //     ->verifications
+        //     ->create($request->phone, "sms");
+
+            return Inertia::render('Auth/RegisterVerify', [
+                'phone' =>$request->phone,
+                'locale'=>$locale,
+        ]);
+      
+    }
     /**
      * Handle an incoming registration request.
      *
@@ -38,46 +117,48 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request)
     {
-        // $request->validate([
-        //     'first_name' => 'required|string|max:255',
-        //     'last_name' => 'required|string|max:255',
-        //     'birth_date' => 'date',
-        //     'gender' => 'string',
-        //     'phone' => 'string',
-        //     'email' => 'required|string|email|max:255|unique:users',
-        //     'password' => ['required', 'confirmed', Rules\Password::defaults()],
-        //     // 'photo' => 'mimes:png,jpeg,jpg,gif,svg'
+        
+        // return $request;
+        $request->validate([
+            // 'first_name' => 'required|string|max:255',
+            // 'last_name' => 'required|string|max:255',
+            // 'gender' => 'string',
+            'birth_date' => 'date',
+            'email' => 'string|email|max:255|unique:users',
+            'national_id' => 'integer',
 
-        // ]);
-        $files = $request->file('photo');
+        ]);
+
         // print_r($files);
-        $photo='/profiles/defaultProfile.png';
-        if ($files) {
-            foreach ($files as $picture) {
+        // $photo='/profiles/defaultProfile.png';
+        // if ($files) {
+        //     foreach ($files as $picture) {
 
-                $filename = $picture->getClientOriginalName();
-        $extension = $picture->getClientOriginalExtension();
-                $pic = date('His') . '-' . $filename;
-                //move image to public/img folder
-                $picture->move(public_path('profiles'), $pic);
-                $photo="/profiles/" . $pic;
+        //         $filename = $picture->getClientOriginalName();
+        //         $extension = $picture->getClientOriginalExtension();
+        //         $pic = date('His') . '-' . $filename;
+        //         //move image to public/img folder
+        //         $picture->move(public_path('profiles'), $pic);
+        //         $photo="/profiles/" . $pic;
 
-            }
+        //     }
             
-        }
-// print_r($photo);
+        // }
+
+        // return "hghghghghghghghghghg";
+
         $user = User::create([
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
+            // 'first_name' => $request->first_name,
+            // 'last_name' => $request->last_name,
+            // 'gender' => $request->gender,
+            // 'photo_path'=>$photo,
             'birth_date' => $request->birth_date,
-            'gender' => $request->gender,
             'phone' => $request->phone,
             'email' => $request->email,
-            'photo_path'=>$photo,
-            'password' => Hash::make($request->password),
+            'national_id' => $request->Identification,
         ]);
+        // return $user;
         
-
         event(new Registered($user));
 
         Auth::login($user);

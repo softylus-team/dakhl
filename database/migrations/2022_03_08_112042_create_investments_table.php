@@ -17,7 +17,6 @@ class CreateInvestmentsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('contract_id');
             $table->unsignedInteger('amount');
-            $table->unsignedInteger('period');
             $table->foreign('contract_id')->references('id')->on('contracts')->onDelete('cascade');
             $table->timestamps();
         });

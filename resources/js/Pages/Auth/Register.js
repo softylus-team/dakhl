@@ -4,6 +4,7 @@ import Guest from '@/Layouts/Guest';
 import Input from '@/Components/Input';
 import Radio from '@/Components/Radio';
 import Label from '@/Components/Label';
+import Container from '@/components/container';
 import ValidationErrors from '@/Components/ValidationErrors';
 import { Head, Link, useForm } from '@inertiajs/inertia-react';
 import stringss from "../../../strings";
@@ -13,30 +14,26 @@ export default function Register({ locale }) {
     let strings = new LocalizedStrings(stringss);
     strings.setLanguage(locale);
     const { data, setData, post, processing, errors, reset } = useForm({
-        first_name: '',
-        last_name: '',
-        birth_date: '',
-        gender: '',
-        password: '',
-        password_confirmation: '',
-        photo: '',
+        phone: '',
     });
 
-    useEffect(() => {
-        return () => {
-            reset('password', 'password_confirmation');
-        };
-    }, []);
+    // useEffect(() => {
+    //     return () => {
+    //         reset('password', 'password_confirmation');
+    //     };
+    // }, []);
 
     const onHandleChange = (event) => {
         setData(event.target.name, event.target.type === 'checkbox' ? event.target.checked : event.target.type === 'file' ? event.target.files : event.target.value);
         // console.log(event.target.name, event.target.type === 'checkbox' ? event.target.checked : event.target.type === 'file' ? event.target.files : event.target.value);
     };
-
+    // let str = 'foo123bar';
+    // const strColor = str.replace(/\d+/, match => <span style={{color: 'red'}}> {match} </span> );
+   
     const submit = (e) => {
         e.preventDefault();
 
-        post(route('register1'));
+        post(route('registerOTP'));
     };
 
     return (
@@ -46,136 +43,52 @@ export default function Register({ locale }) {
             header={strings.register}
             strings={strings}>
             <Head title="Register" />
-
             <ValidationErrors errors={errors} />
-
-            <form onSubmit={submit}>
-                <div>
-                    <Label forInput="first_name" value="First Name" />
-
-                    <Input
-                        type="text"
-                        name="first_name"
-                        value={data.first_name}
-                        className="mt-1 block w-full"
-                        autoComplete="first_name"
-                        isFocused={true}
-                        handleChange={onHandleChange}
-                        required
-                    />
+            <Container className={"header_background_login dir-ltr"}>
+                <div className='flex items-end' style={{ height: "52%" }}>
+                    <div className='w-3/4'></div>
+                    <div className='sm:w-1/4'>
+                    </div>
                 </div>
-                <div className="mt-4">
-                    <Label forInput="last_name" value="Last Name" />
+            </Container>
+                <form className='d-flex align-items-center flex-column w-55 text-center sm:w-2/5 mx-auto my-8'  onSubmit={submit}>
+                    <div className="flex align-items-center text-center sm:w-2/5 mx-auto">
+                        <img src="/appIcons/phonestep.jpeg" className="w-15 p-3"  />
+                        <img src="/appIcons/Verifygray.jpeg" className="w-15 p-3"  />
+                        <img src="/appIcons/emailicon.jpeg" className="w-15 p-3"  />
+                    </div>
 
-                    <Input
-                        type="text"
-                        name="last_name"
-                        value={data.last_name}
-                        className="mt-1 block w-full"
-                        autoComplete="Last_name"
-                        handleChange={onHandleChange}
-                        required
-                    />
-                </div>
-                <div className="mt-4">
-                    <Label forInput="birth_date" value="Birth Date" />
-
-                    <Input
-                        type="date"
-                        name="birth_date"
-                        value={data.birth_date}
-                        className="mt-1 block w-full"
-                        autoComplete="birth_date"
-                        handleChange={onHandleChange}
-
-                    />
-                </div>
-                <div className="mt-4">
-                    <Label forInput="gender" value="Gender" />
-
-                    <label className='font-medium text-sm text-gray-700  mr-4'>
-                        <Radio
-                            type="text"
-                            name="gender"
-                            value="female"
-                            handleChange={onHandleChange}
-                            checked={data.gender == 'female' ? true : false}
-                        />
-                        Female
-                    </label>
-
-                    <label className='font-medium text-sm text-gray-700'>
-                        <Radio
-                            type="text"
-                            name="gender"
-                            value="male"
-                            handleChange={onHandleChange}
-                            checked={data.gender == 'male' ? true : false}
-                        />
-                        Male
-                    </label>
-
-                </div>
-                <div className="mt-4">
-                    <Label forInput="email" value="Email" />
-
-                    <Input
-                        type="email"
-                        name="email"
-                        value={data.email}
-                        className="mt-1 block w-full"
-                        autoComplete="username"
-                        handleChange={onHandleChange}
-                        required
-                    />
-                </div>
-
-                <div className="mt-4">
-                    <Label forInput="password" value="Password" />
-
-                    <Input
-                        type="password"
-                        name="password"
-                        value={data.password}
-                        className="mt-1 block w-full"
-                        autoComplete="new-password"
-                        handleChange={onHandleChange}
-                        required
-                    />
-                </div>
-
-                <div className="mt-4">
-                    <Label forInput="password_confirmation" value="Confirm Password" />
-
-                    <Input
-                        type="password"
-                        name="password_confirmation"
-                        value={data.password_confirmation}
-                        className="mt-1 block w-full"
-                        handleChange={onHandleChange}
-                        required
-                    />
-                </div>
-                <div className="mt-4">
-                    <Label forInput="photo" value="Profile photo" />
-
-                    <input
-                        type="file"
-                        name="photo"
-                        label="Profile photo"
-                        onChange={onHandleChange}
-                        className=""
-                        accept='image/*'
-                    /></div>
-                <div className="flex items-center justify-end mt-4">
-                    <Link href={route('login')} className="underline text-sm text-gray-600 hover:text-gray-900">
-                        Already registered?
-                    </Link>
-
-                    <Button className="ml-4" processing={processing}>
-                        Register
-                    </Button>
-                </div>
+                        <div className="sm:text-3xl text-xl text-d-gray font-bold">
+                            <h2>{strings.registerLogin}</h2>
+                            <p className='sm:text-lg text-base text-l-gray font-normal  p-3'>{strings.loginParagraph}</p>
+                        </div>
+                        <div className="d-flex flex-column ">
+                            <Label forInput="phone" className=" flex wh-full font-bold text-d-blue" value={strings.phone}  />
+                            <div className="flex ">
+                            <img src="/appIcons/mobilephone.svg" className="w-10" />
+                            <Input
+                                type="text"
+                                name="phone"
+                                value={data.phone}
+                                className="flex items-center justify-center"
+                                autoComplete="current-password"
+                                handleChange={onHandleChange}
+                                placeholder="12 123 1234 669+"
+                            />
+                        </div>
+                        </div>
+                        <div className="flex items-center justify-center text-center w-full mt-8">
+                            <Button className="mt-1 block flex items-center justify-center w-full text-center" processing={processing}>
+                            {strings.Next}
+                            </Button>
+                        </div>
+                        <div className="sm:text-3xl text-xl text-d-gray">
+                            <p className='sm:text-lg text-base text-l-gray font-normal  p-3'>{strings.alreadyaccount}
+                            <Link className="mr-2 font-bold text-d-blue " href={route('phoneNumberLogin')}>
+                                            {strings.login}
+                            </Link>
+                            </p>
+                        </div>
             </form>
         </Guest>
     );

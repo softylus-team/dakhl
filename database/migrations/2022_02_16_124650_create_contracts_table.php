@@ -17,7 +17,6 @@ class CreateContractsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('investor_id');
             $table->unsignedBigInteger('property_id');
-            $table->string('contract_status')->default("pending");
             $table->foreign('investor_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('property_id')->references('id')->on('properties')->onDelete('cascade');
             $table->timestamps();
