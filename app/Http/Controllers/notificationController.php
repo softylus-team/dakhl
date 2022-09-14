@@ -23,8 +23,10 @@ class notificationController extends Controller
     }
     function delete_notification($id){
         $notification=DatabaseNotification::find($id);
+        // return $notification;
+        if ($notification != null) {
         $notification->delete();
-        return 1;
+        return 1;}
     }
     function pin_notification($id){
         $notification=DatabaseNotification::find($id);

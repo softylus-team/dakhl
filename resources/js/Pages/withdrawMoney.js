@@ -22,7 +22,7 @@ const useStyles = makeStyles(theme => ({
         }
     }
 }));
-export default function DepositMoney(props) {
+export default function withdrawMoney(props) {
     // console.log(props.stakes);
     let strings = new LocalizedStrings(stringss);
     strings.setLanguage(props.locale);
@@ -66,13 +66,13 @@ export default function DepositMoney(props) {
             locale={props.locale}
             auth={props.auth}
             errors={props.errors}
-            header={strings.depositMoney}
+            header={strings.withdrawMoney}
             menu={props.menu}
             strings={strings}
         >
-            <Head title={strings.depositMoney} />
+            <Head title={strings.withdrawMoney} />
             <Container>
-                <h2 className='mb-2 font-semibold text-d-blue text-base'>{strings.wallet}/<span className='font-semibold text-l-gray text-base'>{strings.depositMoney}</span></h2>
+                <h2 className='mb-2 font-semibold text-d-blue text-base'>{strings.wallet}/<span className='font-semibold text-l-gray text-base'>{strings.withdrawMoney}</span></h2>
                 <hr />
                 <ValidationErrors errors={errors} />
 
@@ -208,7 +208,7 @@ export default function DepositMoney(props) {
 
                     <div className="my-4 flex items-center justify-center gap-2.5 sm:w-2/3">
                         <Button className="w-1/2 flex justify-center" processing={processing}>
-                            {strings.depositMoney}
+                            {strings.continuation}
                         </Button>
                         <Link href={route("wallet")} className='block w-1/2 text-center rounded p-2 text-base font-semibold border border-d-blue text-d-blue' >
                                             {strings.cancel}

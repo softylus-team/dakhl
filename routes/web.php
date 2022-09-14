@@ -100,14 +100,14 @@ Route::get('/investments/{locale?}', function ($locale = 'ar') {//this is the sl
                 $stake["status"] = $contract->contract_status;
 
                 $output = array();
-                $investments = Investment::where('stake_id', $stake->id)->orderBy('created_at', 'desc')->get();
+                $investments = Investment::where('property_id', $property->id)->orderBy('created_at', 'desc')->get();
                 foreach ($investments as $investment) {
                     array_push($output, [
                         "id" => $investment->id,
                         "amount" => $investment->amount,
-                        "period" => $investment->period,
+                        // "period" => $investment->period,
                         "property"=>$property->name,
-                        "price"=>$price->minimum_investment,
+                        // "price"=>$price->minimum_investment,
                         "state"=>$stake->state,
                         "monthlyProfit"=>0,
                         "profitLoss"=>70,
@@ -197,6 +197,8 @@ Route::get('/bankAccountDeactivate/{id}', [PaymentController::class, 'bankAccoun
 Route::delete('/bankAccountDelete/{id}', [PaymentController::class, 'bankAccountDelete'])->name("bankAccountDelete");
 
 Route::get('/DepositMoney/{locale?}',[UserController::class, 'DepositMoney'] )->setDefaults(['locale' => 'ar'])->middleware(['auth', 'verified'])->name('DepositMoney');//->name is a nickname to use it in route() insted of a complex slugs
+
+Route::get('/withdrawMoney/{locale?}',[UserController::class, 'withdrawMoney'] )->setDefaults(['locale' => 'ar'])->middleware(['auth', 'verified'])->name('withdrawMoney');//->name is a nickname to use it in route() insted of a complex slugs
 
 Route::get('/referral/{locale?}', function ($locale = 'ar') {//this is the slug
     $user=Auth::user();

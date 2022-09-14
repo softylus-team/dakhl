@@ -492,5 +492,14 @@ class UserController extends Controller
             'bankAccounts'=>bankAccount::where('holder_id',$user->id)->get(),
         ]);//this is the page name
     }
+
+    public function withdrawMoney($locale = 'ar') {//this is the slug
+        $user=Auth::user();
+        
+        return Inertia::render('withdrawMoney',[
+            'locale'=>$locale,
+            'bankAccounts'=>bankAccount::where('holder_id',$user->id)->get(),
+        ]);//this is the page name
+    }
     
 }

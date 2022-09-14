@@ -41,7 +41,7 @@ export default function Wallet(props) {
                                     </Button>
                             </Link>
 
-                            <Link className="" href="#">
+                            <Link className="" href={route("withdrawMoney")}>
                                 <Button type="button" className='bg-cyan flex justify-center gap-2.5'>
                                     <img src="/appIcons/withdrawMoney.svg" />
                                     {strings.withdrawMoney}

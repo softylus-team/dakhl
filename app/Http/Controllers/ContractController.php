@@ -28,6 +28,7 @@ class ContractController extends Controller
                 'property_id' => 'required|integer',
                 'amount' => 'required|integer',
             ]);
+            
             $user = User::find($request->user_id);
             $financialPlan = FinancialPlan::where("property_id", $request->property_id)->first();
             $property = Properties::find($request->property_id);
@@ -352,14 +353,15 @@ class ContractController extends Controller
         $user = User::find($contract->investor_id);
         $property = Properties::find($contract->property_id);
         $user->deposit($investment->amount, ['property' => $property->name, 'type' => "cancel_investment"]);
-        $stake = Investment::where("stake_id", $investment->stake_id)->get();
-        if (count($stake) <= 1) {
-            $contract->delete();
-        } else {
-            $investment->delete();
-        }
+        // $stake = Investment::where("stake_id", $investment->stake_id)->get();
+        // if (count($stake) <= 1) {
+        //     $contract->delete();
+        // } else {
+        //     $investment->delete();
+        // }        
+        $investment->status ="cancelled";
+        $investment->save();
         $tarnsactionData = [
-
             'type' => "cancel_investment",
             'amount' => $investment->amount,
             'property' => $property->name,

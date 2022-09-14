@@ -199,18 +199,18 @@ class PropertiesController extends Controller
             }
             $invested = 0;
             $property['stakes'] = Stake::whereIn('contract_id', $Cids)->get();
-            foreach ($property['stakes'] as $stake) {
-                $stake['investments'] = Investment::where('stake_id', $stake->id)->get();
-                $invested += $stake->value;
-            }
+            // foreach ($property['stakes'] as $stake) {
+            //     $stake['investments'] = Investment::where('stake_id', $stake->id)->get();
+            //     $invested += $stake->value;
+            // }
             if (!$property['financialPlan']) {
                 unset($properties[$key]);
             }
             $property['expected_return'] = 20;
             $property['fund_period'] = 18;
-            $property['invested'] = $invested;
-            $invested_percent = ($invested / $property['financialPlan']->price) * 100;
-            $property['invested_percent'] = $invested_percent;
+            // $property['invested'] = $invested;
+            // $invested_percent = ($invested / $property['financialPlan']->price) * 100;
+            // $property['invested_percent'] = $invested_percent;
         }
 
         return Inertia::render('Properties', [
