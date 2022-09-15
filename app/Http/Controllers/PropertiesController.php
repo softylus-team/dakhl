@@ -149,14 +149,14 @@ class PropertiesController extends Controller
             array_push($Cids, $contract->id);
         }
         $propertyObj['stakes'] = Stake::whereIn('contract_id', $Cids)->get();
-        foreach ($propertyObj['stakes'] as $stake) {
-            $stake['investments'] = Investment::where('stake_id', $stake->id)->get();
-            $invested += $stake->value;
-        }
+        // foreach ($propertyObj['stakes'] as $stake) {
+        //     $stake['investments'] = Investment::where('stake_id', $stake->id)->get();
+        //     $invested += $stake->value;
+        // }
         $propertyObj['expected_return'] = 20;
         $propertyObj['fund_period'] = 18;
-        $propertyObj['invested'] = $invested;
-        $invested_percent = ($invested / $propertyObj['financialPlan']->price) * 100;
+        // $propertyObj['invested'] = $invested;
+        // $invested_percent = ($invested / $propertyObj['financialPlan']->price) * 100;
         return $propertyObj;
     }
 
@@ -164,7 +164,65 @@ class PropertiesController extends Controller
     public function index($locale = 'ar')
     {
         $user = Auth::user();
+        $savedProprties = $user ? InvestorSavedProperty::where('investor_id', $user->id)->get() : array();
+        $propsIDs = array();
+        foreach ($savedProprties as $savedProprty) {
+            array_push($propsIDs, $savedProprty->property_id);
+        }
+        $properties = Properties::all();
+        foreach ($properties as $key => $property) {
+            $id = $property->id;
+            // $propertyObj=Properties::findOrFail($id);
+            if (in_array($id, $propsIDs)) {
+                $property['saved'] = true;
+            } else {
+                $property['saved'] = false;
 
+            }
+            $property['address'] = Address::where('property_id', $id)->get()->first();
+            $property['amenities'] = Amenity::where('property_id', $id)->get();
+            $property['reviews'] = Review::where('property_id', $id)->get();
+            foreach ($property['reviews'] as $review) {
+                $user = User::find($review->author_id);
+                $review["author_photo"] = $user->photo_path;
+                $review["author_name"] = $user->first_name . " " . $user->last_name;
+            }
+            $property['financialPlan'] = FinancialPlan::where('property_id', $id)->get()->first();
+            $property['photos'] = Photo::where('property_id', $id)->get();
+            $property['attachments'] = Attachment::where('property_id', $id)->get();
+            $property['constructionReport'] = ConstructionReport::where('property_id', $id)->get();
+            $contracts = Contract::where('property_id', $id)->get();
+            $Cids = array();
+            foreach ($contracts as $contract) {
+                array_push($Cids, $contract->id);
+            }
+            $invested = 0;
+            $property['stakes'] = Stake::whereIn('contract_id', $Cids)->get();
+            // foreach ($property['stakes'] as $stake) {
+            //     $stake['investments'] = Investment::where('stake_id', $stake->id)->get();
+            //     $invested += $stake->value;
+            // }
+            if (!$property['financialPlan']) {
+                unset($properties[$key]);
+            }
+            $property['expected_return'] = 20;
+            $property['fund_period'] = 18;
+            // $property['invested'] = $invested;
+            // $invested_percent = ($invested / $property['financialPlan']->price) * 100;
+            // $property['invested_percent'] = $invested_percent;
+        }
+
+        return Inertia::render('Properties', [
+            'Properties' => $properties,
+            'savedProprties' => $propsIDs,
+            'locale' => $locale,
+
+        ]);
+    }
+    public function updateProperties(Request $request)
+    {
+        return $request;
+        $user = Auth::user();
         $savedProprties = $user ? InvestorSavedProperty::where('investor_id', $user->id)->get() : array();
         $propsIDs = array();
         foreach ($savedProprties as $savedProprty) {
@@ -245,7 +303,7 @@ class PropertiesController extends Controller
                 $invested += $stake->value;
             }
             $Plan= FinancialPlan::where('property_id', $id)->get()->first();
-            $invested_percent = ($invested / $Plan->price) * 100;
+            // $invested_percent = ($invested / $Plan->price) * 100;
             $properties = Properties::all();
             foreach ($properties as $key => $property) {
                 // $propertyObj=Properties::findOrFail($id);
@@ -275,7 +333,7 @@ class PropertiesController extends Controller
                 $invested = 0;
                 $property['stakes'] = Stake::whereIn('contract_id', $Cids)->get();
                 foreach ($property['stakes'] as $stake) {
-                    $stake['investments'] = Investment::where('stake_id', $stake->id)->get();
+                    $stake['investments'] = Investment::where('contract_id', $stake->id)->get();
                     $invested += $stake->value;
                 }
                 if (!$property['financialPlan']) {
@@ -284,8 +342,8 @@ class PropertiesController extends Controller
                 $property['expected_return'] = 20;
                 $property['fund_period'] = 18;
                 $property['invested'] = $invested;
-                $invested_percent = ($invested / $property['financialPlan']->price) * 100;
-                $property['invested_percent'] = $invested_percent;
+                // $invested_percent = ($invested / $property['financialPlan']->price) * 100;
+                // $property['invested_percent'] = $invested_percent;
             }
         return Inertia::render('Single-Property', [
             'Property' => Properties::findOrFail($id),
@@ -300,7 +358,7 @@ class PropertiesController extends Controller
             'expected_return' => 20,
             'fund_period' => 18,
             'invested'=> $invested,
-            'invested_percent'=> $invested_percent,
+            // 'invested_percent'=> $invested_percent,
             'properties'=> $properties,
             'locale' => $locale,
         ]);
@@ -521,15 +579,15 @@ class PropertiesController extends Controller
         $request->validate([
             'property_id' => 'required|integer',
         ]);
-
+        $user = Auth::user();
         Review::create([
-            "property_id" => $request->id,
-            "author_id" => $request['author_id'],
+            "property_id" => $request->property_id,
+            "author_id" => $user->id,
             "rating" => $request['rating'],
             "message" => $request['message'],
         ]);
 
-        return redirect(route('Single-Property', $request->property_id));
+        return redirect(route('viewproperty', $request->property_id));
     }
     // /**
     //  * Show the form for creating a new resource.
@@ -565,7 +623,7 @@ class PropertiesController extends Controller
             "zip_code" => 'required|integer|digits_between:0,10',
             "longitude" => 'required|integer',
             "latitude" => 'required|integer',
-            "price" => 'required|integer|digits_between:0,10',
+            // "price" => 'required|integer|digits_between:0,10',
             "minimum_investment" => 'required|integer|digits_between:0,10',
             "progress" => 'required|integer|max:100',
             "stakes_limit" => 'required|integer|max:100',

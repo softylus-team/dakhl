@@ -86,7 +86,7 @@ Route::get('/ForgotPassword', function () {//this is the slug
 Route::get('/ResetPassword', function () {//this is the slug
     return Inertia::render('Auth/ResetPassword');//this is the page name
 })->name('ResetPassword');
-Route::get('/investments/{locale?}', function ($locale = 'ar') {//this is the slug
+Route::get('/dashboard/{locale?}', function ($locale = 'ar') {//this is the slug
     $user=Auth::user();
     $outputstakes = array();
         $contracts = Contract::where('investor_id', $user->id)->get();
@@ -142,6 +142,7 @@ Route::get('/user/{id}/{locale?}',[UserController::class, 'view'] )->name('myacc
 Route::post('/updateMyAccount', [UserController::class, 'updateMyAccount'])->middleware(['auth', 'verified'])->name('updateMyAccount');
 
 Route::get('/properties/{locale?}', [PropertiesController::class, 'index'])->name('properties');//->name is a nickname to use it in route() insted of a complex slugs
+Route::post('/updateProperties', [PropertiesController::class, 'updateProperties'])->middleware(['auth', 'verified'])->name('updateProperties');//->name is a nickname to use it in route() insted of a complex slugs
 
 
 Route::get('/property/save/{id}',[PropertiesController::class, 'save'] )->setDefaults(['locale' => 'ar'])->name('saveproperty');//->name is a nickname to use it in route() insted of a complex slugs

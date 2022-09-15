@@ -30,7 +30,9 @@ Route::post('/registerVerifyOTP', [RegisteredUserController::class, 'verify']);
 Route::post('/register', [RegisteredUserController::class, 'ApiRegister']);
 
 Route::post('/login', [AuthenticatedSessionController::class, 'ApiAuth']);
+
 Route::post('/infoUserAPI/{id}', [AuthController::class, 'infouserEP'])->middleware('Sanctum');
+Route::get('/fetchAnswerAPI/{id}', [AuthController::class, 'fetchAnswer'])->middleware('Sanctum');
 
 Route::post('/loginAPI', [AuthController::class, 'create']);
 Route::post('/verifyLoginAPI', [AuthController::class, 'verify']);

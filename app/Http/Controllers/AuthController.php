@@ -116,4 +116,11 @@ class AuthController extends Controller
             'status' => 'Done',
         ]);
     }
+    protected function fetchAnswer(Request $request)
+    {
+
+        $General_questions = General_questions::where('user_id',$request->user_id)->get();
+
+        return $General_questions[0];
+    }
 }

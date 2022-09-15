@@ -11,6 +11,7 @@ use App\Models\bankAccount;
 use App\Models\Review;
 use App\Models\ConstructionReport;
 use App\Models\Photo;
+use App\Models\Wallet;
 use Bavix\Wallet\Models\Transaction;
 use App\Models\TransactionFiltered;
 use Illuminate\Http\Request;
@@ -377,8 +378,9 @@ class UserController extends Controller
 
     public function myInvestmentsEP($id)
     {
-        $propertiesArray=array();
-        // $Properties["Userbalance"]=User::find($id)->get('balance');
+        $balance=Wallet::where("holder_id",$id)->get('balance'); 
+        $propertiesArray["Userbalance"]=$balance[0]->balance;
+        $propertiesArray["investments"]=array();
         $contracts = Contract::where('investor_id', $id)->get();
         foreach ($contracts as $contract) {
             $investment = Investment::where('contract_id', $contract->id)->get();
@@ -408,12 +410,13 @@ class UserController extends Controller
                 $properties['Reminning_days']=0;
             }
             $investment = Investment::where('contract_id', $contract->id)->get();
-            $properties['investments']=$investment;
+            $properties['investments']=$investment[0];
+            $progress_percentage=ConstructionReport::where('property_id', $property->id)->get("progress_percentage")[0]->progress_percentage;
+            $properties['progress_percentage']=$progress_percentage;
             
-            array_push($propertiesArray, $properties); 
+            array_push($propertiesArray["investments"], $properties); 
         }
-
-        }
+    }
         return $propertiesArray;
 
 

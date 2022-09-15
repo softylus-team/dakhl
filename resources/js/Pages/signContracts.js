@@ -225,7 +225,7 @@ export default function signContracts(props) {
                         </div>
                         <hr />
                         
-                        <div className='flex justify-between items-center pointer-events-none'>
+                        <div className='flex justify-between items-center '>
                             <label  className={`w-18rem flex items-center gap-2.5 font-semibold text-lg  py-2 ${data.paymentMethod == 'bankAccount' ? "text-d-blue" : "text-l-gray"}`}>
                                 <Radio
                                     name="paymentMethod"

@@ -23,6 +23,7 @@ export default function Properties(props) {
             menu={props.menu}
             strings={strings}
         >
+            
             <Head title={strings.properties} />
             <Container className={"my-8"}>
                 <h2 className='mb-2 font-semibold text-d-gray text-base'>{strings.home}/<span className='font-semibold text-l-gray text-base'>{strings.properties}</span></h2>

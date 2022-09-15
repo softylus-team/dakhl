@@ -8,6 +8,7 @@ import Select from '@/Components/SelectMui';
 import ValidationErrors from '@/Components/ValidationErrors';
 import { Head, Link, useForm } from '@inertiajs/inertia-react';
 
+
 export default function PropertiesFilterForm({ locale, strings }) {
     function Placeholder({icon,title }) {
         return (
@@ -22,7 +23,9 @@ export default function PropertiesFilterForm({ locale, strings }) {
         minimumPrice: '',
         expectedProfit: '',
         companies: '',
+        location:'',
     });
+
 
     useEffect(() => {
         return () => {
@@ -30,36 +33,40 @@ export default function PropertiesFilterForm({ locale, strings }) {
         };
     }, []);
 
+    
     const onHandleChange = (event) => {
-        setData(event.target.name, event.target.type === 'checkbox' ? event.target.checked : event.target.type === 'file' ? event.target.files : event.target.value);
+        console.log("hhh");
+        setData(event.target.name, event.target.type === 'checkbox' ? event.target.checked : event.target.value);
+
     };
 
     const submit = (e) => {
         e.preventDefault();
-
-        post(route('updateMyAccount'));
+        setData(e.target.name, e.target.type === 'checkbox' ? e.target.checked : e.target.value);
+        setData(location,"ffffffff")
+        post(route('updateProperties'));
     };
     return (
         <div className="">
             <ValidationErrors errors={errors} />
             <form onSubmit={submit} encType="multipart/form-data" className='sm:flex grid grid-cols-3 items-center justify-between sm:gap-6 gap-2.5'>
-                <div className='sm:w-1/6'>
+                {/* <div className='sm:w-1/6'> */}
 
 
                     <Select
                         name="propertyStatus"
                         locale={locale}
                         data={strings.propertyStatuses}
+                        handleChange={onHandleChange}                        
                         placeholder={<Placeholder icon={"/appIcons/property.svg"} title={strings.properties}/>}
                     />
-                </div>
+                {/* </div> */}
                 <div className='sm:w-1/6'>
-
-
                     <Select
                         name="minimumPrice"
                         locale={locale}
-                        data={strings.minimumPrices}
+                        data={strings.minimumPrices}                        
+                        handleChange={onHandleChange}
                         placeholder={<Placeholder icon={"/appIcons/minimumPrice.svg"} title={strings.minimumPrice}/> }
                     />
                 </div>
@@ -69,6 +76,7 @@ export default function PropertiesFilterForm({ locale, strings }) {
                         name="expectedProfit"
                         locale={locale}
                         data={strings.expectedProfits}
+                        handleChange={onHandleChange}
                         placeholder={ <Placeholder icon={"/appIcons/expectedProfit.svg"} title={strings.expectedProfit2}/>}
                     />
                 </div>
@@ -79,6 +87,7 @@ export default function PropertiesFilterForm({ locale, strings }) {
                         name="companies"
                         locale={locale}
                         data={strings.companies}
+                        handleChange={onHandleChange}
                         placeholder={ <Placeholder icon={"/appIcons/companies.svg"} title={strings.company}/> }
                     />
                 </div>
@@ -87,6 +96,7 @@ export default function PropertiesFilterForm({ locale, strings }) {
                         name="location"
                         locale={locale}
                         data={strings.locations}
+                        handleChange={onHandleChange}
                         placeholder={ <Placeholder icon={"/appIcons/locations.svg"} title={strings.location}/> }
                     />
                 </div>
