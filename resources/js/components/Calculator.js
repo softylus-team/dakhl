@@ -31,6 +31,7 @@ export default function Calculator({ locale, strings }) {
 
     const handleSliderChange = (event, newValue) => {
         // setValue(newValue);
+        console.log("dddd");
         setData(event.target.name, newValue);
 
     };

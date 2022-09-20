@@ -55,7 +55,7 @@ export default function singleProperty(props) {
     // route('viewproperty', property.id)
     var Difference_In_Days = Math.round(Difference_In_Time / (1000 * 3600 * 24)).toFixed(0);
     const Address = props.Address;
-    // console.log(Address);
+    console.log(Address);
     const Plan = props.Plan;
     // console.log(Plan);
     const Photos = props.Photos;
@@ -131,6 +131,7 @@ export default function singleProperty(props) {
                 </div>
                 <div className='w-1/3'>
                     <div className='p-4 fav-shadow rounded flex flex-col gap-6'>
+                        
                         <h3 className='text-xl text-d-gray font-bold' style={{ lineHeight: "2rem" }}>{Property.name}</h3>
                         <div className='flex gap-2.5'>
                             <img src="/appIcons/propLocation.svg" className='w-4 h-4' />

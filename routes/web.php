@@ -48,6 +48,7 @@ Route::get('/{locale?}', function ($locale = 'ar') {
         app()->setLocale($locale);
     }
     $Properties=Properties::all();
+    $PropertiesFilter=Properties::all();
     foreach ($Properties as $Property) {
         $Property['Plan'] = FinancialPlan::where('property_id', $Property->id)->get()->first();
         $Property['Photos'] = Photo::where('property_id', $Property->id)->get()->first();
@@ -65,6 +66,7 @@ Route::get('/{locale?}', function ($locale = 'ar') {
         'phpVersion' => PHP_VERSION,
         'locale'=>$locale,
         'Properties' => $Properties,
+        'Properties' => $PropertiesFilter,
         'Reviews' => $reviews,
         'Partners' => our_partners::all(),
         'howWorkCards'=>how_we_work::all(),
@@ -142,7 +144,7 @@ Route::get('/user/{id}/{locale?}',[UserController::class, 'view'] )->name('myacc
 Route::post('/updateMyAccount', [UserController::class, 'updateMyAccount'])->middleware(['auth', 'verified'])->name('updateMyAccount');
 
 Route::get('/properties/{locale?}', [PropertiesController::class, 'index'])->name('properties');//->name is a nickname to use it in route() insted of a complex slugs
-Route::post('/updateProperties', [PropertiesController::class, 'updateProperties'])->middleware(['auth', 'verified'])->name('updateProperties');//->name is a nickname to use it in route() insted of a complex slugs
+// Route::get('/properties1/{locale?}', [PropertiesController::class, 'updateProperties'])->middleware(['auth', 'verified'])->name('updateProperties');//->name is a nickname to use it in route() insted of a complex slugs
 
 
 Route::get('/property/save/{id}',[PropertiesController::class, 'save'] )->setDefaults(['locale' => 'ar'])->name('saveproperty');//->name is a nickname to use it in route() insted of a complex slugs

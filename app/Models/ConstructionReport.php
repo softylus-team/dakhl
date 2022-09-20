@@ -15,4 +15,8 @@ class ConstructionReport extends Model
     protected $table = 'property_construction_report';
     protected $primaryKey = 'id';
     protected $fillable = ["property_id","progress_percentage", "description","created_at","updated_at"];
+    public function scopeFilter(Builder $builder, $request)
+    {
+        return (new PriceFilter($request))->filter($builder);
+    }
 }

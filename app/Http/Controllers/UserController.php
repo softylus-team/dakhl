@@ -24,7 +24,7 @@ use App\Models\InvestorSavedProperty;
 use App\Models\FinancialPlan;
 use App\Notifications\InvoiceTransaction;
 use Illuminate\Support\Facades\DB;
-
+use Illuminate\Pagination\Paginator;
 
 class UserController extends Controller
 {
@@ -468,7 +468,8 @@ class UserController extends Controller
     }
     public function walletOperationsEP(Request $request,$id){
         $user=User::find($id);
-        return TransactionFiltered::filter($request)->where("payable_id",$id)->orderBy('created_at', 'desc')->get();
+        // return $paginator->count();
+        return TransactionFiltered::filter($request)->where("payable_id",$id)->orderBy('created_at', 'desc')->paginate($request->current_page,['*'],'page');
     }
     public function getWallet($locale='ar'){
         $user=Auth::user();
@@ -484,7 +485,7 @@ class UserController extends Controller
         'savedAccounts'=>bankAccount::where('holder_id',$user->id)->get()->count(),
         'bankAccounts'=>bankAccount::where('holder_id',$user->id)->get(),
         'deposites'=>$Deposites,
-        'withdrawals'=>$Withdrawals
+        'withdrawals'=>$Withdrawals 
     ]);
     }
     public function DepositMoney($locale = 'ar') {//this is the slug

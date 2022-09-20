@@ -11,9 +11,13 @@ import PropertiesFilterForm from '@/components/PropertiesFilterForm';
 // import PropertiesCollection from "../components/Properties";
 export default function Properties(props) {
     
+    
     let strings = new LocalizedStrings(stringss);
     strings.setLanguage(props.locale);
     const Properties = props.Properties;
+    const PropertiesFilter = props.PropertiesFilter;
+    const propertyAddress = props.propertyAddress;
+    const progressPercentage = props.progressPercentage;
     return (
         <Guest
             locale={props.locale}
@@ -23,7 +27,7 @@ export default function Properties(props) {
             menu={props.menu}
             strings={strings}
         >
-            
+
             <Head title={strings.properties} />
             <Container className={"my-8"}>
                 <h2 className='mb-2 font-semibold text-d-gray text-base'>{strings.home}/<span className='font-semibold text-l-gray text-base'>{strings.properties}</span></h2>
@@ -35,7 +39,7 @@ export default function Properties(props) {
                     </div>
                     <CalculatorPopup locale={props.locale} strings={strings} triggerBtn={<img className='cursor-pointer' src="/appIcons/calculatorBiger.svg" />}/>
                 </div>
-                <PropertiesFilterForm locale={props.locale} strings={strings}/>
+                <PropertiesFilterForm locale={props.locale} strings={strings} data={PropertiesFilter} dataAddress={propertyAddress} progressPercentage={progressPercentage}/>
             </Container>
             <Container className={"my-8"}>
                 {Properties ? (
