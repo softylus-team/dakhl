@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect,useRef,useState   } from 'react';
 import Button from '@/Components/Button';
 import Checkbox from '@/Components/Checkbox';
 import Guest from '@/Layouts/Guest';
@@ -14,7 +14,7 @@ import LocalizedStrings from 'react-localization';
 export default function LoginVerify(props ) {
     let strings = new LocalizedStrings(stringss);
     strings.setLanguage(props.locale);
-
+    const [disable, setDisable] = React.useState(false);
     const { data, setData, post, processing, errors } = useForm({
         verification_code: '',
         phone: props.phone,
@@ -32,7 +32,56 @@ export default function LoginVerify(props ) {
         post(route('VerifyOTP'));
     };
 
-    
+    const Ref = useRef(null);
+  
+    // The state for our timer
+    const [timer, setTimer] = useState('00:00:00');
+  
+    const getTimeRemaining = (e) => {
+        const total = Date.parse(e) - Date.parse(new Date());
+        const seconds = Math.floor((total / 1000) % 60);
+        const minutes = Math.floor((total / 1000 / 60) % 60);
+        const hours = Math.floor((total / 1000 / 60 / 60) % 24);
+        return {
+            total, hours, minutes, seconds
+        };
+    }
+  
+    const startTimer = (e) => {
+        let { total, hours, minutes, seconds } 
+                    = getTimeRemaining(e);
+        if (total >= 0) {
+            setTimer(
+                (hours > 9 ? hours : '0' + hours) + ':' +
+                (minutes > 9 ? minutes : '0' + minutes) + ':'
+                + (seconds > 9 ? seconds : '0' + seconds)
+            )
+        }
+    }
+  
+    const clearTimer = (e) => {
+        setTimer('00:01:00');
+        if (Ref.current) clearInterval(Ref.current);
+        const id = setInterval(() => {
+            startTimer(e);
+        }, 1000)
+        Ref.current = id;
+    }
+  
+    const getDeadTime = () => {
+        let deadline = new Date();
+        deadline.setSeconds(deadline.getSeconds() + 60);
+        return deadline;
+    }
+    useEffect(() => {
+        clearTimer(getDeadTime());
+    }, []);
+    let button;
+    if (timer!= "00:00:00") {
+        button =  <Link className="mr-1 text-d-gray pointer-events-none" href="#" >{strings.Resend}</Link>;
+      } else {
+        button = <Link className="mr-1 text-d-blue" href={route('LoginOTPResend',{"phone":props.phone})}  disabled={true}>{strings.Resend}</Link> ;
+      }
     return (
         <Guest
             locale={props.locale}
@@ -43,8 +92,6 @@ export default function LoginVerify(props ) {
 
             {props.status && <div className="mb-4 font-medium text-sm text-green-600">{props.status}</div>}
             <Container>
-
-            
             <ValidationErrors errors={errors} />
             <Container className={"header_background_login dir-ltr"}>
                 <div className='sm:w-1/4'>
@@ -70,10 +117,12 @@ export default function LoginVerify(props ) {
                         handleChange={onHandleChange}
                         placeholder="12345"
                     />
-                   <u className='w-32'> <Link className="mr-1 text-d-blue" href={route('LoginOTPResend',{"phone":props.phone})}>{strings.Resend}</Link></u>
+                   <u className='w-32'>{button}</u>
                 </div>
                 </div>
-                <div id="clockdiv"></div>
+                <div className="App">
+                    <h2 className='p-3'>{timer}</h2>
+                </div>
                 <div className="flex items-center justify-center text-center w-full mt-8">
                     <Button className="mt-1 block flex items-center justify-center w-full text-center" processing={processing}>
                     {strings.login}
@@ -84,29 +133,4 @@ export default function LoginVerify(props ) {
         </Guest>
     );
     
-    // 10 minutes from now
-    var time_in_minutes = 1;
-    var current_time = Date.parse(new Date());
-    var deadline = new Date(current_time + time_in_minutes*60*1000);
-    
-    
-    function time_remaining(endtime){
-        var t = Date.parse(endtime) - Date.parse(new Date());
-        var seconds = Math.floor( (t/1000) % 60 );
-        var minutes = Math.floor( (t/1000/60) % 60 );
-        var hours = Math.floor( (t/(1000*60*60)) % 24 );
-        var days = Math.floor( t/(1000*60*60*24) );
-        return {'total':t, 'days':days, 'hours':hours, 'minutes':minutes, 'seconds':seconds};
-    }
-    function run_clock(id,endtime){
-        var clock = document.getElementById(id);
-        function update_clock(){
-            var t = time_remaining(endtime);
-            clock.innerHTML = 'minutes: '+t.minutes+'<br>seconds: '+t.seconds;
-            if(t.total<=0){ clearInterval(timeinterval); }
-        }
-        update_clock(); // run function once at first to avoid delay
-        var timeinterval = setInterval(update_clock,1000);
-    }
-    run_clock('clockdiv',deadline);
 }
