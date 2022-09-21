@@ -167,6 +167,8 @@ class RegisteredUserController extends Controller
         return redirect(route('dashboard'));
     }
 
+
+    // Register API function
     protected function createEP(Request $request)
     {
 

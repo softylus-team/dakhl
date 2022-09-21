@@ -378,31 +378,31 @@ class ContractController extends Controller
             'Investment' => $investment,
         ]);
     }
-    public function liquidize_investmentEP(Request $request)
-    {
-        $request->validate([
-            'investment_id' => 'required|integer',
-            'amount' => 'required|integer',
-        ]);
-        $user = Auth::user();
-        $investment = Investment::find($request->investment_id);
-        $stake = Stake::find($investment->stake_id);
-        $contract = Contract::find($investment->contract_id);
-        $investment->amount = $investment->amount + $request->amount;
-        $stake->value = $stake->value + $request->amount;
-        $property = Properties::find($contract->property_id);
-        $user->withdraw($request->amount, ["property" => $property->name, "type" => "liquidize_investment"]);
-        $investment->save();
-        $stake->save();
-        $tarnsactionData = [
+    // public function liquidize_investmentEP(Request $request)
+    // {
+    //     $request->validate([
+    //         'investment_id' => 'required|integer',
+    //         'amount' => 'required|integer',
+    //     ]);
+    //     $user = Auth::user();
+    //     $investment = Investment::find($request->investment_id);
+    //     $stake = Stake::find($investment->stake_id);
+    //     $contract = Contract::find($investment->contract_id);
+    //     $investment->amount = $investment->amount + $request->amount;
+    //     $stake->value = $stake->value + $request->amount;
+    //     $property = Properties::find($contract->property_id);
+    //     $user->withdraw($request->amount, ["property" => $property->name, "type" => "liquidize_investment"]);
+    //     $investment->save();
+    //     $stake->save();
+    //     $tarnsactionData = [
 
-            'type' => "liquidize_investment",
-            'amount' => $investment->amount,
-            'property' => $property->name,
-        ];
-        $user->notify(new InvoiceTransaction($tarnsactionData));
-        return 'your investment is liquidized successfully';
-    }
+    //         'type' => "liquidize_investment",
+    //         'amount' => $investment->amount,
+    //         'property' => $property->name,
+    //     ];
+    //     $user->notify(new InvoiceTransaction($tarnsactionData));
+    //     return 'your investment is liquidized successfully';
+    // }
     public function update_investment(Request $request)
     {
         $request->validate([

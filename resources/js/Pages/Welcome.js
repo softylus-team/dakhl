@@ -58,11 +58,11 @@ export default function Welcome(props) {
                                     img={property.Photos ? property.Photos.photo_path : "/images/placeholder.png"}
                                     location={property.community_name}
                                     title={property.name}
-                                    price={property.Plan.price}
+                                    // price={property.Plan.price}
                                     period={"0"}
                                     propStatus={property.status}
                                     monthlyEarning={"0"}
-                                    minimumInvest={property.Plan.minimum_investment}
+                                    // minimumInvest={property.Plan.minimum_investment}
                                 />
                             )
                         })}

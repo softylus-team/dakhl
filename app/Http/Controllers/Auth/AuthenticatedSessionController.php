@@ -147,25 +147,26 @@ class AuthenticatedSessionController extends Controller
          * @param  \App\Http\Requests\Auth\LoginRequest  $request
          * @return \Illuminate\Http\RedirectResponse
          */
-    public function ApiAuth(LoginRequest $request)
-    {
-        
-        $request->authenticate();
-        $request->session()->regenerate();
-        $user=$request->user();
-        $user->tokens()->delete();
-        $user->createToken($request->email);
-        $token = DB::table('personal_access_tokens')->where('tokenable_id', $user->id)->first();
-        $user['token'] =$token->token;
-        return $user;
-    }
+    // public function ApiAuth(LoginRequest $request)
+    // {
+    //     $request->authenticate();
+    //     $request->session()->regenerate();
+    //     $user=$request->user();
+    //     $user->tokens()->delete();
+    //     $user->createToken($request->email);
+    //     $token = DB::table('personal_access_tokens')->where('tokenable_id', $user->id)->first();
+    //     $user['token'] =$token->token;
+    //     return $user;
+    // }
+
     public function ApiAuthDestroy(Request $request)
     {
         $bearer = $request->bearerToken();
         if ($token = DB::table('personal_access_tokens')->where('token', $bearer)->first()) {
             // return User::find($token->tokenable_id);
             if ($user = User::find($token->tokenable_id)) {
-                // return $user;
+                $userVerified = tap(User::where('id', $user->id))->update(['isVerified' => false]);
+                // return $user->isVerified;
                 Auth::logout();
                 $request->session()->invalidate();
                 $request->session()->regenerateToken();
@@ -175,7 +176,6 @@ class AuthenticatedSessionController extends Controller
                 ]);
             }
         }
-        
         return response()->json([
             'success' => false,
             'error' => 'Logout failed.',

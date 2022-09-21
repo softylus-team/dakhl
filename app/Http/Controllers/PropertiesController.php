@@ -195,8 +195,8 @@ class PropertiesController extends Controller
         foreach ($properties as $key => $property) {
             $id = $property->id;
             // return $key;
-            $progress_percentage=ConstructionReport::where('property_id', $property->id)->get("progress_percentage")[0]->progress_percentage;
-            // $progress_percentage=ConstructionReport::where('property_id', $property->id)->get("progress_percentage");
+            // $progress_percentage=ConstructionReport::where('property_id', $property->id)->get("progress_percentage")[0]->progress_percentage;
+            $progress_percentage=ConstructionReport::where('property_id', $property->id)->get("progress_percentage");
             // $propertyObj=Properties::findOrFail($id);
             if (in_array($id, $propsIDs)) {
                 $property['saved'] = true;

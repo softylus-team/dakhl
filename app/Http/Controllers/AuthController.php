@@ -19,9 +19,9 @@ class AuthController extends Controller
      * @param  array  $data
      * @return \App\User
      */
+    // login function 
     protected function create(Request $request)
     {
-
         $phoneNumper=DB::select("SELECT * FROM users where phone = $request->phone" );
         if(count($phoneNumper)==0){
             return response()->json([
@@ -41,6 +41,7 @@ class AuthController extends Controller
             'status' => 'watting',
         ]);
     }
+
     protected function verify(Request $request)
     {
         $data = $request->validate([
@@ -73,9 +74,10 @@ class AuthController extends Controller
         return response()->json([
             'status' => 'Invalid OTP',
         ]);
-      
     }
 
+
+    // info User Questions
     protected function infouserEP(Request $request,$id)
     {
         $infoUser =$request->validate([
@@ -116,6 +118,7 @@ class AuthController extends Controller
             'status' => 'Done',
         ]);
     }
+    
     protected function fetchAnswer(Request $request)
     {
 
