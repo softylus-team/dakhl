@@ -1,8 +1,10 @@
 import React from 'react';
 import { Link } from '@inertiajs/inertia-react';
 
-export default function propertyCard({ strings, img, location, title, price, period, propStatus, monthlyEarning, minimumInvest }) {
+export default function propertyCard({id, strings, img, location, title, price, period, propStatus, monthlyEarning, minimumInvest }) {
+
     return (
+        <Link href={route('viewproperty', id)} >
         <div style={{ boxShadow: " 0px -2px 9px rgba(205, 205, 205, 0.25), 1.23281e-15px 7.13px 19.27px rgba(223, 223, 223, 0.4605)" }}>
             <div className='relative px-1 pt-1'>
                 <img className={"w-full h-72 object-cover"} src={img} />
@@ -14,7 +16,7 @@ export default function propertyCard({ strings, img, location, title, price, per
             </div>
             <div className='px-6 py-3'>
 
-                <div className='border-b border-gray flex justify-end'>
+                <div className='border-b border-gray flex '>
                     <div>
                         <p className='text-l-gray font-normal text-lg'>{strings.totalCost}</p>
                         <p className='text-d-blue font-bold text-xl'>{price} SAR</p>
@@ -24,7 +26,7 @@ export default function propertyCard({ strings, img, location, title, price, per
 
                     <div>
                         <p className='text-l-gray font-normal text-lg'>{strings.investPeriod}</p>
-                        <p className='text-d-gray font-bold text-xl'>{period}</p>
+                        <p className='text-d-gray font-bold text-xl'>{period} {strings.month}</p>
                     </div>
                     <div>
                         <p className='text-l-gray font-normal text-lg'>{strings.status}</p>
@@ -34,7 +36,7 @@ export default function propertyCard({ strings, img, location, title, price, per
                 <div className='flex justify-between'>
                     <div>
                         <p className='text-l-gray font-normal text-lg'>{strings.monthlyEarning}</p>
-                        <p className='text-d-gray font-bold text-xl'>{monthlyEarning} SAR</p>
+                        <p className='text-d-gray font-bold text-xl'>{monthlyEarning}% SAR</p>
                     </div>
                     <div>
                         <p className='text-l-gray font-normal text-lg'>{strings.minimumInvest}</p>
@@ -43,5 +45,7 @@ export default function propertyCard({ strings, img, location, title, price, per
                 </div>
             </div>
         </div>
+        </Link>
+
     );
 }

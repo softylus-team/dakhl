@@ -17,7 +17,7 @@ export default function Welcome(props) {
     let strings = new LocalizedStrings(stringss);
     strings.setLanguage(props.locale);
 
-    // console.log(props.Properties);
+    console.log(props.Properties[0]);
 
     return (
         <Guest
@@ -54,15 +54,16 @@ export default function Welcome(props) {
                             return (
                                 <PropertyCard
                                     key={index}
+                                    id={property.id}
                                     strings={strings}
                                     img={property.Photos ? property.Photos.photo_path : "/images/placeholder.png"}
                                     location={property.community_name}
                                     title={property.name}
-                                    // price={property.Plan.price}
-                                    period={"0"}
+                                    price={property.Plan ? property.Plan.price: "20"}
+                                    period={Math.round(property.available_days/30)}
                                     propStatus={property.status}
-                                    monthlyEarning={"0"}
-                                    // minimumInvest={property.Plan.minimum_investment}
+                                    monthlyEarning={"30"}
+                                    minimumInvest={property.stake_amout}
                                 />
                             )
                         })}

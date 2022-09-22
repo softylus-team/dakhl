@@ -74,7 +74,7 @@ export default function property({ strings, locale, property }) {
                     <hr />
                     <div className='pb-4 flex text-center justify-between items-center gap-2.5'>
                         <div>
-                            <p className='text-base text-d-blue font-semibold' style={{ lineHeight: "2rem" }}>{property.financialPlan.minimum_investment} {strings.currency}</p>
+                            <p className='text-base text-d-blue font-semibold' style={{ lineHeight: "2rem" }}>{property.stake_amout} {strings.currency}</p>
                             <p className='text-l-gray text-sm font-normal'>{strings.price}</p>
                         </div>
                         <div>
@@ -89,8 +89,8 @@ export default function property({ strings, locale, property }) {
                     <hr />
                     <div className='py-2'>
                         <div className='flex justify-between items-center'>
-                            <p className='text-l-gray text-sm font-normal'>{property.invested} {strings.currency} {strings.invested}</p>
-                            <p className='text-base text-d-blue font-semibold' style={{ lineHeight: "2rem" }}>%{Math.round(property.invested_percent).toFixed(0)}</p>
+                            <p className='text-l-gray text-sm font-normal'>{property.totalStakesinvestment} {strings.currency} {strings.invested}</p>
+                            <p className='text-base text-d-blue font-semibold' style={{ lineHeight: "2rem" }}>%{property.progress_percentage}</p>
                         </div>
                         <ProgressBar completed={property.invested_percent} bgColor="#02044F" baseBgColor="#B3BFD8" height="3px" isLabelVisible={false} dir={locale == "ar" ? "rtl" : "ltr"} />
 

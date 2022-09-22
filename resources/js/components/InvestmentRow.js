@@ -4,8 +4,9 @@ import ProfitLossChart from '@/components/profitLossChart'
 import Dropdown from '@/Components/Dropdown';
 
 export default function InvestmentRow({ locale, investment, strings }) {
-    var d = new Date(investment.created_at);
+    var d = new Date(investment.created);
     d.setMonth(d.getMonth() + investment.period);
+    // console.log(investment.created);
     return (
         <tr className='fav-shadow rounded bg-white sm:p-6 p-4 sm:table-row flex flex-col my-4' >
             <td className="sm:hidden">
@@ -41,26 +42,26 @@ export default function InvestmentRow({ locale, investment, strings }) {
                 <div>{investment.price} {strings.currency}</div>
             </td>
             <td className="text-lg font-normal text-d-gray sm:table-cell flex items-center sm:border-none border-b">
-                <div className="sm:hidden w-40 text-sm text-l-gray font-normal w-36">{strings.pays}</div>
+                <div className="sm:hidden w-40 text-sm text-l-gray font-normal w-36">{strings.totalPays}</div>
                 <div>{investment.amount} {strings.currency}</div>
             </td>
             <td className="text-lg font-semibold text-d-blue sm:table-cell flex items-center sm:border-none border-b">
-                <div className="sm:hidden w-40 text-sm text-l-gray font-normal w-36">{strings.monthlyProfit}</div>
+                <div className="sm:hidden w-40 text-sm text-l-gray font-normal w-36">{strings.expected_return}</div>
                 <div>30% ({investment.monthlyProfit} {strings.currency})</div>
             </td>
             <td className="sm:w-20 sm:table-cell flex items-center sm:border-none border-b">
                 <div className="sm:hidden w-40 text-sm text-l-gray font-normal w-36">{strings.status}</div>
                 <div>
-                    {investment.state == "1" ? <p className="w-16 text-center text-lg text-d-green bg-l-green">{strings.opened}</p> : <p className="w-16 text-center text-lg text-d-red bg-l-red">{strings.closed}</p>}
+                    {investment.state == "pending" ? <p className="w-16 text-center text-lg text-d-green bg-l-green">{strings.opened}</p> : <p className="w-16 text-center text-lg text-d-red bg-l-red">{strings.closed}</p>}
                 </div>
             </td>
-            <td className="relative sm:table-cell flex items-center sm:border-none border-b">
+            {/* <td className="relative sm:table-cell flex items-center sm:border-none border-b">
                 <div className="sm:hidden w-40 text-sm text-l-gray font-normal w-36">{strings.profitLoss}</div>
                 <div className="relative w-16">
                     <ProfitLossChart profitLoss={investment.profitLoss} />
                     <h4 className='chartInner text-center'>{investment.profitLoss}%</h4>
                 </div>
-            </td>
+            </td> */}
             <td className="sm:table-cell flex items-center">
                 <div className="sm:hidden w-40 text-sm text-l-gray font-normal w-36">{strings.period}</div>
                 <div><p className="text-lg font-semibold text-d-gray">{investment.period} {strings.month}</p>

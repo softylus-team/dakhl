@@ -34,15 +34,7 @@ use App\Http\Controllers\PaymentController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-// Route::get('/', function () {
-//     return Inertia::render('Welcome', [
-//         'canLogin' => Route::has('login'),
-//         'canRegister' => Route::has('register'),
-//         'laravelVersion' => Application::VERSION,
-//         'phpVersion' => PHP_VERSION,
-//     ]);
-// });
+// Home Page 
 Route::get('/{locale?}', function ($locale = 'ar') {
     if (isset($locale) && in_array($locale, config('app.available_locales'))) {
         app()->setLocale($locale);
@@ -66,28 +58,14 @@ Route::get('/{locale?}', function ($locale = 'ar') {
         'phpVersion' => PHP_VERSION,
         'locale'=>$locale,
         'Properties' => $Properties,
-        'Properties' => $PropertiesFilter,
         'Reviews' => $reviews,
         'Partners' => our_partners::all(),
         'howWorkCards'=>how_we_work::all(),
         'aboutusCards'=>about_us::all()
     ]);
 })->name("/");
-// Route::get('/login/{locale?}', function ($locale = 'ar') {
-//     // if (isset($locale) && in_array($locale, config('app.available_locales'))) {
-//     //     app()->setLocale($locale);
-//     // }
-    
-//     return Inertia::render('Login', [
-//         'locale'=>$locale,
-//     ]);
-// })->name("login");
-Route::get('/ForgotPassword', function () {//this is the slug
-    return Inertia::render('Auth/ForgotPassword');//this is the page name
-})->name('ForgotPassword');
-Route::get('/ResetPassword', function () {//this is the slug
-    return Inertia::render('Auth/ResetPassword');//this is the page name
-})->name('ResetPassword');
+
+// Dashboard
 Route::get('/dashboard/{locale?}', function ($locale = 'ar') {//this is the slug
     $user=Auth::user();
     $outputstakes = array();
@@ -96,31 +74,25 @@ Route::get('/dashboard/{locale?}', function ($locale = 'ar') {//this is the slug
             $stakes = Stake::where('contract_id', $contract->id)->get();
             $property=Properties::find($contract->property_id);
             $price = FinancialPlan::where('property_id', $property->id)->get()->first();
-            foreach ($stakes as $stake) {
-                
-
-                $stake["status"] = $contract->contract_status;
-
-                $output = array();
-                $investments = Investment::where('property_id', $property->id)->orderBy('created_at', 'desc')->get();
-                foreach ($investments as $investment) {
-                    array_push($output, [
-                        "id" => $investment->id,
-                        "amount" => $investment->amount,
-                        // "period" => $investment->period,
-                        "property"=>$property->name,
-                        // "price"=>$price->minimum_investment,
-                        "state"=>$stake->state,
-                        "monthlyProfit"=>0,
-                        "profitLoss"=>70,
-                        "created_at" => $investment->created_at,
-                    ]
-                    );
-                }
-                $stake['investments'] = $output;
-
-                array_push($outputstakes, $stake);
+            $investments = Investment::where('contract_id', $contract->id)->orderBy('created_at', 'desc')->get();
+            $output = array();
+            foreach ($investments as $investment) {
+                array_push($output, [
+                    "id" => $investment->id,
+                    "amount" => $investment->amount,
+                    "period" => round($property->available_days/30),
+                    "property"=>$property->name,
+                    "created"=>$property->created_at,
+                    "price"=>$property->stake_amout,
+                    "state"=>$investment->status,
+                    "monthlyProfit"=>0,
+                    "profitLoss"=>70,
+                    "created_at" => $investment->created_at,
+                ]
+                );
             }
+                $stake['investments'] = $output;
+                array_push($outputstakes, $stake);
         }
     return Inertia::render('Dashboard',[
         'locale'=>$locale,
@@ -130,9 +102,16 @@ Route::get('/dashboard/{locale?}', function ($locale = 'ar') {//this is the slug
         'openInvestment'=>0,
         'closedInvestment'=>0,
         'stakes' => $outputstakes,
-
     ]);//this is the page name
 })->setDefaults(['locale' => 'ar'])->middleware(['auth', 'verified'])->name('dashboard');//->name is a nickname to use it in route() insted of a complex slugs
+
+// Properties
+Route::get('/properties/{locale?}', [PropertiesController::class, 'index'])->name('properties');//->name is a nickname to use it in route() insted of a complex slugs
+Route::get('/property/{id}/{locale?}',[PropertiesController::class, 'view'] )->setDefaults(['locale' => 'ar'])->name('viewproperty');//->name is a nickname to use it in route() insted of a complex slugs
+
+
+
+
 // Route::get('/wallets',[UserController::class, 'walletView'] )->middleware(['auth', 'verified'])->name('wallets');//->name is a nickname to use it in route() insted of a complex slugs
 Route::get('/wallet/{locale?}', [UserController::class, 'getWallet'])->setDefaults(['locale' => 'ar'])->middleware(['auth', 'verified'])->name('wallet');
 Route::get('/bookmarks/{locale?}', [PropertiesController::class, 'getBookmarks'])->setDefaults(['locale' => 'ar'])->middleware(['auth', 'verified'])->name('bookmarks');
@@ -143,13 +122,11 @@ Route::get('/user/{id}/update', [UserController::class, 'updateView'])->middlewa
 Route::get('/user/{id}/{locale?}',[UserController::class, 'view'] )->name('myaccount');//->name is a nickname to use it in route() insted of a complex slugs
 Route::post('/updateMyAccount', [UserController::class, 'updateMyAccount'])->middleware(['auth', 'verified'])->name('updateMyAccount');
 
-Route::get('/properties/{locale?}', [PropertiesController::class, 'index'])->name('properties');//->name is a nickname to use it in route() insted of a complex slugs
 // Route::get('/properties1/{locale?}', [PropertiesController::class, 'updateProperties'])->middleware(['auth', 'verified'])->name('updateProperties');//->name is a nickname to use it in route() insted of a complex slugs
 
 
 Route::get('/property/save/{id}',[PropertiesController::class, 'save'] )->setDefaults(['locale' => 'ar'])->name('saveproperty');//->name is a nickname to use it in route() insted of a complex slugs
 Route::get('/property/unsave/{id}',[PropertiesController::class, 'unsave'] )->setDefaults(['locale' => 'ar'])->name('unsaveproperty');//->name is a nickname to use it in route() insted of a complex slugs
-Route::get('/property/{id}/{locale?}',[PropertiesController::class, 'view'] )->setDefaults(['locale' => 'ar'])->name('viewproperty');//->name is a nickname to use it in route() insted of a complex slugs
 
 
 Route::post('/admin/addproperty', [PropertiesController::class, 'store'])->middleware(['auth', 'verified'])->name('addproperty');
@@ -383,6 +360,31 @@ Route::delete('/deleteNotification/{id}', [notificationController::class,'delete
 // return $user->roles;
 // });
 
+
+
+// Route::get('/', function () {
+//     return Inertia::render('Welcome', [
+//         'canLogin' => Route::has('login'),
+//         'canRegister' => Route::has('register'),
+//         'laravelVersion' => Application::VERSION,
+//         'phpVersion' => PHP_VERSION,
+//     ]);
+// });
+// Route::get('/login/{locale?}', function ($locale = 'ar') {
+//     // if (isset($locale) && in_array($locale, config('app.available_locales'))) {
+//     //     app()->setLocale($locale);
+//     // }
+    
+//     return Inertia::render('Login', [
+//         'locale'=>$locale,
+//     ]);
+// })->name("login");
+// Route::get('/ForgotPassword', function () {//this is the slug
+//     return Inertia::render('Auth/ForgotPassword');//this is the page name
+// })->name('ForgotPassword');
+// Route::get('/ResetPassword', function () {//this is the slug
+//     return Inertia::render('Auth/ResetPassword');//this is the page name
+// })->name('ResetPassword');
 Route::get('/user/{id}/pivot',function($id){
     $user=User::find($id);
     foreach ($user->roles as $role) {

@@ -164,7 +164,6 @@ export default function singleProperty(props) {
                             <Button className=" w-full flex justify-center" processing={processing}>
                                 {strings.startInvest}
                             </Button>
-                                            <h1>fff</h1>
 
                         </Link>
                     </div>

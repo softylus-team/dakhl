@@ -174,7 +174,6 @@ class PropertiesController extends Controller
             if($request->location != ''){
                 $location=Address::where('city', $request->location)->get()->first();
                 $properties = Properties::where('id',$location->property_id)->get();
-                // return $location;
             }else if($request->expectedProfitArray != ''){
                 $expectedProfit=ConstructionReport::where('progress_percentage', $request->expectedProfitArray)->get();
                 if (count($expectedProfit) >= 1){
@@ -194,10 +193,8 @@ class PropertiesController extends Controller
         $progressPercentage= array();
         foreach ($properties as $key => $property) {
             $id = $property->id;
-            // return $key;
-            // $progress_percentage=ConstructionReport::where('property_id', $property->id)->get("progress_percentage")[0]->progress_percentage;
             $progress_percentage=ConstructionReport::where('property_id', $property->id)->get("progress_percentage");
-            // $propertyObj=Properties::findOrFail($id);
+            $property['progress_percentage']=$progress_percentage[0]->progress_percentage;
             if (in_array($id, $propsIDs)) {
                 $property['saved'] = true;
             } else {
@@ -205,11 +202,8 @@ class PropertiesController extends Controller
 
             }
             $property['address'] = Address::where('property_id', $id)->get()->first();
-            
              array_push($propertyAddress, $property['address']);
              array_push($progressPercentage, $progress_percentage);
-            // return $propertyAddress;
-
             $property['amenities'] = Amenity::where('property_id', $id)->get();
             $property['reviews'] = Review::where('property_id', $id)->get();
             foreach ($property['reviews'] as $review) {
@@ -226,27 +220,18 @@ class PropertiesController extends Controller
             foreach ($contracts as $contract) {
                 array_push($Cids, $contract->id);
             }
-            
-
             $invested = 0;
             $property['stakes'] = Stake::whereIn('contract_id', $Cids)->get();
-            // foreach ($property['stakes'] as $stake) {
-            //     $stake['investments'] = Investment::where('stake_id', $stake->id)->get();
-            //     $invested += $stake->value;
-            // }
+            $stakesCount=Stake::where('property_id',$id)->count();
+            $property['totalStakesinvestment']=$stakesCount*$property->stake_amout;
             if (!$property['financialPlan']) {
                 unset($properties[$key]);
             }
             $property['expected_return'] = 20;
-            $property['fund_period'] = 18;
-            // $property['invested'] = $invested;
-            // $invested_percent = ($invested / $property['financialPlan']->price) * 100;
-            // $property['invested_percent'] = $invested_percent;
+            $property['fund_period'] =round($property->available_days/30);
+            $property['stake_amout'] =$property->stake_amout;
         }
         $PropertiesFilter = Properties::all();
-
-        // return $progressPercentage;
-
         return Inertia::render('Properties', [
             'Properties' => $properties,
             'PropertiesFilter' => $PropertiesFilter,
@@ -325,6 +310,7 @@ class PropertiesController extends Controller
                 // $invested_percent = ($invested / $property['financialPlan']->price) * 100;
                 // $property['invested_percent'] = $invested_percent;
             }
+            return $Plan;
         return Inertia::render('Single-Property', [
             'Property' => Properties::findOrFail($id),
             'Address' => Address::where('property_id', $id)->get()->first(),

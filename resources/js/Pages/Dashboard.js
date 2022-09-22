@@ -77,10 +77,10 @@ export default function Dashboard(props) {
                                 <tr className={`${props.locale == 'ar' ? "text-right" : "text-left"} hidden sm:table-row`}>
                                     <th className="text-sm text-l-gray font-normal w-56">{strings.investmentName}</th>
                                     <th className="text-sm text-l-gray font-normal w-36">{strings.price}</th>
-                                    <th className="text-sm text-l-gray font-normal w-36">{strings.pays}</th>
-                                    <th className="text-sm text-l-gray font-normal w-36">{strings.monthlyProfit}</th>
+                                    <th className="text-sm text-l-gray font-normal w-36">{strings.totalPays}</th>
+                                    <th className="text-sm text-l-gray font-normal w-36">{strings.expected_return}</th>
                                     <th className="text-sm text-l-gray font-normal w-36">{strings.status}</th>
-                                    <th className="text-sm text-l-gray font-normal w-36">{strings.profitLoss}</th>
+                                    {/* <th className="text-sm text-l-gray font-normal w-36">{strings.profitLoss}</th> */}
                                     <th className="text-sm text-l-gray font-normal">{strings.period}</th>
                                 </tr>
                             </thead>

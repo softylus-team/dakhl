@@ -9,6 +9,6 @@ class Investment extends Model
 {
     use HasFactory;
     protected $table="investments";
-    protected $fillable = ["stake_id","contract_id", "amount","period","property_id"];
+    protected $fillable = ["stake_id","contract_id", "amount","property_id"];
 
 }
