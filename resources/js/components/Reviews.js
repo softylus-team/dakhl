@@ -3,7 +3,7 @@ import Button from '@/Components/Button';
 import Input from '@/Components/Input';
 import Label from '@/Components/Label';
 import Textarea from '@/Components/Textarea';
-import Select from '@/Components/Select';
+import SelectReviews from '@/Components/SelectReviews';
 import ValidationErrors from '@/Components/ValidationErrors';
 import { Head, Link, useForm } from '@inertiajs/inertia-react';
 
@@ -77,7 +77,7 @@ export default function Reviews({ Reviews, strings, auth, locale }) {
 
                         <div className="mt-4">
                             <Label forInput="rating" value={strings.rating} />
-                            <Select
+                            <SelectReviews
                                 name="rating"
                                 value={data.rating}
                                 handleChange={onHandleChange}

@@ -45,26 +45,27 @@ export default function singleProperty(props) {
     }
     // console.log(props.Property.name);
     const Property = props.Property;
+    const Properties = props.properties;
     var date1 = new Date(Property.created_at);
     var date2 = new Date(Property.created_at);
-    date2.setMonth(date2.getMonth() + props.fund_period);
-    // To calculate the time difference of two dates
+    var fund_period= Math.round(Property.available_days/30);
+    date2.setMonth(date2.getMonth() + fund_period);
     var Difference_In_Time = date2.getTime() - date1.getTime();
-
-    // To calculate the no. of days between two dates
-    // route('viewproperty', property.id)
     var Difference_In_Days = Math.round(Difference_In_Time / (1000 * 3600 * 24)).toFixed(0);
     const Address = props.Address;
-    console.log(Address);
+    for(var i=0;i<Properties.length;i++){
+        if(Properties[i].id==Property.id){
+           var id=Property.id;
+           var indexID=i;
+        }
+    }
     const Plan = props.Plan;
-    // console.log(Plan);
     const Photos = props.Photos;
     const Attachments = props.Attachments
     const CReports = props.CReport;
     const Amenities = props.Amenity;
     const Reviews = props.Reviews;
 
-    // console.log(Reviews);
 
     return (
         <Guest
@@ -75,7 +76,6 @@ export default function singleProperty(props) {
             menu={props.menu}
             strings={strings}
         >
-            
             <Head title={Property.name} />
             <Container className={"sm:my-8 my-4"}>
                 <h2 className='hidden sm:block mb-2 font-semibold text-d-gray text-base'>{strings.home}/{strings.properties}/<span className='font-semibold text-l-gray text-base'>{Property.name}</span></h2>
@@ -105,7 +105,7 @@ export default function singleProperty(props) {
 
                     </div>
                     <div className='w-2/3 mx-auto pb-4 flex text-center justify-center items-center gap-6'>
-                        <Details strings={strings} minimum_investment={Plan.minimum_investment} expected_return={props.expected_return} fund_period={props.fund_period} />
+                        <Details strings={strings} Price={Property.stake_amout} expected_return={props.expected_return} fund_period={Math.round(Property.available_days/30)} />
                     </div>
                     <div className='w-5/6 mt-8'>
                         <div className='flex items-center gap-6'>
@@ -145,18 +145,18 @@ export default function singleProperty(props) {
                         <div className=' flex justify-between items-center gap-14'>
                             <div>
                                 <p className='text-l-gray text-base font-semibold' style={{ lineHeight: "2rem" }}>{strings.fundCapital}</p>
-                                <p className='text-d-gray text-base font-bold'>{Plan.price} {strings.currency}</p>
+                                <p className='text-d-gray text-base font-bold'>{Properties[indexID].financialPlan.price} {strings.currency}</p>
                             </div>
 
                             <div>
                                 <p className='text-l-gray text-base font-semibold'>{strings.minimumInvestment}</p>
-                                <p className='text-d-gray text-base font-bold' style={{ lineHeight: "2rem" }}>{Plan.minimum_investment} {strings.currency}</p>
+                                <p className='text-d-gray text-base font-bold' style={{ lineHeight: "2rem" }}>{Property.stake_amout} {strings.currency}</p>
                             </div>
                         </div>
                         <div className=''>
                             <div className='flex justify-between items-center'>
-                                <p className='text-l-gray text-base font-semibold'>{props.invested} {strings.currency} {strings.invested}</p>
-                                <p className='text-base text-d-blue font-semibold' style={{ lineHeight: "2rem" }}>%{Math.round(props.invested_percent).toFixed(0)}</p>
+                                <p className='text-l-gray text-base font-semibold'>{Properties[indexID].totalStakesinvestment} {strings.currency} {strings.invested}</p>
+                                {/* <p className='text-base text-d-blue font-semibold' style={{ lineHeight: "2rem" }}>%{Math.round(props.invested_percent).toFixed(0)}</p> */}
                             </div>
                             <ProgressBar completed={props.invested_percent} bgColor="#02044F" baseBgColor="#B3BFD8" height="3px" isLabelVisible={false} dir={props.locale == "ar" ? "rtl" : "ltr"} />
 

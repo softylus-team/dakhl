@@ -305,12 +305,10 @@ class PropertiesController extends Controller
                     unset($properties[$key]);
                 }
                 $property['expected_return'] = 20;
-                $property['fund_period'] = 18;
                 $property['invested'] = $invested;
-                // $invested_percent = ($invested / $property['financialPlan']->price) * 100;
-                // $property['invested_percent'] = $invested_percent;
+                $stakesCount=Stake::where('property_id',$id)->count();
+                $property['totalStakesinvestment']=$stakesCount*$property->stake_amout;
             }
-            return $Plan;
         return Inertia::render('Single-Property', [
             'Property' => Properties::findOrFail($id),
             'Address' => Address::where('property_id', $id)->get()->first(),
@@ -322,9 +320,7 @@ class PropertiesController extends Controller
             'CReport' => ConstructionReport::where('property_id', $id)->get(),
             'saved' => in_array($id, $propsIDs) ? true : false,
             'expected_return' => 20,
-            'fund_period' => 18,
             'invested'=> $invested,
-            // 'invested_percent'=> $invested_percent,
             'properties'=> $properties,
             'locale' => $locale,
         ]);

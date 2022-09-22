@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { useForm } from '@inertiajs/inertia-react';
-import Select from '@/Components/Select';
+import Select from '@/Components/SelectReviews';
 import SingleReview from '@/Components/singleReviews';
 import ValidationErrors from '@/Components/ValidationErrors';
 import Input from '@/Components/Input';
@@ -66,6 +66,7 @@ export default function ReviewsForm({ strings, locale, Reviews,property_id }) {
                         items={strings.ratings}
                         placeholder={strings.rating}
                         handleChange={onHandleChange}
+                        required
                     />
 
                 </div>
@@ -77,6 +78,7 @@ export default function ReviewsForm({ strings, locale, Reviews,property_id }) {
                         className="mt-1 block w-full"
                         handleChange={onHandleChange}
                         placeholder={strings.addHere}
+                        required
                     />
                 </div>
 
