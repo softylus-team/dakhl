@@ -75,6 +75,7 @@ export default function singleProperty(props) {
             menu={props.menu}
             strings={strings}
         >
+            
             <Head title={Property.name} />
             <Container className={"sm:my-8 my-4"}>
                 <h2 className='hidden sm:block mb-2 font-semibold text-d-gray text-base'>{strings.home}/{strings.properties}/<span className='font-semibold text-l-gray text-base'>{Property.name}</span></h2>

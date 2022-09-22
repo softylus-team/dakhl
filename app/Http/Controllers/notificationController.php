@@ -4,12 +4,13 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Notifications\DatabaseNotification;
+use Illuminate\Pagination\Paginator;
 
 class notificationController extends Controller
 {
-    function get_notifications($id){
+    function get_notifications(Request $request,$id){
         $user = User::find($id);
-        return $user->notifications; 
+        return $user->notifications()->paginate($request->current_page,['*'],'page'); 
     }
     function markAsRead($id){
         $user = User::find($id);

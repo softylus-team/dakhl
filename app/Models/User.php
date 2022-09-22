@@ -14,6 +14,8 @@ use Bavix\Wallet\Interfaces\Wallet;
 use Bavix\Wallet\Interfaces\Product;
 use Questocat\Referral\Traits\UserReferral;
 use App\Traits\ManageUserTransactions;
+use Illuminate\Pagination\Paginator;
+
 class User extends Authenticatable implements Customer 
 {
    
