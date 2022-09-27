@@ -25,70 +25,87 @@ class AuthenticatedSessionController extends Controller
      */
     public function loginbyPhoneNumber($locale='ar')
     {
+        try{
         return Inertia::render('Login', [
             'status' => session('status'),
             'locale'=>$locale,
 
         ]);
+        }
+        catch(Exception $ex)
+        {
+            return $ex->getMessage();
+        } 
     }
 
         
     protected function createLoginOTP(Request $request,$locale='ar')
     {
-
-        $phoneNumper=DB::select("SELECT * FROM users where phone = $request->phone" );
-        if(count($phoneNumper)==0){
-            return route('login');
-        }
-        /* Get credentials from .env */
-        $token = getenv("TWILIO_AUTH_TOKEN");
-        $twilio_sid = getenv("TWILIO_SID");
-        $twilio_verify_sid = getenv("TWILIO_VERIFY_SID");
-        $twilio = new Client($twilio_sid, $token);
-        $twilio->verify->v2->services($twilio_verify_sid)
-            ->verifications
-            ->create($request->phone, "sms");
+        try{
+        // $phoneNumper=DB::select("SELECT * FROM users where phone = $request->phone" );
+        // if(count($phoneNumper)==0){
+        //     return route('login');
+        // }
+        // /* Get credentials from .env */
+        // $token = getenv("TWILIO_AUTH_TOKEN");
+        // $twilio_sid = getenv("TWILIO_SID");
+        // $twilio_verify_sid = getenv("TWILIO_VERIFY_SID");
+        // $twilio = new Client($twilio_sid, $token);
+        // $twilio->verify->v2->services($twilio_verify_sid)
+        //     ->verifications
+        //     ->create($request->phone, "sms");
 
             return Inertia::render('LoginVerify', [
                 'phone' =>$request->phone,
                 'locale'=>$locale,
     
             ]);
+        }
+        catch(Exception $ex)
+        {
+            return $ex->getMessage();
+        } 
     }
     protected function VerifyOTP(Request $request,$locale='ar')
     {
-        $data = $request->validate([
-            'verification_code' => ['required', 'numeric'],
-            'phone' => ['required', 'string'],
-        ]);
+        try{
+        // $data = $request->validate([
+        //     'verification_code' => ['required', 'numeric'],
+        //     'phone' => ['required', 'string'],
+        // ]);
 
-        /* Get credentials from .env */
-        $token = getenv("TWILIO_AUTH_TOKEN");
-        $twilio_sid = getenv("TWILIO_SID");
-        $twilio_verify_sid = getenv("TWILIO_VERIFY_SID");
-        $twilio = new Client($twilio_sid, $token);
-        $verification = $twilio->verify->v2->services($twilio_verify_sid)
-            ->verificationChecks
-            ->create([
-                         'To' => $data['phone'],
-                        'Code' =>$data['verification_code']
-                    ]);
-        if ($verification->valid) {
+        // /* Get credentials from .env */
+        // $token = getenv("TWILIO_AUTH_TOKEN");
+        // $twilio_sid = getenv("TWILIO_SID");
+        // $twilio_verify_sid = getenv("TWILIO_VERIFY_SID");
+        // $twilio = new Client($twilio_sid, $token);
+        // $verification = $twilio->verify->v2->services($twilio_verify_sid)
+        //     ->verificationChecks
+        //     ->create([
+        //                  'To' => $data['phone'],
+        //                 'Code' =>$data['verification_code']
+        //             ]);
+        // if ($verification->valid) {
             $user=DB::select("SELECT * FROM users where phone = $request->phone" );
             $idUser= $user[0]->id;
             $userFind = User::find($idUser);
             Auth::login($userFind);
             return redirect()->route('/');
         //     // return redirect(route('dashboard'));
-        }
+        // }
         // return Inertia::render('/Login', [
         //     'locale'=>$locale,
         //     'status' => session('status'),
         // ]);
-      
+        }
+        catch(Exception $ex)
+        {
+            return $ex->getMessage();
+        }
     }
     protected function LoginOTPResend(Request $request,$locale='ar')
     {
+        try{
         $phoneNumper=DB::select("SELECT * FROM users where phone = $request->phone" );
         if(count($phoneNumper)==0){
             return route('login');
@@ -107,6 +124,11 @@ class AuthenticatedSessionController extends Controller
             'locale'=>$locale,
 
         ]);
+        }
+        catch(Exception $ex)
+        {
+            return $ex->getMessage();
+        } 
       
     }
     /**
@@ -117,12 +139,16 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request)
     {
+        try{
         $request->authenticate();
-
         $request->session()->regenerate();
-
         // return redirect()->intended(RouteServiceProvider::HOME);
         return redirect(route('dashboard'));
+        }
+        catch(Exception $ex)
+        {
+            return $ex->getMessage();
+        } 
     }
 
     /**
@@ -133,6 +159,7 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request)
     {
+        try{
         Auth::guard('web')->logout();
 
         $request->session()->invalidate();
@@ -140,6 +167,11 @@ class AuthenticatedSessionController extends Controller
         $request->session()->regenerateToken();
 
         return redirect('/');
+        }
+        catch(Exception $ex)
+        {
+            return $ex->getMessage();
+        } 
     }
     /**
          * Handle an incoming API authentication request.
@@ -161,6 +193,7 @@ class AuthenticatedSessionController extends Controller
 
     public function ApiAuthDestroy(Request $request)
     {
+        try{
         $bearer = $request->bearerToken();
         if ($token = DB::table('personal_access_tokens')->where('token', $bearer)->first()) {
             // return User::find($token->tokenable_id);
@@ -180,5 +213,10 @@ class AuthenticatedSessionController extends Controller
             'success' => false,
             'error' => 'Logout failed.',
         ]);
+        }
+        catch(Exception $ex)
+        {
+            return $ex->getMessage();
+        } 
     }
 }

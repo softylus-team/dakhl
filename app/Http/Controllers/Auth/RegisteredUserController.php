@@ -23,15 +23,21 @@ class RegisteredUserController extends Controller
      */
     public function create($locale='ar')
     {
+        try{
         return Inertia::render('Auth/Register',[
             'locale'=>$locale,
             'status' => session('status'),
 
         ]);
+        }
+        catch(Exception $ex)
+        {
+            return $ex->getMessage();
+        } 
     }
     protected function createRegisterOTP(Request $request,$locale='ar')
     {
-
+        try{
         // $phoneNumper=DB::select("SELECT * FROM users where phone = $request->phone" );
         // // return $phoneNumper;
         // if(count($phoneNumper)>0){
@@ -49,11 +55,17 @@ class RegisteredUserController extends Controller
                 'phone' =>$request->phone,
                 'locale'=>$locale,
         ]);
+        }
+        catch(Exception $ex)
+        {
+            return $ex->getMessage();
+        }    
+
     }
 
     protected function RegisterVerifyOTP(Request $request,$locale='ar')
     {
-        // return $request;
+        try{
         // $data = $request->validate([
         //     'verification_code' => ['required', 'numeric'],
         //     'phone' => ['required', 'string'],
@@ -83,11 +95,17 @@ class RegisteredUserController extends Controller
         //     'locale'=>$locale,
         //     'status' => session('status'),
         // ]);
+        }
+        catch(Exception $ex)
+        {
+            return $ex->getMessage();
+        } 
       
     }
 
     protected function RegisterOTPResend(Request $request,$locale='ar')
     {
+        try{
         // $phoneNumper=DB::select("SELECT * FROM users where phone = $request->phone" );
         // if(count($phoneNumper)==0){
         //     return route('login');
@@ -105,6 +123,11 @@ class RegisteredUserController extends Controller
                 'phone' =>$request->phone,
                 'locale'=>$locale,
         ]);
+        }
+        catch(Exception $ex)
+        {
+            return $ex->getMessage();
+        } 
       
     }
     /**
@@ -118,7 +141,7 @@ class RegisteredUserController extends Controller
     public function store(Request $request)
     {
         
-        // return $request;
+        try{
         $request->validate([
             // 'first_name' => 'required|string|max:255',
             // 'last_name' => 'required|string|max:255',
@@ -165,13 +188,18 @@ class RegisteredUserController extends Controller
 
         // return redirect(RouteServiceProvider::HOME);
         return redirect(route('dashboard'));
+        }
+        catch(Exception $ex)
+        {
+            return $ex->getMessage();
+        } 
     }
 
 
     // Register API function
     protected function createEP(Request $request)
     {
-
+        try{
         $request->validate([
             'phone' => ['string','required']
         ]);
@@ -195,10 +223,16 @@ class RegisteredUserController extends Controller
         return response()->json([
             'status' => 'phone number is exist',
         ]);
+        }
+        catch(Exception $ex)
+        {
+            return $ex->getMessage();
+        } 
 
     }
     protected function verify(Request $request)
     {
+        try{
         $data = $request->validate([
             'verification_code' => ['required', 'numeric'],
             'phone' => ['required', 'string'],
@@ -222,10 +256,16 @@ class RegisteredUserController extends Controller
         return response()->json([
             'status' => 'Invalid OTP',
         ]);
-      
+        }
+        catch(Exception $ex)
+        {
+            return $ex->getMessage();
+        }    
+
     }
     public function ApiRegister(Request $request)
     {
+        try{
         $request->validate([
             'phone' => ['string'],
             'email' => ['required'],
@@ -251,5 +291,10 @@ class RegisteredUserController extends Controller
         $token = DB::table('personal_access_tokens')->where('tokenable_id', $user->id)->first();
         $user['token'] =$token->token;
         return $user;
+        }
+        catch(Exception $ex)
+        {
+            return $ex->getMessage();
+        }    
     }
 }

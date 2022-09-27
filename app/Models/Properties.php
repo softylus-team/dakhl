@@ -26,7 +26,7 @@ class Properties extends Model implements Product
     protected $dates=['deleted_at'];
     protected $primaryKey = 'id';
     //allow data to be inserted and updated for create and update ELOQUENT methods 
-    protected $fillable = ["name", "type", "bedrooms","status","nighborhood","bulding_name","community_name","description","stakes_limit","available_days"];
+    protected $fillable = ["name", "type", "bedrooms","status","nighborhood","bulding_name","community_name","description","stakes_limit","available_days","risk_level"];
     
     public function canBuy(Customer $customer, int $quantity = 1, bool $force = false): bool
     {

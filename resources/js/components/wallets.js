@@ -15,6 +15,10 @@ export default function Wallets(props) {
         data['investment_id'] = record.id
     };
 
+    console.log(props.stakes);
+    console.log(props.contracts);
+    console.log(props.investments);
+
     const submit = (e) => {
         e.preventDefault();
 
@@ -45,12 +49,12 @@ export default function Wallets(props) {
                             <table className="w-full table-fixed border-collapse border border-gray-400">
                                 <thead>
                                     <tr>
-                                        <th className="text-center border border-gray-300" colspan="4">Investments</th>
+                                        <th className="text-center border border-gray-300" colSpan="3">Investments</th>
                                     </tr>
                                     <tr>
                                         <th className="border border-gray-300">Date</th>
                                         <th className="border border-gray-300">Amount</th>
-                                        <th className="border border-gray-300">Period</th>
+                                        {/* <th className="border border-gray-300">Period</th> */}
                                         <th className="border border-gray-300">Actions</th>
                                     </tr>
                                 </thead>
@@ -82,7 +86,7 @@ export default function Wallets(props) {
                                                     return (<tr key={index}>
                                                         <td className="border border-gray-300">{created_at.toLocaleDateString("en-US")+" "+created_at.toLocaleTimeString('en-US')}</td>
                                                         <td className="border border-gray-300">{investment.amount}</td>
-                                                        <td className="border border-gray-300">{investment.period}</td>
+                                                        {/* <td className="border border-gray-300">{investment.period}</td> */}
                                                         <td className="border border-gray-300">
                                                             <Dropdown>
                                                                 <Dropdown.Trigger>
@@ -120,7 +124,6 @@ export default function Wallets(props) {
                         ) : ""}
                 </tbody>
             </table>
-
         </div>
 
     );

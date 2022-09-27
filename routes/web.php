@@ -139,23 +139,24 @@ Route::post('/addBankAccount', [PaymentController::class, 'addBankAccount'])->na
 Route::get('/properties/{locale?}', [PropertiesController::class, 'index'])->name('properties');//->name is a nickname to use it in route() insted of a complex slugs
 Route::get('/property/{id}/{locale?}',[PropertiesController::class, 'view'] )->setDefaults(['locale' => 'ar'])->name('viewproperty');//->name is a nickname to use it in route() insted of a complex slugs
 Route::get('/property/{id}/invest/{locale?}', [PropertiesController::class, 'invest'])->setDefaults(['locale' => 'ar'])->middleware(['auth', 'verified'])->name('invest');
-Route::get('/property/save/{id}',[PropertiesController::class, 'save'] )->setDefaults(['locale' => 'ar'])->name('saveproperty');//->name is a nickname to use it in route() insted of a complex slugs
+Route::get('/property/save/{id}',[PropertiesController::class, 'save'] )->setDefaults(['locale' => 'ar'])->middleware(['auth', 'verified'])->name('saveproperty');//->name is a nickname to use it in route() insted of a complex slugs
 Route::get('/property/unsave/{id}',[PropertiesController::class, 'unsave'] )->setDefaults(['locale' => 'ar'])->name('unsaveproperty');//->name is a nickname to use it in route() insted of a complex slugs
 
-Route::post('/admin/addproperty', [PropertiesController::class, 'store'])->middleware(['auth', 'verified'])->name('addproperty');
+// Proerties Admin
 Route::get('/admin/add/property/{locale?}',[PropertiesController::class, 'add'] )->middleware(['auth', 'verified'])->name('Add-Property');
+Route::post('/admin/addproperty', [PropertiesController::class, 'store'])->middleware(['auth', 'verified'])->name('addproperty');
 Route::post('/admin/updateproperty', [PropertiesController::class, 'update'])->middleware(['auth', 'verified'])->name('updateproperty');
 Route::get('/admin/property/{id}/update/{locale?}', [PropertiesController::class, 'updateView'])->middleware(['auth', 'verified'])->name('Update-Property');
 Route::post('/admin/deleteproperty', [PropertiesController::class, 'delete'])->middleware(['auth', 'verified'])->name('deleteproperty');
 Route::get('/admin/property/{id}/delete',[PropertiesController::class, 'deleteView'] )->middleware(['auth', 'verified'])->name('Delete-Property');
-
-
 Route::post('/addphotos', [PropertiesController::class, 'addPhotos'])->middleware(['auth', 'verified'])->name('addphotos');
 Route::post('/addattachs', [PropertiesController::class, 'addattachs'])->middleware(['auth', 'verified'])->name('addattachs');
 Route::post('/photodelete', [PropertiesController::class, 'photoDelete'])->middleware(['auth', 'verified'])->name('photodelete');
 Route::post('/amenitydelete', [PropertiesController::class, 'AmenityDelete'])->middleware(['auth', 'verified'])->name('amenitydelete');
 Route::post('/amenityupdate', [PropertiesController::class, 'AmenityUpdate'])->middleware(['auth', 'verified'])->name('amenityupdate');
 Route::post('/amenitysave', [PropertiesController::class, 'AmenitySave'])->middleware(['auth', 'verified'])->name('amenitysave');
+
+
 Route::post('/reviewdelete', [PropertiesController::class, 'ReviewDelete'])->middleware(['auth', 'verified'])->name('reviewdelete');
 Route::post('/reviewupdate', [PropertiesController::class, 'ReviewUpdate'])->middleware(['auth', 'verified'])->name('reviewupdate');
 Route::post('/reviewsave', [PropertiesController::class, 'ReviewSave'])->middleware(['auth', 'verified'])->name('reviewsave');
@@ -176,7 +177,7 @@ Route::put('/pinNotification/{id}', [notificationController::class,'pin_notifica
 Route::put('/unpinNotification/{id}', [notificationController::class,'unpin_notification'])->middleware(['auth', 'verified'])->name('unpin_notification');
 Route::delete('/deleteNotification/{id}', [notificationController::class,'delete_notification'])->middleware(['auth', 'verified'])->name('delete_notification');
 
-// Sections
+// Sections admin
 Route::get('/sections-data/{locale?}', [SectionsController::class, 'index'])->middleware(['auth', 'verified'])->name('Sections-data');
 Route::post('/addPartner', [SectionsController::class, 'addPartner'])->middleware(['auth', 'verified'])->name('addPartner');
 Route::get('/deletePartner/{id}', [SectionsController::class, 'deletePartner'])->middleware(['auth', 'verified'])->name('deletePartner');

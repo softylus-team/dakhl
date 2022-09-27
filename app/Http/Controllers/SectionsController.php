@@ -13,8 +13,10 @@ class SectionsController extends Controller
 {
     public function index($locale='ar')
     {
+        try{
         // $user = Auth::user();
         $reviews=HomepageReview::all();
+        // return $reviews;
         foreach ($reviews as $review) {
             $user=User::find($review->author_id);
             $review["author_photo"]=$user->photo_path;
@@ -27,9 +29,12 @@ class SectionsController extends Controller
             'locale'=>$locale,
 
         ]);
+        }catch(Exception $ex ){
+            return $ex->getMessage();
+        }
     }
     public function addPartner(Request $request){
-
+        try{
         $request->validate([
             'name_en' => 'string|max:255',
             'name_ar' => 'string|max:255',
@@ -62,21 +67,26 @@ class SectionsController extends Controller
             return redirect()->back()->with('success', 'The logo is required');
         }
         
-        
-        
-
-    
+    }catch(Exception $ex ){
+        return $ex->getMessage();
     }
+    }
+
     public function deletePartner($id){
+        try{
         $deleted=our_partners::find($id)->delete();
         if($deleted){
             return redirect()->back()->with('success', 'Deleted successfully');
         }else{
             return redirect()->back()->with('success', 'Something went wrong try again');
         }
+        }catch(Exception $ex ){
+            return $ex->getMessage();
+        }
     }
 
     public function addReview(Request $request){
+        try{
         $request->validate([
             'author_id' => 'integer',
             'rating' => 'string|max:255',
@@ -95,9 +105,12 @@ class SectionsController extends Controller
             }else{
                 return redirect()->back()->with('success', 'Something went wrong try again');
             }
-       
+        }catch(Exception $ex ){
+            return $ex->getMessage();
+        }
     }
     public function approveReview($id){
+        try{
         $review=HomepageReview::find($id);
             if($review){
                 $review->approved=1;
@@ -105,17 +118,25 @@ class SectionsController extends Controller
                 return redirect()->back()->with('success', 'Approved successfully');
             }
                 return redirect()->back()->with('success', 'Something went wrong try again');
+        }catch(Exception $ex ){
+            return $ex->getMessage();
+        }
             
     }
     public function deleteReview($id){
+        try{
         $deleted=HomepageReview::find($id)->delete();
         if($deleted){
             return redirect()->back()->with('success', 'Deleted successfully');
         }else{
             return redirect()->back()->with('success', 'Something went wrong try again');
         }
+    }catch(Exception $ex ){
+        return $ex->getMessage();
+    }
     }
     public function updateAboutus(Request $request){
+        try{
         $id=$request->itemid;
         print_r($request->itemid);
 
@@ -143,12 +164,23 @@ class SectionsController extends Controller
             // return redirect()->back()->with('success', 'Saved successfully');
         }
         // return redirect()->back()->with('success', 'something went wrong');
+    }catch(Exception $ex ){
+        return $ex->getMessage();
+    }
 
     }
     function aboutUs(){
+        try{
         return about_us::all();
+    }catch(Exception $ex ){
+        return $ex->getMessage();
+    }
     }
     function howWeWork(){
+        try{
         return how_we_work::all();
+    }catch(Exception $ex ){
+        return $ex->getMessage();
+    }
     }
 }

@@ -22,6 +22,7 @@ class AuthController extends Controller
     // login function 
     protected function create(Request $request)
     {
+        try{
         $phoneNumper=DB::select("SELECT * FROM users where phone = $request->phone" );
         if(count($phoneNumper)==0){
             return response()->json([
@@ -29,37 +30,43 @@ class AuthController extends Controller
             ]);
         }
         /* Get credentials from .env */
-        $token = getenv("TWILIO_AUTH_TOKEN");
-        $twilio_sid = getenv("TWILIO_SID");
-        $twilio_verify_sid = getenv("TWILIO_VERIFY_SID");
-        $twilio = new Client($twilio_sid, $token);
-        $twilio->verify->v2->services($twilio_verify_sid)
-            ->verifications
-            ->create($request->phone, "sms");
+        // $token = getenv("TWILIO_AUTH_TOKEN");
+        // $twilio_sid = getenv("TWILIO_SID");
+        // $twilio_verify_sid = getenv("TWILIO_VERIFY_SID");
+        // $twilio = new Client($twilio_sid, $token);
+        // $twilio->verify->v2->services($twilio_verify_sid)
+        //     ->verifications
+        //     ->create($request->phone, "sms");
         
         return response()->json([
             'status' => 'watting',
         ]);
     }
+        catch(Exception $ex)
+        {
+            return $ex->getMessage();
+        }    
+    }
 
     protected function verify(Request $request)
     {
+        try{
         $data = $request->validate([
             'verification_code' => ['required', 'numeric'],
             'phone' => ['required', 'string'],
         ]);
-        /* Get credentials from .env */
-        $token = getenv("TWILIO_AUTH_TOKEN");
-        $twilio_sid = getenv("TWILIO_SID");
-        $twilio_verify_sid = getenv("TWILIO_VERIFY_SID");
-        $twilio = new Client($twilio_sid, $token);
-        $verification = $twilio->verify->v2->services($twilio_verify_sid)
-            ->verificationChecks
-            ->create([
-                         'To' => $data['phone'],
-                        'Code' =>$data['verification_code']
-                    ]);
-        if ($verification->valid) {
+        // /* Get credentials from .env */
+        // $token = getenv("TWILIO_AUTH_TOKEN");
+        // $twilio_sid = getenv("TWILIO_SID");
+        // $twilio_verify_sid = getenv("TWILIO_VERIFY_SID");
+        // $twilio = new Client($twilio_sid, $token);
+        // $verification = $twilio->verify->v2->services($twilio_verify_sid)
+        //     ->verificationChecks
+        //     ->create([
+        //                  'To' => $data['phone'],
+        //                 'Code' =>$data['verification_code']
+        //             ]);
+        // if ($verification->valid) {
             $user = tap(User::where('phone', $data['phone']))->update(['isVerified' => true]);
             /* Authenticate user */
             Auth::login($user->first());
@@ -70,16 +77,22 @@ class AuthController extends Controller
             $token = DB::table('personal_access_tokens')->where('tokenable_id', $user->id)->first();
             $user['token'] =$token->token;
             return $user;
+        // }
+        // return response()->json([
+        //     'status' => 'Invalid OTP',
+        // ]);
         }
-        return response()->json([
-            'status' => 'Invalid OTP',
-        ]);
+        catch(Exception $ex)
+        {
+            return $ex->getMessage();
+        }    
     }
 
 
     // info User Questions
     protected function infouserEP(Request $request,$id)
     {
+        try{
         $infoUser =$request->validate([
             'marital_status'=>[  'string'],
             'number_of_family_members'=>[  'numeric'],
@@ -117,13 +130,25 @@ class AuthController extends Controller
         return response()->json([
             'status' => 'Done',
         ]);
+        }
+        catch(Exception $ex)
+        {
+            return $ex->getMessage();
+        }    
+
     }
     
     protected function fetchAnswer(Request $request)
     {
 
+        try{
         $General_questions = General_questions::where('user_id',$request->user_id)->get();
 
         return $General_questions[0];
-    }
+        }
+        catch(Exception $ex)
+        {
+            return $ex->getMessage();
+        }    
+        }
 }

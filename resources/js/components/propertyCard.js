@@ -7,7 +7,7 @@ export default function propertyCard({id, strings, img, location, title, price, 
         <Link href={route('viewproperty', id)} >
         <div style={{ boxShadow: " 0px -2px 9px rgba(205, 205, 205, 0.25), 1.23281e-15px 7.13px 19.27px rgba(223, 223, 223, 0.4605)" }}>
             <div className='relative px-1 pt-1'>
-                <img className={"w-full h-72 object-cover"} src={img} />
+                <img className={"w-full h-72 object-cover"} src={img} alt={title} />
                 <div className='absolute bottom-0 right-0 left-0 flex justify-between bg-white/75 px-6 h-16 items-center '>
                     <p className='text-d-gray font-semibold text-xl'>{location}</p>
                     <p className='text-d-blue  text-xl'>{title}</p>

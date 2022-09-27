@@ -62,6 +62,7 @@ export default function AddBankPopup({ locale, strings, triggerBtn }) {
         post(route('addproperty'));
     };
     return (
+        
         <Popup
             trigger={triggerBtn}
             modal

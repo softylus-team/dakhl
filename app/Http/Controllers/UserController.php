@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Inertia\Inertia;
-use App\Models\HomepageReview;
+// use App\Models\Review;
 use App\Models\InvestorSavedProperty;
 use App\Models\FinancialPlan;
 use App\Notifications\InvoiceTransaction;
@@ -29,21 +29,30 @@ use Illuminate\Pagination\Paginator;
 class UserController extends Controller
 {
     public function allUsersEP()
-    {$users = User::all();
+    {
+        try{
+        $users = User::all();
         foreach($users as $user){
             $user['balance'] = $user->balance;
         }
         return $users;
-        
+        }catch(Exception $ex ){
+            return $ex->getMessage();
+        }
     }
     public function index()
     {
+        try{
         return Inertia::render('users-list', [
             'Users' => User::all(),
         ]);
+    }catch(Exception $ex ){
+        return $ex->getMessage();
+    }
     }
     public function singleUserEP($id)
     {
+        try{
         $user = User::findOrFail($id);
         $user['balance'] = $user->balance;
 
@@ -77,10 +86,14 @@ class UserController extends Controller
         $user['savedProerties']= InvestorSavedProperty::where('investor_id', $user->id)->get();
 
         return $user;
+        }catch(Exception $ex ){
+            return $ex->getMessage();
+        }
 
     }
     public function updateUserEP(Request $request,$id)
     {
+        try{
         // $request->validate([
         //     'first_name' => 'string|max:255',
         //     'last_name' => 'string|max:255',
@@ -115,34 +128,43 @@ class UserController extends Controller
         
 
         return response()->json("success", 422);
+        }catch(Exception $ex ){
+            return $ex->getMessage();
+        }
     }
     
     public function view($id,$locale='ar')
     {
+        try{
         $outputstakes = array();
+        $outputinvestments = array();
         $contracts = Contract::where('investor_id', $id)->get();
+        // return $contracts;
         foreach ($contracts as $contract) {
             $stakes = Stake::where('contract_id', $contract->id)->get();
+            // return $stakes;
+            $investments = Investment::where('contract_id',$contract->id)->get();
 
             foreach ($stakes as $stake) {
                 $stake["property"] =Properties::find($contract->property_id)->name;
                 $stake["status"] = $contract->contract_status;
 
                 $output = array();
-                $investments = Investment::where('stake_id', $stake->id)->get();
-                foreach ($investments as $investment) {
-                    array_push($output, [
-                        "id" => $investment->id,
-                        "amount" => $investment->amount,
-                        "period" => $investment->period,
-                        "created_at" => $investment->created_at,
-                    ]
-                    );
-                }
-                $stake['investments'] = $output;
+                // foreach ($investments as $investment) {
+                //     array_push($output, [
+                //         "id" => $investment->id,
+                //         "amount" => $investment->amount,
+                //         "period" => $investment->period,
+                //         "created_at" => $investment->created_at,
+                //     ]
+                //     );
+                // }
+                $stake['investments'] = $investments;
 
                 array_push($outputstakes, $stake);
             }
+
+
         }
         
         $user = User::findOrFail($id);
@@ -151,7 +173,7 @@ class UserController extends Controller
         foreach ($SavedProperties as $SavedProperty) {
            array_push( $properties_ids , $SavedProperty->property_id);
         }
-        $reviews=HomepageReview::where('author_id', $id)->get();
+        $reviews=Review::where('author_id', $id)->get();
         foreach ($reviews as $review) {
             $user=User::find($review->author_id);
             $review["author_photo"]=$user->photo_path;
@@ -164,10 +186,19 @@ class UserController extends Controller
             'Properties'=>Properties::whereIn("id",$properties_ids)->get(),
             'Reviews'=> $reviews,
             'locale'=>$locale,
+            'contracts'=>$contracts,
+
         ]);
+        }catch(Exception $ex ){
+            return $ex->getMessage();
+        }
     }
+
+
+
     public function updateMyAccount(Request $request)
     {
+        try{
         $request->validate([
             'first_name' => 'string|max:255',
             'last_name' => 'string|max:255',
@@ -211,10 +242,17 @@ class UserController extends Controller
         $User->save();
 
         return redirect()->back()->with('success', 'Your account details updated successfully');
+        }catch(Exception $ex ){
+            return $ex->getMessage();
+        }
     }
     public function create()
     {
+        try{
         return Inertia::render('Auth/Register');
+        }catch(Exception $ex ){
+            return $ex->getMessage();
+        }
     }
 
     /**
@@ -227,6 +265,7 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+        try{
         $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
@@ -268,15 +307,23 @@ class UserController extends Controller
         // Auth::login($user);
 
         // return redirect(RouteServiceProvider::HOME);
+        }catch(Exception $ex ){
+            return $ex->getMessage();
+        }
     }
     public function updateView($id)
     { //this is the slug
+        try{
         return Inertia::render('Update-User', [
             'user' => User::findOrFail($id),
         ]);
+        }catch(Exception $ex ){
+            return $ex->getMessage();
+        }
     }
     public function update(Request $request)
     {
+        try{
         $request->validate([
             'first_name' => 'string|max:255',
             'last_name' => 'string|max:255',
@@ -321,6 +368,9 @@ class UserController extends Controller
         $User->save();
 
         return redirect(route('users'));
+        }catch(Exception $ex ){
+            return $ex->getMessage();
+        }
     }
 
     // public function walletView() {
@@ -334,24 +384,33 @@ class UserController extends Controller
     // }
     public function deposit($amount)
     {
+        try{
         $user = Auth::user();
         $user->deposit($amount);
         // $user->hasWallet('my-wallet');
         return Inertia::render('wallets', [
             'user_balance' => $user->balance,
         ]);
+        }catch(Exception $ex ){
+            return $ex->getMessage();
+        }
     }
     public function withdraw($amount)
     {
+        try{
         $user = Auth::user();
         $user->withdraw($amount);
         // $user->hasWallet('my-wallet');
         return Inertia::render('wallets', [
             'user_balance' => $user->balance,
         ]);
+        }catch(Exception $ex ){
+            return $ex->getMessage();
+        }
     }
     public function walletDepositEP(Request $request)
     {
+        try{
         $user = User::findOrFail($request->user_id);
         $user->deposit($request->amount,["type"=>"user_deposit","description" =>$request->description]);
         $tarnsactionData=[
@@ -362,9 +421,13 @@ class UserController extends Controller
         ];
         $user->notify(new InvoiceTransaction($tarnsactionData));
         return $user;
+        }catch(Exception $ex ){
+            return $ex->getMessage();
+        }
     }
     public function walletWithdrawalEP(Request $request)
     {
+        try{
         $user = User::findOrFail($request->user_id);
         $user->withdraw($request->amount,["type"=>"user_withdraw","description" =>$request->description]);
         $tarnsactionData=[
@@ -374,10 +437,14 @@ class UserController extends Controller
         ];
         $user->notify(new InvoiceTransaction($tarnsactionData));
         return $user;
+        }catch(Exception $ex ){
+            return $ex->getMessage();
+        }
     }
 
     public function myInvestmentsEP($id)
     {
+        try{
         $balance=Wallet::where("holder_id",$id)->get('balance'); 
         $propertiesArray["Userbalance"]=$balance[0]->balance;
         $propertiesArray["investments"]=array();
@@ -465,13 +532,21 @@ class UserController extends Controller
         //     'closedInvestments' =>0,
         //     'stakes' => $outputstakes
         // ];
+        }catch(Exception $ex ){
+            return $ex->getMessage();
+        }
     }
     public function walletOperationsEP(Request $request,$id){
+        try{
         $user=User::find($id);
         // return $paginator->count();
         return TransactionFiltered::filter($request)->where("payable_id",$id)->orderBy('created_at', 'desc')->paginate($request->current_page,['*'],'page');
+        }catch(Exception $ex ){
+            return $ex->getMessage();
+        }
     }
     public function getWallet($locale='ar'){
+        try{
         $user=Auth::user();
     $Deposites=Transaction::where("payable_id",$user->id)->where("type","deposit")->orderBy('created_at', 'desc')->get();
     $Withdrawals=Transaction::where("payable_id",$user->id)->where("type","withdraw")->orderBy('created_at', 'desc')->get();
@@ -487,23 +562,34 @@ class UserController extends Controller
         'deposites'=>$Deposites,
         'withdrawals'=>$Withdrawals 
     ]);
+    }catch(Exception $ex ){
+        return $ex->getMessage();
+    }
     }
     public function DepositMoney($locale = 'ar') {//this is the slug
+        try{
         $user=Auth::user();
         
         return Inertia::render('DepositMoney',[
             'locale'=>$locale,
             'bankAccounts'=>bankAccount::where('holder_id',$user->id)->get(),
         ]);//this is the page name
+        }catch(Exception $ex ){
+            return $ex->getMessage();
+        }
     }
 
     public function withdrawMoney($locale = 'ar') {//this is the slug
+        try{
         $user=Auth::user();
         
         return Inertia::render('withdrawMoney',[
             'locale'=>$locale,
             'bankAccounts'=>bankAccount::where('holder_id',$user->id)->get(),
         ]);//this is the page name
+        }catch(Exception $ex ){
+            return $ex->getMessage();
+        }
     }
     
 }

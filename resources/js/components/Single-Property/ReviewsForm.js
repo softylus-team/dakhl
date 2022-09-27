@@ -91,6 +91,7 @@ export default function ReviewsForm({ strings, locale, Reviews,property_id }) {
                     handleChange={onHandleChange}
                     required
                 />
+                
                 <div className="flex items-center justify-end mt-4">
                     <Button className="w-1/2 flex justify-center" processing={processing} name="save">
                         {strings.submit}

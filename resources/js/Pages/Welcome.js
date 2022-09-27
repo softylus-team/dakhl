@@ -17,8 +17,6 @@ export default function Welcome(props) {
     let strings = new LocalizedStrings(stringss);
     strings.setLanguage(props.locale);
 
-    console.log(props.Properties[0]);
-
     return (
         <Guest
             locale={props.locale}
@@ -129,8 +127,8 @@ export default function Welcome(props) {
                     <h1 className='flex sm:text-3xl text-xl text-d-gray font-bold'>{strings.startInvest}</h1>
                     <h3 className='flex align-self-sm-center'>{strings.The_application_is_now_available}</h3>
                 <div className=' sm:flex flex-row gap-2.5'>
-                    <img className="w-40 h-47" src="/appIcons/google_play.svg"  />
-                    <img className="w-40 h-47" src="/appIcons/app_store.svg" />
+                    <img className="w-40 h-47" src="/appIcons/google_play.svg" alt='google_play' />
+                    <img className="w-40 h-47" src="/appIcons/app_store.svg" alt='app_store' />
                 </div>
                 </div>
                 
@@ -194,7 +192,7 @@ export default function Welcome(props) {
                         }
                         }
                         className={'mr-10 rounded text-center fav-border'}
-                        slides={props.Partners.map(function (partner, index) { return (<img key={index} src={partner.logo} className={"mx-auto object-contain rounded"} style={{ width: "170px", height: "112px" }} />) })}
+                        slides={props.Partners.map(function (partner, index) { return (<img key={index} src={partner.logo} className={"mx-auto object-contain rounded"} style={{ width: "170px", height: "112px" }} alt={index} />) })}
                     />
                 }
             </Container>

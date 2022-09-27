@@ -72,6 +72,7 @@ class PropertiesController extends Controller
 
     public function invest($id, $locale = 'ar')
     {
+        try{
         $user = Auth::user();
         $property = Properties::findOrFail($id);
         $savedProprties = $user ? InvestorSavedProperty::where('investor_id', $user->id)->get() : array();
@@ -124,12 +125,16 @@ class PropertiesController extends Controller
             'bankAccounts'=>$user? bankAccount::where("holder_id",$user->id)->get() :null,
             'locale' => $locale,
         ]);
+    }catch(Exception $ex ){
+        return $ex->getMessage();
+    }
 
     }
 
 
     public function singlePropertyEP($id)
     {
+        try{
         $propertyObj = Properties::findOrFail($id);
         $propertyObj['address'] = Address::where('property_id', $id)->get()->first();
         $propertyObj['amenities'] = Amenity::where('property_id', $id)->get();
@@ -158,12 +163,15 @@ class PropertiesController extends Controller
         // $propertyObj['invested'] = $invested;
         // $invested_percent = ($invested / $propertyObj['financialPlan']->price) * 100;
         return $propertyObj;
+        }catch(Exception $ex ){
+            return $ex->getMessage();
+        }
     }
 
     
     public function index(Request $request,$locale = 'ar')
     {
-
+        try{
         $user = Auth::user();
         $savedProprties = $user ? InvestorSavedProperty::where('investor_id', $user->id)->get() : array();
         $propsIDs = array();
@@ -240,11 +248,15 @@ class PropertiesController extends Controller
             'savedProprties' => $propsIDs,
             'locale' => $locale,
         ]);
+    }catch(Exception $ex ){
+        return $ex->getMessage();
+    }
     }
 
 
     public function view($id, $locale = 'ar')
     {
+        try{
         $user = Auth::user();
         $reviews = Review::where('property_id', $id)->get();
         foreach ($reviews as $review) {
@@ -324,24 +336,35 @@ class PropertiesController extends Controller
             'properties'=> $properties,
             'locale' => $locale,
         ]);
+    }catch(Exception $ex ){
+        return $ex->getMessage();
+    }
     }
 
     public function savePropertyEP(Request $request)
     {
+        try{
         $save = InvestorSavedProperty::create([
             "property_id" => $request->property_id,
             "investor_id" => $request->investor_id,
         ]);
         return $save;
+    }catch(Exception $ex ){
+        return $ex->getMessage();
+    }
 
     }
     public function unsavePropertyEP($proprerty_id, $user_id)
     {
+        try{
         return InvestorSavedProperty::where("property_id", $proprerty_id)->where("investor_id", $user_id)->first()->delete();
-
+    }catch(Exception $ex ){
+        return $ex->getMessage();
+    }
     }
     public function save($id)
     {
+        try{
         $user = Auth::user();
         InvestorSavedProperty::create([
             "property_id" => $id,
@@ -349,23 +372,35 @@ class PropertiesController extends Controller
         ]);
         // return Redirect::to(URL::previous() . $id);
         return redirect()->back()->with('success', 'Property saved!!');
-
+    }catch(Exception $ex ){
+        return $ex->getMessage();
+    }
     }
     public function unsave($id)
     {
-        $user = Auth::user();
+        return "ddd";
+        try{
+            $user = Auth::user();
+            return $id;
         InvestorSavedProperty::where("property_id", $id)->where("investor_id", $user->id)->first()->delete();
         return redirect()->back()->with('success', 'Property deleted from saved properties!!');
-
+    }catch(Exception $ex ){
+        return $ex->getMessage();
+    }
     }
     public function add($locale = 'ar')
     { //this is the slug
+        try{
         return Inertia::render('Add-Property', [
             'locale' => $locale,
         ]);
+    }catch(Exception $ex ){
+        return $ex->getMessage();
+    }
     }
     public function updateView($id,$locale)
     { //this is the slug
+        try{
         $reviews = Review::where('property_id', $id)->get();
         foreach ($reviews as $review) {
             $user = User::find($review->author_id);
@@ -381,17 +416,24 @@ class PropertiesController extends Controller
             'Amenity' => Amenity::where('property_id', $id)->get(),
             'Reviews' => $reviews,
             'locale' => $locale,
-           
         ]);
+    }catch(Exception $ex ){
+        return $ex->getMessage();
+    }
     }
     public function deleteView($id)
     { //this is the slug
+        try{
         return Inertia::render('Delete-Property', [
             'Property' => Properties::findOrFail($id),
         ]);
+    }catch(Exception $ex ){
+        return $ex->getMessage();
+    }
     }
     public function addPhotos(Request $request)
     { //this is the slug
+        try{
         $files = $request->file('picture');
         // print_r($files);
         foreach ($files as $key => $pictures) {
@@ -409,12 +451,15 @@ class PropertiesController extends Controller
             }
 
         }
-
-        // return $Property->id;
         return redirect(route('viewproperty', $request->id));
+    }catch(Exception $ex ){
+        return $ex->getMessage();
     }
+    }
+
     public function photoDelete(Request $request)
     {
+        try{
         $request->validate([
             'id' => 'required|integer',
             'picid' => 'required|integer',
@@ -422,9 +467,14 @@ class PropertiesController extends Controller
         $Photos = Photo::find($request->picid);
         $Photos->delete();
         return redirect(route('viewproperty', $request->id));
+    }catch(Exception $ex ){
+        return $ex->getMessage();
     }
+    }
+
     public function addattachs(Request $request)
     { //this is the slug
+        try{
         $attach = $request->file('attach');
         // print_r($files);
         if ($attach) {
@@ -447,9 +497,14 @@ class PropertiesController extends Controller
 
         // return $Property->id;
         return redirect(route('viewproperty', $request->id));
+    }catch(Exception $ex ){
+        return $ex->getMessage();
     }
+    }
+
     public function attachDelete(Request $request)
     {
+        try{
         $request->validate([
             'id' => 'required|integer',
             'attachid' => 'required|integer',
@@ -457,9 +512,14 @@ class PropertiesController extends Controller
         $attach = Photo::find($request->attachid);
         $attach->delete();
         return redirect(route('viewproperty', $request->id));
+    }catch(Exception $ex ){
+        return $ex->getMessage();
     }
+    }
+
     public function AmenityDelete(Request $request)
     {
+        try{
         $request->validate([
             'id' => 'required|integer',
             'amenity_id' => 'required|integer',
@@ -467,9 +527,14 @@ class PropertiesController extends Controller
         $Amenity = Amenity::find($request->amenity_id);
         $Amenity->delete();
         return redirect(route('Update-Property', $request->id));
+    }catch(Exception $ex ){
+        return $ex->getMessage();
     }
+    }
+
     public function AmenityUpdate(Request $request)
     {
+        try{
         $request->validate([
             'id' => 'required|integer',
             'amenity_id' => 'required|integer',
@@ -488,9 +553,14 @@ class PropertiesController extends Controller
         //    print_r($update);
 
         return redirect(route('Update-Property', $request->id));
+    }catch(Exception $ex ){
+        return $ex->getMessage();
     }
+    }
+
     public function AmenitySave(Request $request)
     {
+        try{
         $request->validate([
             'id' => 'required|integer',
             'amenity_suffix' => 'required|string',
@@ -504,9 +574,13 @@ class PropertiesController extends Controller
         ]);
 
         return redirect(route('Update-Property', $request->id));
+    }catch(Exception $ex ){
+        return $ex->getMessage();
+    }
     }
     public function ReviewDelete(Request $request)
     {
+        try{
         $request->validate([
             'property_id' => 'required|integer',
             'review_id' => 'required|integer',
@@ -514,9 +588,14 @@ class PropertiesController extends Controller
         $Review = Review::find($request->review_id);
         $Review->delete();
         return redirect(route('Single-Property', $request->property_id));
+    }catch(Exception $ex ){
+        return $ex->getMessage();
     }
+    }
+
     public function ReviewUpdate(Request $request)
     {
+        try{
         $request->validate([
             'id' => 'required|integer',
             'review_id' => 'required|integer',
@@ -535,21 +614,27 @@ class PropertiesController extends Controller
         //    print_r($update);
 
         return redirect(route('Update-Property', $request->id));
+        }catch(Exception $ex ){
+            return $ex->getMessage();
+        }
     }
     public function ReviewSave(Request $request)
     {
-        $request->validate([
-            'property_id' => 'required|integer',
-        ]);
-        $user = Auth::user();
-        Review::create([
-            "property_id" => $request->property_id,
-            "author_id" => $user->id,
-            "rating" => $request['rating'],
-            "message" => $request['message'],
-        ]);
-
+        try{
+            $request->validate([
+                'property_id' => 'required|integer',
+            ]);
+            $user = Auth::user();
+            Review::create([
+                "property_id" => $request->property_id,
+                "author_id" => $user->id,
+                "rating" => $request['rating'],
+                "message" => $request['message'],
+            ]);
         return redirect(route('viewproperty', $request->property_id));
+    }catch(Exception $ex ){
+        return $ex->getMessage();
+    }
     }
     // /**
     //  * Show the form for creating a new resource.
@@ -569,6 +654,7 @@ class PropertiesController extends Controller
      */
     public function store(Request $request)
     {
+        try{
         $request->validate([
             'name' => 'required|string|max:255',
             'type' => 'required|string|max:255',
@@ -585,13 +671,15 @@ class PropertiesController extends Controller
             "zip_code" => 'required|integer|digits_between:0,10',
             "longitude" => 'required|integer',
             "latitude" => 'required|integer',
-            // "price" => 'required|integer|digits_between:0,10',
+            "price" => 'required|integer|digits_between:0,10',
             "minimum_investment" => 'required|integer|digits_between:0,10',
             "progress" => 'required|integer|max:100',
-            "stakes_limit" => 'required|integer|max:100',
+            "stakes_limit" => 'required|integer',
             "available_days" => 'required|integer',
             "report_description" => 'required|string|max:255',
+            "risk_level" => 'required|string|max:255',
         ]);
+        // return $request;
 
         $Property = Properties::create([
             'name' => $request->name,
@@ -604,8 +692,10 @@ class PropertiesController extends Controller
             'description' => $request->description,
             'stakes_limit' => $request->stakes_limit,
             'available_days' => $request->available_days,
+            'risk_level'=>$request->risk_level,
 
         ]);
+
         Address::create([
             "property_id" => $Property->id,
             "country" => $request->country,
@@ -677,9 +767,13 @@ class PropertiesController extends Controller
         }
         // return $Property->id;
         return redirect(route('properties'));
+        }catch(Exception $ex ){
+            return $ex->getMessage();
+        }
     }
     public function update(Request $request)
     {
+        try{
         $request->validate([
             'id' => 'required|integer',
             'name' => 'required|string|max:255',
@@ -755,18 +849,26 @@ class PropertiesController extends Controller
         }
 
         return redirect(route('properties'));
+        }catch(Exception $ex ){
+            return $ex->getMessage();
+        }
     }
     public function delete(Request $request)
     {
+        try{
         $request->validate([
             'id' => 'required|integer',
         ]);
         $Property = Properties::find($request->id);
         $Property->delete();
         return redirect(route('properties'));
+        }catch(Exception $ex ){
+            return $ex->getMessage();
+        }
     }
     public function AddConstructionReport(Request $request)
     {
+        try{
         $request->validate([
             'property_id' => 'required|integer',
             "progress" => 'required|integer|max:100',
@@ -780,9 +882,13 @@ class PropertiesController extends Controller
         ]);
         // return $Property->id;
         return redirect(route('properties'));
+        }catch(Exception $ex ){
+            return $ex->getMessage();
+        }
     }
     public function getBookmarks($locale = 'ar')
     {
+        try{
         $user = Auth::user();
         $savedProprties = InvestorSavedProperty::where('investor_id', $user->id)->get();
         $propsIDs = array();
@@ -835,5 +941,8 @@ class PropertiesController extends Controller
             'locale' => $locale,
             'properties' => $properties,
         ]);
+        }catch(Exception $ex ){
+            return $ex->getMessage();
+        }
     }
 }

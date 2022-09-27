@@ -3,7 +3,7 @@ import Button from '@/Components/Button';
 import Authenticated from '@/Layouts/Authenticated';
 import Input from '@/Components/Input';
 import Textarea from '@/Components/Textarea';
-import Select from '@/Components/Select';
+import Select from '@/Components/SelectReviews';
 import Label from '@/Components/Label';
 import ValidationErrors from '@/Components/ValidationErrors';
 import { Head, Link, useForm } from '@inertiajs/inertia-react';
@@ -30,6 +30,7 @@ export default function UpdateProperty(props) {
         id: props.Property.id,
         name: props.Property.name,
         type: props.Property.type,
+        risk_level: props.Property.risk_level,
         bedrooms: props.Property.bedrooms,
         status: props.Property.status,
         nighborhood: props.Property.nighborhood,
@@ -111,7 +112,7 @@ export default function UpdateProperty(props) {
         return result;
     }
     const Amenity = () => {
-var iddsfs=getRandomString(5);
+        var iddsfs=getRandomString(5);
         formobject['amenity_suffix'] = iddsfs;
         formobject[`amenity_name${iddsfs}`] = '';
         formobject[`amenity_type${iddsfs}`] = '';
@@ -197,7 +198,6 @@ var iddsfs=getRandomString(5);
     const onAddBtnClick = event => {
         setInputList(AmenityList.concat(<Amenity key={AmenityList.length + Amenities.length + 1} />));
         data['amenitylist'] = AmenityList.length + Amenities.length + 1;
-        // console.log(data);
     };
  
 //     const [ReviewList, setReviewList] = useState([]);
@@ -419,7 +419,20 @@ var iddsfs=getRandomString(5);
                             required
                         />
                     </div>
+                    <div className="mt-4">
+                        <Label forInput="risk_level" value="Risk Level" />
 
+                        <Input
+                            type="text"
+                            name="risk_level"
+                            value={data.risk_level}
+                            className="mt-1 block w-full"
+                            autoComplete="risk_level"
+                            isFocused={true}
+                            handleChange={onHandleChange}
+                            required
+                        />
+                    </div>
                     <div className="mt-4">
                         <Label forInput="type" value="Type" />
                         <Select

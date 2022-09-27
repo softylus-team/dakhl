@@ -2,7 +2,8 @@ import React, { useEffect } from 'react';
 import Button from '@/Components/Button';
 import Authenticated from '@/Layouts/Authenticated';
 import Input from '@/Components/Input';
-
+import stringss from "../../strings";
+// import LocalizedStrings from 'react-localization';
 import ValidationErrors from '@/Components/ValidationErrors';
 import { Head, Link, useForm } from '@inertiajs/inertia-react';
 
@@ -27,15 +28,19 @@ export default function UpdateProperty(props) {
 
         post(route('deleteproperty'));
     };
-
+    // let strings = new LocalizedStrings(stringss);
+    // strings.setLanguage(props.locale);
     return (
         <Authenticated
         auth={props.auth}
         errors={props.errors}
         header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Delete Propery: {data.name}</h2>}
+        menu={props.menu}
+        strings={stringss}
     >
+
+    <div className="max-w-6xl mx-auto mt-6 mb-6 sm:px-6 lg:px-8">
             <Head title="Delete Property" />
-            <div className="max-w-6xl mx-auto mt-6 mb-6 sm:px-6 lg:px-8">
             <ValidationErrors errors={errors} />
           
             <form onSubmit={submit}>

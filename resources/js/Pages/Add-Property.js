@@ -4,7 +4,8 @@ import Button from '@/Components/Button';
 import Authenticated from '@/Layouts/Authenticated';
 import Input from '@/Components/Input';
 import Textarea from '@/Components/Textarea';
-import Select from '@/Components/Select';
+// import Select from '@/Components/Select';
+import Select from '@/Components/SelectReviews';
 import CountrySelect from '@/Components/country-state-city-select';
 import Label from '@/Components/Label';
 import ValidationErrors from '@/Components/ValidationErrors';
@@ -52,6 +53,7 @@ export default function AddProperty(props) {
         // reviewlist: '',
         progress:'',
         report_description:'',
+        risk_level:'',
     });
     const onHandleChange = (event) => {
         setData(event.target.name, event.target.type === 'file' ? event.target.files : event.target.value);
@@ -191,6 +193,7 @@ export default function AddProperty(props) {
             menu={props.menu}
             strings={strings}
             >
+                
             <Head title="Add Property" />
             <div className="max-w-6xl mx-auto mt-6 mb-6 sm:px-6 lg:px-8">
                 <ValidationErrors errors={errors} />
@@ -470,6 +473,20 @@ export default function AddProperty(props) {
                             className="mt-1 block w-full"
                             handleChange={onHandleChange}
                             
+                        />
+                    </div>
+                    <div>
+                        <Label forInput="risk_level" value="Risk level" />
+
+                        <Input
+                            type="text"
+                            name="risk_level"
+                            value={data.risk_level}
+                            className="mt-1 block w-full"
+                            autoComplete="name"
+                            isFocused={true}
+                            handleChange={onHandleChange}
+                            required
                         />
                     </div>
                     <h3 className='font-bold'>Amenities</h3>

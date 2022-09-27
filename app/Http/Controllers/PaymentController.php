@@ -18,6 +18,7 @@ class PaymentController extends  Controller
 {
     public function prepareCheckoutEP(Request $request)
     {
+        try{
         $request->validate([
             'user_id' => 'required|integer',
             'amount' => 'required|integer',
@@ -86,9 +87,13 @@ class PaymentController extends  Controller
         //             'locale' => 'ar',
         //             'redirect'=>Arr::get($transactionData, 'redirect')
         //         ]);
+        }catch(Exception $ex ){
+            return $ex->getMessage();
+        }
     }
     public function prepareCheckout(Request $request)
     {
+        try{
         $request->validate([
             'paymentMethod' => 'required|string',
             'amount' => 'required|integer',
@@ -165,9 +170,13 @@ class PaymentController extends  Controller
             $redirect= Arr::get($transactionData, 'redirect');
             
     }
+        }catch(Exception $ex ){
+            return $ex->getMessage();
+        }
     }
     public function paymentStatus(Request $request)
     {
+        try{
         $resourcePath = $request->get('resourcePath');
         $checkout_id = $request->get('id');
         $LaravelHyperpay= new LaravelHyperpay( new GuzzleClient );
@@ -192,18 +201,25 @@ class PaymentController extends  Controller
             'status'=>$tran["status"],
             // 'status'=>200
         ]);
+        }catch(Exception $ex ){
+            return $ex->getMessage();
+        }
     }
     public function paymentStatusEP(Request $request)
     {
+        try{
         $resourcePath = $request->get('resourcePath');
         $checkout_id = $request->get('id');
         $LaravelHyperpay= new LaravelHyperpay( new GuzzleClient );
         // return $LaravelHyperpay->paymentStatus($resourcePath, $checkout_id);
         $data=(array)$LaravelHyperpay->paymentStatus($resourcePath, $checkout_id);
         return $data["exception"]==null?$data["original"]:$data["exception"];
-        
+        }catch(Exception $ex ){
+            return $ex->getMessage();
+        }
     }
     public function addBankAccount(Request $request){
+        try{
         $request->validate([
             'full_name' => 'required|string',
             'bank_name' => 'required|string',
@@ -224,25 +240,37 @@ class PaymentController extends  Controller
             "account_number" => $request->acc_number,
         ]);
         return redirect()->back()->with('success', 'saved successfully');
+        }catch(Exception $ex ){
+            return $ex->getMessage();
+        }
     }
     public function bankAccountActivate($id){
+        try{
         $account=bankAccount::find($id);
         $account->active=1;
         $account->save();
         return redirect()->back()->with('success', 'saved successfully');
-
+        }catch(Exception $ex ){
+            return $ex->getMessage();
+        }
     }
     public function bankAccountDeactivate($id){
+        try{
         $account=bankAccount::find($id);
         $account->active=0;
         $account->save();
         return redirect()->back()->with('success', 'saved successfully');
-
+        }catch(Exception $ex ){
+            return $ex->getMessage();
+        }
     }
     public function bankAccountDelete($id){
+        try{
         $account=bankAccount::find($id);
         $account->delete();
         return redirect()->back()->with('success', 'saved successfully');
-
+    }catch(Exception $ex ){
+        return $ex->getMessage();
+    }
     }
 } 

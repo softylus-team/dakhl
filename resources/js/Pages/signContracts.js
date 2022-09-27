@@ -34,7 +34,7 @@ export default function signContracts(props) {
     let strings = new LocalizedStrings(stringss);
     strings.setLanguage(props.locale);
     const Property = props.Property;
-    console.log(Property);
+    // console.log(Property);
     const { data, setData, post, processing, errors, reset } = useForm({
         investValue: 0,
         card: '',

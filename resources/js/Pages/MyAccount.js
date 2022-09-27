@@ -24,7 +24,7 @@ export default function MyAccount(props) {
             errors={props.errors}
             header={strings.wallet}
             menu={props.menu}
-            strings={strings}
+            strings={stringss}
         >
             <Head title="My Account" />
             <div className="max-w-6xl mx-auto mt-6 mb-6 sm:px-6 lg:px-8">
@@ -44,7 +44,7 @@ export default function MyAccount(props) {
                         <AccountDetails auth={props.auth} locale={props.locale} strings={strings} errors={props.errors} />
                     </TabPanel>
                     <TabPanel>
-                        <Wallet user_balance={props.user_balance} stakes={props.stakes} errors={props.errors} />
+                        <Wallet user_balance={props.user_balance} stakes={props.stakes} errors={props.errors} contracts={props.contracts}  investments={props.investments}/>
                     </TabPanel>
                     <TabPanel>
                         <SavedProperties Properties={props.Properties} errors={props.errors} />

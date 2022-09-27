@@ -167,7 +167,7 @@ export default function AccountDetails({ auth, locale, strings }) {
                 </div>
 
 
-                <div className="my-4">
+                {/* <div className="my-4">
                     <Label forInput="password" value={strings.password} />
 
                     <Input
@@ -192,7 +192,7 @@ export default function AccountDetails({ auth, locale, strings }) {
                         handleChange={onHandleChange}
 
                     />
-                </div>
+                </div> */}
                 <div className="flex items-center justify-center mt-4">
                     <Button className="sm:w-1/2 my-4 flex justify-center" processing={processing}>
                         {strings.save}

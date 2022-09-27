@@ -127,6 +127,7 @@ class ContractController extends Controller
 
     public function add_stake(Request $request, $locale = "ar")
     {
+        try{
         $request->validate([
             'user_id' => 'required|integer',
             'property_id' => 'required|integer',
@@ -223,10 +224,14 @@ class ContractController extends Controller
         // } else {
         //     return redirect()->back()->with('success', 'your balance is not enough');
         // }
+        }catch(Exception $ex ){
+            return $ex->getMessage();
+        }
 
     }
     public function confirmPayment(Request $request, $property_id)
     {
+        try{
         $resourcePath = $request->get('resourcePath');
         $checkout_id = $request->get('id');
         $property = Properties::find($property_id);
@@ -267,6 +272,9 @@ class ContractController extends Controller
             'data' => $data["exception"] == null ? $data["original"] : $data["exception"],
             'status' => $tran["status"],
         ]);
+        }catch(Exception $ex ){
+            return $ex->getMessage();
+        }
     }
     // public function add_investmentEP(Request $request)
     // {
@@ -313,6 +321,7 @@ class ContractController extends Controller
  
     public function delete_investment_view($id, $locale = "ar")
     {
+        try{
         $investment = Investment::find($id);
         $contract = Contract::find($investment->contract_id);
         return Inertia::render('Delete-investment', [
@@ -320,9 +329,13 @@ class ContractController extends Controller
             'Investment' => $investment,
             'locale' => $locale,
         ]);
+        }catch(Exception $ex ){
+            return $ex->getMessage();
+        }
     }
     public function delete_investment(Request $request)
     {
+        try{
         // $user = Auth::user();
         $investment = Investment::find($request->investment_id);
         $contract = Contract::find($investment->contract_id);
@@ -344,9 +357,13 @@ class ContractController extends Controller
         ];
         $user->notify(new InvoiceTransaction($tarnsactionData));
         return redirect(route("myaccount", $user->id))->with('success', 'your investment is deleted successfully');
+        }catch(Exception $ex ){
+            return $ex->getMessage();
+        }
     }
     public function delete_investmentEP($investment_id)
     {
+        try{
         // $user = Auth::user();
         $investment = Investment::find($investment_id);
         $contract = Contract::find($investment->contract_id);
@@ -368,15 +385,22 @@ class ContractController extends Controller
         ];
         $user->notify(new InvoiceTransaction($tarnsactionData));
         return 'your investment is deleted successfully';
+        }catch(Exception $ex ){
+            return $ex->getMessage();
+        }
     }
     public function liquidize($id)
     {
+        try{
         $investment = Investment::find($id);
         $contract = Contract::find($investment->contract_id);
         return Inertia::render('liquidize', [
             'Property' => Properties::find($contract->property_id),
             'Investment' => $investment,
         ]);
+        }catch(Exception $ex ){
+            return $ex->getMessage();
+        }
     }
     // public function liquidize_investmentEP(Request $request)
     // {
@@ -405,6 +429,7 @@ class ContractController extends Controller
     // }
     public function update_investment(Request $request)
     {
+        try{
         $request->validate([
             'investment_id' => 'required|integer',
             'amount' => 'required|integer',
@@ -427,10 +452,17 @@ class ContractController extends Controller
         ];
         $user->notify(new InvoiceTransaction($tarnsactionData));
         return redirect(route("myaccount", $user->id))->with('success', 'your investment is liquidized successfully');
+        }catch(Exception $ex ){
+            return $ex->getMessage();
+        }
     }
     public function export()
     {
+        try{
         return new InvestmentsExport();
         // return Excel::download(new InvestmentsExport, 'investments.xlsx');
+        }catch(Exception $ex ){
+            return $ex->getMessage();
+        }
     }
 }
