@@ -65,7 +65,7 @@ export default function singleProperty(props) {
     const CReports = props.CReport;
     const Amenities = props.Amenity;
     const Reviews = props.Reviews;
-
+console.log(Property);
 
     return (
         <Guest
@@ -92,9 +92,9 @@ export default function singleProperty(props) {
                         <div className={`flex items-center gap-6 absolute top-1 left-0`}>
                             <Options />
                             {props.saved ?
+                                // <Link href={route('viewproperty',Property.id)} >
                                 <Link href={route('unsaveproperty', Property.id)} >
                                     <img className='w-14 h-14' src="/appIcons/savedProp.svg" />
-
                                 </Link> :
                                 <Link href={route('saveproperty', Property.id)} >
                                     <img className='w-14 h-14' src="/appIcons/unsavedProp.svg" />
@@ -184,12 +184,12 @@ export default function singleProperty(props) {
                                 <p className='text-l-gray text-sm'>{strings.noAttachments}</p>
                             }
                         </div>
-                        <hr className='my-4' />
+                        {/* <hr className='my-4' />
                         <div className='flex items-center gap-6'>
                             <img className="w-6 h-6" src="/appIcons/reviews.svg" />
                             <p className='text-d-gray font-bold text-lg '>{strings.reviews}</p>
-                        </div>
-                        <ReviewsForm property_id={props.Property.id} strings={strings} locale={props.locale} Reviews={Reviews}/>
+                        </div> */}
+                        {/* <ReviewsForm property_id={props.Property.id} strings={strings} locale={props.locale} Reviews={Reviews}/> */}
                     </div>
                 </div>
             </Container>

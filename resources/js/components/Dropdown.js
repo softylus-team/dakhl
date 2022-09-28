@@ -77,8 +77,8 @@ const Content = ({ align = 'right', width = '48', contentClasses = 'py-1 bg-whit
         </>
     );
 };
-
 const DropdownLink = ({ href, method = 'post', as = 'a', children,className }) => {
+    console.log(href);
     return (
         <Link
             href={href}

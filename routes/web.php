@@ -105,6 +105,52 @@ Route::get('/dashboard/{locale?}', function ($locale = 'ar') {//this is the slug
     ]);//this is the page name
 })->setDefaults(['locale' => 'ar'])->middleware(['auth', 'verified'])->name('dashboard');//->name is a nickname to use it in route() insted of a complex slugs
 
+
+
+
+
+// Dashboard Admin
+Route::get('/dashboardAdmin/{locale?}', function ($locale = 'ar') {//this is the slug
+    $user=Auth::user();
+    $allProperties=FinancialPlan::all();
+    // return $allProperties;
+    $totalPrice=0;
+    foreach($allProperties as $property){
+        $totalPrice=$totalPrice+$property->price;
+    }
+    $users=User::where("role","!=","admin")->get();
+
+    $openProperty=Properties::where("status","available")->get();
+    $closedProperty=Properties::where("status","!=","available")->get();
+
+    $openInvestment=Investment::all();
+    // $openInvestment=Investment::where("status","!=","approval")->get();
+    // $totalPrice= round ($totalPrice, -5);
+    // $totalPrice=$totalPrice/10000;
+    // return $totalPrice;
+    return Inertia::render('DashboardAdmin',[
+        'locale'=>$locale,
+        'balance'=>$totalPrice,
+        'totalPays'=>0,
+        'monthlyReturn'=>0,
+        'openProperty'=>count($openProperty),
+        'closedProperty'=>count($closedProperty),
+        'numberOpenInvestment'=>count($openInvestment),
+        'TotalUsers'=>count($users),
+    ]);//this is the page name
+})->setDefaults(['locale' => 'ar'])->middleware(['auth', 'verified'])->name('dashboardAdmin');//->name is a nickname to use it in route() insted of a complex slugs
+Route::get('/allUsers/{locale?}', [UserController::class, 'allUsers'])->name('allUsers');//->name is a nickname to use it in route() insted of a complex slugs
+Route::get('/deleteUser/{id}', [UserController::class, 'deleteUser'])->name('deleteUser');
+Route::get('/disableUser/{id}', [UserController::class, 'disableUser'])->name('disableUser');
+
+
+
+
+
+
+
+
+
 Route::get('/wallet/{locale?}', [UserController::class, 'getWallet'])->setDefaults(['locale' => 'ar'])->middleware(['auth', 'verified'])->name('wallet');
 Route::get('/DepositMoney/{locale?}',[UserController::class, 'DepositMoney'] )->setDefaults(['locale' => 'ar'])->middleware(['auth', 'verified'])->name('DepositMoney');//->name is a nickname to use it in route() insted of a complex slugs
 Route::get('/withdrawMoney/{locale?}',[UserController::class, 'withdrawMoney'] )->setDefaults(['locale' => 'ar'])->middleware(['auth', 'verified'])->name('withdrawMoney');//->name is a nickname to use it in route() insted of a complex slugs
@@ -139,8 +185,8 @@ Route::post('/addBankAccount', [PaymentController::class, 'addBankAccount'])->na
 Route::get('/properties/{locale?}', [PropertiesController::class, 'index'])->name('properties');//->name is a nickname to use it in route() insted of a complex slugs
 Route::get('/property/{id}/{locale?}',[PropertiesController::class, 'view'] )->setDefaults(['locale' => 'ar'])->name('viewproperty');//->name is a nickname to use it in route() insted of a complex slugs
 Route::get('/property/{id}/invest/{locale?}', [PropertiesController::class, 'invest'])->setDefaults(['locale' => 'ar'])->middleware(['auth', 'verified'])->name('invest');
-Route::get('/property/save/{id}',[PropertiesController::class, 'save'] )->setDefaults(['locale' => 'ar'])->middleware(['auth', 'verified'])->name('saveproperty');//->name is a nickname to use it in route() insted of a complex slugs
-Route::get('/property/unsave/{id}',[PropertiesController::class, 'unsave'] )->setDefaults(['locale' => 'ar'])->name('unsaveproperty');//->name is a nickname to use it in route() insted of a complex slugs
+Route::get('/property/save/{id}/{locale?}',[PropertiesController::class, 'save'] )->setDefaults(['locale' => 'ar'])->middleware(['auth', 'verified'])->name('saveproperty');//->name is a nickname to use it in route() insted of a complex slugs
+Route::get('/property/unsave/{id}/{locale?}',[PropertiesController::class, 'unsave'] )->setDefaults(['locale' => 'ar'])->name('unsaveproperty');//->name is a nickname to use it in route() insted of a complex slugs
 
 // Proerties Admin
 Route::get('/admin/add/property/{locale?}',[PropertiesController::class, 'add'] )->middleware(['auth', 'verified'])->name('Add-Property');

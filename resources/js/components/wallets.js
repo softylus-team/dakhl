@@ -15,9 +15,9 @@ export default function Wallets(props) {
         data['investment_id'] = record.id
     };
 
-    console.log(props.stakes);
-    console.log(props.contracts);
-    console.log(props.investments);
+    // console.log(props.stakes);
+    // console.log(props.contracts);
+    // console.log(props.investments);
 
     const submit = (e) => {
         e.preventDefault();

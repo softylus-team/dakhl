@@ -44,6 +44,7 @@ export default function Properties(props) {
             <Container className={"my-8"}>
                 {Properties ? (
                     <>
+                    
                         <Pagination
                             dataContainerClasses="grid sm:grid-cols-3 grid-cols-1 gap-6"
                             data={Properties}

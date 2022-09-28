@@ -38,7 +38,7 @@ export default function MyAccount(props) {
                         <Tab>Account details</Tab>
                         <Tab>My balance</Tab>
                         <Tab>Saved properties</Tab>
-                        <Tab>My Review</Tab>
+                        {/* <Tab>My Review</Tab> */}
                     </TabList>
                     <TabPanel>
                         <AccountDetails auth={props.auth} locale={props.locale} strings={strings} errors={props.errors} />
@@ -49,9 +49,9 @@ export default function MyAccount(props) {
                     <TabPanel>
                         <SavedProperties Properties={props.Properties} errors={props.errors} />
                     </TabPanel>
-                    <TabPanel>
+                    {/* <TabPanel>
                         <Reviews auth={props.auth} locale={props.locale} strings={strings} Reviews={props.Reviews} errors={props.errors} />
-                    </TabPanel>
+                    </TabPanel> */}
                 </Tabs>
             </div>
         </Authenticated>

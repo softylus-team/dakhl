@@ -378,10 +378,8 @@ class PropertiesController extends Controller
     }
     public function unsave($id)
     {
-        return "ddd";
         try{
             $user = Auth::user();
-            return $id;
         InvestorSavedProperty::where("property_id", $id)->where("investor_id", $user->id)->first()->delete();
         return redirect()->back()->with('success', 'Property deleted from saved properties!!');
     }catch(Exception $ex ){

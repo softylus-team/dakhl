@@ -19,7 +19,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Inertia\Inertia;
-// use App\Models\Review;
 use App\Models\InvestorSavedProperty;
 use App\Models\FinancialPlan;
 use App\Notifications\InvoiceTransaction;
@@ -28,6 +27,26 @@ use Illuminate\Pagination\Paginator;
 
 class UserController extends Controller
 {
+    public function allUsers($locale='ar')
+    {
+        try{
+        $users = User::all();
+        // return $users;
+        return Inertia::render('users-list', [
+            'Users' => $users,
+            'locale'=>$locale,
+
+        ]);
+        return $users;
+        foreach($users as $user){
+            $user['balance'] = $user->balance;
+        }
+        return $users;
+        }catch(Exception $ex ){
+            return $ex->getMessage();
+        }
+    }
+
     public function allUsersEP()
     {
         try{
@@ -255,6 +274,23 @@ class UserController extends Controller
         }
     }
 
+    public function deleteUser($id){
+        try{
+            $user = User::where('id', $id)->get();
+            $user->each->delete();
+            return redirect()->back()->with('success', 'User is deleted successfully');
+        }catch(Exception $ex ){
+            return $ex->getMessage();
+        }
+    }
+    public function disableUser($id){
+        try{
+            $user = User::where('id', $id)->update(['isVerified_login' => "0"]);
+            return redirect()->back()->with('success', 'User is disable successfully');
+        }catch(Exception $ex ){
+            return $ex->getMessage();
+        }
+    }
     /**
      * Handle an incoming registration request.
      *

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Inertia\Middleware;
 use App\Models\ProfileMenu;
 use App\Models\SideMenu;
+use App\Models\SideMenuAdmin;
 use App\Models\User;
 class HandleInertiaRequests extends Middleware
 {
@@ -49,7 +50,8 @@ class HandleInertiaRequests extends Middleware
             },
             'menu' => [
                 'profile' => ProfileMenu::all(),
-                'side'=>SideMenu::all()
+                'side'=>SideMenu::all(),
+                'sideAdmin'=>SideMenuAdmin::all()
             ],
         ]);
     }

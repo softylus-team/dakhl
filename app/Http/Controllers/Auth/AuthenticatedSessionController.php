@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use Twilio\Rest\Client;
 use Illuminate\Http\RedirectResponse;
-
+// use App\Http\Controllers\Auth\alert;
 
 
 class AuthenticatedSessionController extends Controller
@@ -89,14 +89,18 @@ class AuthenticatedSessionController extends Controller
             $user=DB::select("SELECT * FROM users where phone = $request->phone" );
             $idUser= $user[0]->id;
             $userFind = User::find($idUser);
-            Auth::login($userFind);
-            return redirect()->route('/');
-        //     // return redirect(route('dashboard'));
-        // }
-        // return Inertia::render('/Login', [
-        //     'locale'=>$locale,
-        //     'status' => session('status'),
-        // ]);
+            if($userFind->role=="admin"){
+                Auth::login($userFind);
+                return redirect()->route('dashboardAdmin');
+            }else if($userFind->isVerified_login==1)
+            {
+                Auth::login($userFind);
+                return redirect()->route('/');
+            }else {
+                $message = "Please contact with admin your account is disable";
+                echo "<script type='text/javascript'>alert('$message');</script>";
+                return redirect()->route('/');
+            }
         }
         catch(Exception $ex)
         {

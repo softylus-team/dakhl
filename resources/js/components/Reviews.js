@@ -24,8 +24,8 @@ export default function Reviews({ Reviews, strings, auth, locale }) {
 
         post(route('addReview'));
     };
-    console.log(Reviews);
-    console.log(Reviews);
+    // console.log(Reviews);
+    // console.log(Reviews);
     return (
         <div className="max-w-6xl mx-auto mt-6 mb-6 sm:px-6 lg:px-8">
             <ValidationErrors errors={errors} />

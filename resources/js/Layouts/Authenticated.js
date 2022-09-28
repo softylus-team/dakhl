@@ -16,6 +16,7 @@ export default function Authenticated({ auth, header, children, locale, menu, st
         if (notify[index].read_at == null) unRead = true;
     });
     // console.log(notify);
+    console.log(auth.user.role);
     return (<>
         <div className={`min-h-screen flex ${locale == 'ar' ? "rtl" : "ltr"}`} style={{ backgroundColor: "#F8FCFC", direction: `${locale == 'ar' ? "rtl" : "ltr"}` }}>
             <div className="bg-white hidden sm:block w-1/6" >
@@ -26,17 +27,45 @@ export default function Authenticated({ auth, header, children, locale, menu, st
                 </div>
 
                 <div className="hidden space-x-8 sm:-my-px sm:flex flex-col">
-                    {menu.side.map(function (item, index) {
-                        let url = item.url.replace("/", "");
-                        url === "" ? url = "/" : url = item.url.replace("/", "");
-                        return (
-                            <NavLink key={index} href={`${item.url}/${locale}`} icon={item.icon} text={locale == 'ar' ? item.text_ar : item.text_en} active={route().current(url)} />
+                    {auth.user.role=="admin" ?  ( <div className="hidden space-x-8 sm:-my-px sm:flex flex-col">
+                            {menu.sideAdmin.map(function (item, index) {
+                            let url = item.url.replace("/", "");
+                            url === "" ? url = "/" : url = item.url.replace("/", "");
+                            return (
+                                <NavLink key={index} href={`${item.url}/${locale}`} icon={item.icon} text={locale == 'ar' ? item.text_ar : item.text_en} active={route().current(url)} />
+                                
+                                )
+                            })}
+                              <hr />
+                                <ResponsiveNavLink href={route('logout')} method="post" as="button">
 
-                        )
-                    })}
-                    <hr />
-                    <NavLink href={`/settings/${locale}`} active={route().current('settings')} icon="/appIcons/setting.svg" text={strings.settings} />
-                    <NavLink href={"#"} active={route().current('help')} icon="/appIcons/help.svg" text={strings.help} />
+                                <div className='flex gap-2.5'>
+                                    <img className="object-contain w-4 h-6" src={"/appIcons/logout.svg"} />
+                                    <p className='text-l-gray text-sm font-semibold'>{strings.logout}</p>
+                                </div>
+                                </ResponsiveNavLink>
+                            </div> )
+                            :
+                            (<div className="hidden space-x-8 sm:-my-px sm:flex flex-col">
+                            {menu.side.map(function (item, index) {
+                            let url = item.url.replace("/", "");
+                            url === "" ? url = "/" : url = item.url.replace("/", "");
+                            return (
+                                <NavLink key={index} href={`${item.url}/${locale}`} icon={item.icon} text={locale == 'ar' ? item.text_ar : item.text_en} active={route().current(url)} />
+                                
+                                )
+                            })}
+                      
+                      <hr />
+                      <NavLink href={`/settings/${locale}`} active={route().current('settings')} icon="/appIcons/setting.svg" text={strings.settings} />
+                      <NavLink href={"#"} active={route().current('help')} icon="/appIcons/help.svg" text={strings.help} /> 
+                      </div> 
+                      
+                      )
+                    
+                    }
+                    
+
                     {/* {auth.user ? (
                         auth.user.role === "admin" ? (
                             <NavLink href={route('users')} active={route().current('users')}>

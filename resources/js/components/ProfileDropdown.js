@@ -6,6 +6,7 @@ import NotificationIcon from '@/components/notificationIcon'
 export default function ProfileDropdown({ strings, locale, auth,menu }) {
     // const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
 
+    // console.log(menu);
     return (
         <Dropdown>
             <Dropdown.Trigger>

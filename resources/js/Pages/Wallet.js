@@ -118,7 +118,7 @@ export default function Wallet(props) {
                             <tr className={`${props.locale == 'ar' ? "text-right" : "text-left"} hidden sm:table-row`}>
                                 <th className="text-sm text-l-gray font-normal w-56">{strings.operation}</th>
                                 <th className="text-sm text-l-gray font-normal sm:w-36">{strings.bankName}</th>
-                                <th className="text-sm text-l-gray font-normal sm:w-36">{strings.amount}</th>
+                                <th className="text-sm text-l-gray font-normal sm:w-36">{strings.depositAmount}</th>
                                 <th className="text-sm text-l-gray font-normal sm:w-36">{strings.currency}</th>
                                 <th className="text-sm text-l-gray font-normal sm:w-36">{strings.time}</th>
                                 <th className="text-sm text-l-gray font-normal sm:w-36">{strings.status}</th>
@@ -147,7 +147,7 @@ export default function Wallet(props) {
                                             <div>{strings.bankName}</div>
                                         </td>
                                         <td className="text-base text-d-green font-semibold sm:w-36 sm:table-cell flex items-center sm:border-none border-b">
-                                            <div className="sm:hidden w-1/3 text-sm text-l-gray font-normal">{strings.amount}</div>
+                                            <div className="sm:hidden w-1/3 text-sm text-l-gray font-normal">{strings.depositAmount}</div>
                                             <div>+{deposit.amount}</div>
                                         </td>
                                         <td className="text-base text-l-gray font-semibold sm:w-36 sm:table-cell flex items-center sm:border-none border-b">
@@ -181,7 +181,7 @@ export default function Wallet(props) {
                             <tr className={`${props.locale == 'ar' ? "text-right" : "text-left"} hidden sm:table-row`}>
                                 <th className="text-sm text-l-gray font-normal w-56">{strings.operation}</th>
                                 <th className="text-sm text-l-gray font-normal sm:w-36">{strings.bankName}</th>
-                                <th className="text-sm text-l-gray font-normal sm:w-36">{strings.amount}</th>
+                                <th className="text-sm text-l-gray font-normal sm:w-36">{strings.depositAmount}</th>
                                 <th className="text-sm text-l-gray font-normal sm:w-36">{strings.currency}</th>
                                 <th className="text-sm text-l-gray font-normal sm:w-36">{strings.time}</th>
                                 <th className="text-sm text-l-gray font-normal sm:w-36">{strings.status}</th>
@@ -210,7 +210,7 @@ export default function Wallet(props) {
                                             <div>{strings.bankName}</div>
                                         </td>
                                         <td className="text-base text-d-red font-semibold sm:w-36 sm:table-cell flex items-center sm:border-none border-b">
-                                            <div className="sm:hidden w-1/3 text-sm text-l-gray font-normal">{strings.amount}</div>
+                                            <div className="sm:hidden w-1/3 text-sm text-l-gray font-normal">{strings.depositAmount}</div>
                                             <div>{withdrawal.amount}</div>
                                         </td>
                                         <td className="text-base text-l-gray font-semibold sm:w-36 sm:table-cell flex items-center sm:border-none border-b">
