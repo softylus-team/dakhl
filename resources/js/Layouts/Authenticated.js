@@ -16,7 +16,7 @@ export default function Authenticated({ auth, header, children, locale, menu, st
         if (notify[index].read_at == null) unRead = true;
     });
     // console.log(notify);
-    console.log(auth.user.role);
+    // console.log(auth.user.role);
     return (<>
         <div className={`min-h-screen flex ${locale == 'ar' ? "rtl" : "ltr"}`} style={{ backgroundColor: "#F8FCFC", direction: `${locale == 'ar' ? "rtl" : "ltr"}` }}>
             <div className="bg-white hidden sm:block w-1/6" >

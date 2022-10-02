@@ -83,7 +83,7 @@ export default function AddProperty(props) {
                         type="text"
                         name={`amenity_name${AmenityList.length + 1}`}
                         value={data[`amenity_name${AmenityList.length + 1}`]}
-                        className="mt-1 block w-full"
+                        className="mt-1 block  w-3\/6"
                         autoComplete={`amenity_name${AmenityList.length + 1}`}
                         handleChange={onHandleChangelo}
                     />
@@ -96,7 +96,7 @@ export default function AddProperty(props) {
                         type="text"
                         name={`amenity_type${AmenityList.length + 1}`}
                         value={data[`amenity_type${AmenityList.length + 1}`]}
-                        className="mt-1 block w-full"
+                        className="mt-1 block  w-3\/6"
                         autoComplete={`amenity_type${AmenityList.length + 1}`}
                         handleChange={onHandleChangelo}
                     />
@@ -109,7 +109,7 @@ export default function AddProperty(props) {
                     <Textarea
                         name={`amenity_description${AmenityList.length + 1}`}
                         value={data[`amenity_description${AmenityList.length + 1}`]}
-                        className="mt-1 block w-full"
+                        className="mt-1 block  w-2\/5"
                         handleChange={onHandleChangelo}
                     />
                 </div>
@@ -138,7 +138,7 @@ export default function AddProperty(props) {
     //                     type="text"
     //                     name={`author_name${ReviewList.length + 1}`}
     //                     value={data[`author_name${ReviewList.length + 1}`]}
-    //                     className="mt-1 block w-full"
+    //                     className="mt-1 block  w-2\/5"
     //                     autoComplete={`author_name${ReviewList.length + 1}`}
     //                     handleChange={onHandleChangelo}
     //                 />
@@ -151,7 +151,7 @@ export default function AddProperty(props) {
     //                     type="number"
     //                     name={`rating${ReviewList.length + 1}`}
     //                     value={data[`rating${ReviewList.length + 1}`]}
-    //                     className="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full"
+    //                     className="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block  w-2\/5"
     //                     autoComplete={`rating${ReviewList.length + 1}`}
     //                     onChange={onHandleChangelo}
     //                         min="0"
@@ -166,7 +166,7 @@ export default function AddProperty(props) {
     //                 <Textarea
     //                     name={`message${ReviewList.length + 1}`}
     //                     value={data[`message${ReviewList.length + 1}`]}
-    //                     className="mt-1 block w-full"
+    //                     className="mt-1 block  w-2\/5"
     //                     handleChange={onHandleChangelo}
     //                 />
     //             </div>
@@ -192,12 +192,17 @@ export default function AddProperty(props) {
             header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Add Propery</h2>}
             menu={props.menu}
             strings={strings}
+            locale={props.locale}
             >
                 
             <Head title="Add Property" />
             <div className="max-w-6xl mx-auto mt-6 mb-6 sm:px-6 lg:px-8">
                 <ValidationErrors errors={errors} />
-
+                <div className='flex'>
+                    <Link href={route('investmentFunds')} className='m-4 p-2'>{strings.investmentFunds} </Link>
+                    <Link href={route('Add-Property')} className='m-4 p-2 rounded-md px-4 font-bold' style={{backgroundColor:"#E1EDF3" ,color:"#02044F"}}>{strings.addInvestment} </Link>
+                    </div>
+                    <hr className='mb-4'/>
                 <form onSubmit={submit} encType="multipart/form-data">
                     <h3 className='font-bold'>photos</h3>
                     <div>
@@ -206,10 +211,10 @@ export default function AddProperty(props) {
                             name="picture[]"
                             label="Property Pictures"
                             onChange={onHandleChange}
-                            className=""
+                            className="w-3\/6"
                             multiple
                         /></div>
-                        <h3 className='font-bold'>attachments</h3>
+                        {/* <h3 className='font-bold'>attachments</h3>
                     <div>
                         <input
                             type="file"
@@ -218,11 +223,9 @@ export default function AddProperty(props) {
                             onChange={onHandleChange}
                             className=""
                             multiple
-                        /></div>
-                    <h3 className='font-bold'>Info</h3>
-                    <div>
-                        <Label forInput="name" value="Property Name" />
-
+                        /></div> */}
+                    <div className="sm:w-1/2 my-4" >
+                        <Label forInput="name" value={strings.PropertyName}/>
                         <Input
                             type="text"
                             name="name"
@@ -234,7 +237,98 @@ export default function AddProperty(props) {
                             required
                         />
                     </div>
+                    <div className='sm:flex justify-between gap-2.5' >
+                    <div className="sm:w-1/2 my-4">
+                        <Label forInput="community_name" value={strings.company} />
+                        <Input
+                            type="text"
+                            name="community_name "
+                            value={data.community_name}
+                            className="mt-1 block w-full "
+                            handleChange={onHandleChange}
+                            required
+                        />
+                    </div>
+                    <div className="sm:w-1/2 my-4">
+                        <Label forInput="street_name" value={strings.location}/>
 
+                        <Input
+                            type="text"
+                            name="street_name"
+                            value={data.street_name}
+                            className="mt-1 block w-full"
+                            handleChange={onHandleChange}
+                            required
+                        />
+                    </div>
+                    </div>
+                    <div className='sm:flex justify-between gap-2.5' >
+                    <div className="sm:w-1/2 my-4">
+                        <Label forInput="price" value={strings.capital} />
+
+                        <Input
+                            type="number"
+                            name="price"
+                            value={data.price}
+                            className="mt-1 block w-full"
+                            handleChange={onHandleChange}
+                            required
+                        />
+                    </div>
+                    <div className="sm:w-1/2 my-4">
+                        <Label forInput="stakes_limit" value={strings.price} />
+
+                        <Input
+                            type="number"
+                            name="stakes_limit"
+                            value={data.stakes_limit}
+                            className="mt-1 block w-full"
+                            handleChange={onHandleChange}
+                            required
+                        />
+                    </div>
+                    </div>
+                    <div className='sm:flex justify-between gap-2.5' >
+                    <div className="sm:w-1/2 my-4">
+                        <Label forInput="available_days" value={strings.fund_period} />
+
+                        <Input
+                            type="number"
+                            name="available_days"
+                            value={data.available_days}
+                            className="mt-1 block w-full"
+                            handleChange={onHandleChange}
+                            required
+                        />
+                    </div>
+                    </div>
+                    <div className="sm:w-1/2 my-4">
+                        <Label forInput="report_description" value={strings.details} />
+                        
+                        <Textarea
+                            name="report_description"
+                            value={data.report_description}
+                            className="mt-1 block w-full"
+                            handleChange={onHandleChange}
+                            
+                        />
+                    </div>
+                    <div className="flex items-center justify-center mt-4">
+                        <Button className="sm:w-1/2 my-4 flex justify-center" processing={processing}>
+                            {strings.save}
+                        </Button>
+                    </div>
+                    </form>
+            </div>
+        </Authenticated>
+    );
+
+
+
+
+
+
+{/* 
                     <div>
                         <Label forInput="type" value="Type" />
                         <Select
@@ -251,24 +345,13 @@ export default function AddProperty(props) {
                             type="number"
                             name="bedrooms"
                             value={data.bedrooms}
-                            className="mt-1 block w-full"
+                            className="mt-1 block  w-2\/5"
                             autoComplete="bedrooms"
                             handleChange={onHandleChange}
 
                         />
                     </div>
-                    <div className="mt-4">
-                        <Label forInput="available_days" value="Available days" />
-
-                        <Input
-                            type="number"
-                            name="available_days"
-                            value={data.available_days}
-                            className="mt-1 block w-full"
-                            handleChange={onHandleChange}
-                            required
-                        />
-                    </div>
+                 
                     <div>
                         <Label forInput="status" value="Status" />
 
@@ -286,7 +369,7 @@ export default function AddProperty(props) {
                             type="text"
                             name="nighborhood"
                             value={data.nighborhood}
-                            className="mt-1 block w-full"
+                            className="mt-1 block  w-2\/5"
                             autoComplete="nighborhood"
                             handleChange={onHandleChange}
                             required
@@ -300,32 +383,21 @@ export default function AddProperty(props) {
                             type="text"
                             name="bulding_name"
                             value={data.bulding_name}
-                            className="mt-1 block w-full"
+                            className="mt-1 block  w-2\/5"
                             autoComplete="bulding_name"
                             handleChange={onHandleChange}
                             required
                         />
                     </div>
 
-                    <div className="mt-4">
-                        <Label forInput="community_name" value="Community Name" />
-
-                        <Input
-                            type="text"
-                            name="community_name"
-                            value={data.community_name}
-                            className="mt-1 block w-full"
-                            handleChange={onHandleChange}
-                            required
-                        />
-                    </div>
+                   
                     <div className="mt-4">
                         <Label forInput="description" value="Description" />
                         <Textarea
                             type="text"
                             name="description"
                             value={data.description}
-                            className="mt-1 block w-full"
+                            className="mt-1 block  w-2\/5"
                             handleChange={onHandleChange}
                             required
                         />
@@ -368,7 +440,7 @@ export default function AddProperty(props) {
                             type="text"
                             name="street_name"
                             value={data.street_name}
-                            className="mt-1 block w-full"
+                            className="mt-1 block  w-2\/5"
                             handleChange={onHandleChange}
                             required
                         />
@@ -380,7 +452,7 @@ export default function AddProperty(props) {
                             type="number"
                             name="zip_code"
                             value={data.zip_code}
-                            className="mt-1 block w-full"
+                            className="mt-1 block  w-2\/5"
                             handleChange={onHandleChange}
                             required
                         />
@@ -392,7 +464,7 @@ export default function AddProperty(props) {
                             type="number"
                             name="longitude"
                             value={data.longitude}
-                            className="mt-1 block w-full"
+                            className="mt-1 block  w-2\/5"
                             handleChange={onHandleChange}
                             required
                         />
@@ -404,37 +476,14 @@ export default function AddProperty(props) {
                             type="number"
                             name="latitude"
                             value={data.latitude}
-                            className="mt-1 block w-full"
+                            className="mt-1 block  w-2\/5"
                             handleChange={onHandleChange}
                             required
                         />
                     </div>
                     <h3 className='font-bold'>Financial Plan</h3>
 
-                    <div className="mt-4">
-                        <Label forInput="price" value="Price" />
-
-                        <Input
-                            type="number"
-                            name="price"
-                            value={data.price}
-                            className="mt-1 block w-full"
-                            handleChange={onHandleChange}
-                            required
-                        />
-                    </div>
-                    <div className="mt-4">
-                        <Label forInput="stakes_limit" value="Stakes limit" />
-
-                        <Input
-                            type="number"
-                            name="stakes_limit"
-                            value={data.stakes_limit}
-                            className="mt-1 block w-full"
-                            handleChange={onHandleChange}
-                            required
-                        />
-                    </div>
+                  
                     <div className="mt-4">
                         <Label forInput="minimum_investment" value="Minimum Investment" />
 
@@ -442,7 +491,7 @@ export default function AddProperty(props) {
                             type="number"
                             name="minimum_investment"
                             value={data.minimum_investment}
-                            className="mt-1 block w-full"
+                            className="mt-1 block  w-2\/5"
                             handleChange={onHandleChange}
                             required
                         />
@@ -456,7 +505,7 @@ export default function AddProperty(props) {
                             type="number"
                             name="progress"
                             value={data.progress}
-                            className="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block w-full"
+                            className="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm mt-1 block  w-2\/5"
                             onChange={onHandleChange}
                             min="0"
                             max="100"
@@ -464,17 +513,7 @@ export default function AddProperty(props) {
                             required
                         />
                     </div>
-                    <div className="mt-4">
-                        <Label forInput="report_description" value="Report Description" />
-                        
-                        <Textarea
-                            name="report_description"
-                            value={data.report_description}
-                            className="mt-1 block w-full"
-                            handleChange={onHandleChange}
-                            
-                        />
-                    </div>
+                    
                     <div>
                         <Label forInput="risk_level" value="Risk level" />
 
@@ -482,7 +521,7 @@ export default function AddProperty(props) {
                             type="text"
                             name="risk_level"
                             value={data.risk_level}
-                            className="mt-1 block w-full"
+                            className="mt-1 block  w-2\/5"
                             autoComplete="name"
                             isFocused={true}
                             handleChange={onHandleChange}
@@ -494,20 +533,16 @@ export default function AddProperty(props) {
 
                         {AmenityList}
                         <div className="cursor-pointer inline-flex items-center px-4 py-2 bg-gray-900 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-1px active:bg-gray-900 transition ease-in-out duration-150 " onClick={onAddBtnClick}>Add Amenity</div>
-                    </div>
+                    </div> */}
                     {/* <h3 className='font-bold'>Reviews</h3>
                     <div>
 
                         {ReviewList}
                         <div className="cursor-pointer inline-flex items-center px-4 py-2 bg-gray-900 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-1px active:bg-gray-900 transition ease-in-out duration-150 " onClick={onAddreviewBtnClick}>Add Review</div>
                     </div> */}
-                    <div className="flex items-center justify-end mt-4">
-                        <Button className="ml-4" processing={processing}>
-                            Add Property
-                        </Button>
-                    </div>
-                </form>
+                    
+                {/* </form>
             </div>
-        </Authenticated>
-    );
+        </Authenticated> */}
+    // );
 }

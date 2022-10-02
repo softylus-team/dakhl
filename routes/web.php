@@ -142,6 +142,14 @@ Route::get('/dashboardAdmin/{locale?}', function ($locale = 'ar') {//this is the
 Route::get('/allUsers/{locale?}', [UserController::class, 'allUsers'])->name('allUsers');//->name is a nickname to use it in route() insted of a complex slugs
 Route::get('/deleteUser/{id}', [UserController::class, 'deleteUser'])->name('deleteUser');
 Route::get('/disableUser/{id}', [UserController::class, 'disableUser'])->name('disableUser');
+Route::get('/inableUser/{id}', [UserController::class, 'inableUser'])->name('inableUser');
+Route::get('/disableInvestment/{id}', [UserController::class, 'disableInvestment'])->name('disableInvestment');
+Route::get('/deleteInvestment/{id}', [UserController::class, 'deleteInvestment'])->name('deleteInvestment');
+Route::get('/investmentFunds/{locale?}', [UserController::class, 'investmentFunds'])->name('investmentFunds');//->name is a nickname to use it in route() insted of a complex slugs
+Route::get('/addadmin/{locale?}',[UserController::class, 'addRole'] )->middleware(['auth', 'verified'])->name('Add-Admin');
+Route::post('addAdmin', [UserController::class, 'addAdmin'])->middleware(['auth', 'verified'])->name('addAdmin');
+Route::get('/viewpropertyAdmin/{id}/{locale?}',[PropertiesController::class, 'viewpropertyAdmin'] )->setDefaults(['locale' => 'ar'])->name('viewpropertyAdmin');//->name is a nickname to use it in route() insted of a complex slugs
+
 
 
 
@@ -194,7 +202,7 @@ Route::post('/admin/addproperty', [PropertiesController::class, 'store'])->middl
 Route::post('/admin/updateproperty', [PropertiesController::class, 'update'])->middleware(['auth', 'verified'])->name('updateproperty');
 Route::get('/admin/property/{id}/update/{locale?}', [PropertiesController::class, 'updateView'])->middleware(['auth', 'verified'])->name('Update-Property');
 Route::post('/admin/deleteproperty', [PropertiesController::class, 'delete'])->middleware(['auth', 'verified'])->name('deleteproperty');
-Route::get('/admin/property/{id}/delete',[PropertiesController::class, 'deleteView'] )->middleware(['auth', 'verified'])->name('Delete-Property');
+Route::get('/admin/property/{id}/delete/{locale?}',[PropertiesController::class, 'deleteView'] )->middleware(['auth', 'verified'])->name('Delete-Property');
 Route::post('/addphotos', [PropertiesController::class, 'addPhotos'])->middleware(['auth', 'verified'])->name('addphotos');
 Route::post('/addattachs', [PropertiesController::class, 'addattachs'])->middleware(['auth', 'verified'])->name('addattachs');
 Route::post('/photodelete', [PropertiesController::class, 'photoDelete'])->middleware(['auth', 'verified'])->name('photodelete');

@@ -46,7 +46,38 @@ class UserController extends Controller
             return $ex->getMessage();
         }
     }
+    public function investmentFunds($locale='ar')
+    {
+        try{
+        $properties = Properties::all();
+        foreach($properties as $property){
+            $investment=Investment::where('property_id', $property->id)->get();
+            $property['sizelBalances'] =FinancialPlan::where('property_id', $property->id)->get("price");
+            $reminning_days =$property['available_days']/30;
+            if($reminning_days>=12){
+            $property['reminning_days'] =$reminning_days/12;
 
+            }else{
+
+                $property['reminning_days'] =$reminning_days;
+            }
+            $property['investment'] =count ($investment);
+        }
+        // return $properties;
+        return Inertia::render('investment-funds-list', [
+            'Properties' => $properties,
+            'locale'=>$locale,
+
+        ]);
+        return $users;
+        foreach($users as $user){
+            $user['balance'] = $user->balance;
+        }
+        return $users;
+        }catch(Exception $ex ){
+            return $ex->getMessage();
+        }
+    }
     public function allUsersEP()
     {
         try{
@@ -287,6 +318,37 @@ class UserController extends Controller
         try{
             $user = User::where('id', $id)->update(['isVerified_login' => "0"]);
             return redirect()->back()->with('success', 'User is disable successfully');
+        }catch(Exception $ex ){
+            return $ex->getMessage();
+        }
+    }
+    public function inableUser($id){
+        try{
+            $user = User::where('id', $id)->update(['isVerified_login' => "1"]);
+            return redirect()->back()->with('success', 'User is inable successfully');
+        }catch(Exception $ex ){
+            return $ex->getMessage();
+        }
+    }
+    public function addRole($locale = 'ar')
+    { //this is the slug
+        try{
+            $users = User::all();
+        return Inertia::render('Add-Admin', [
+            'locale' => $locale,
+            'Users' => $users,
+        ]);
+    }catch(Exception $ex ){
+        return $ex->getMessage();
+    }
+    }
+    
+    public function addAdmin(Request $request){
+        try{
+            return $request;
+
+            $user = User::where('id', $id)->update(['isVerified_login' => "1"]);
+            return redirect()->back()->with('success', 'User is inable successfully');
         }catch(Exception $ex ){
             return $ex->getMessage();
         }

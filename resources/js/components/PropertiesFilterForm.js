@@ -82,16 +82,16 @@ export default function PropertiesFilterForm({ locale, strings ,data,dataAddress
     });
     const submit = (e) => {
         e.preventDefault();
-        console.log(statusArray);
-        console.log(companiesArray);
-        // console.log(expectedProfitArray[0]);
-        console.log(Math.max(...minimumPriceArray));
-        console.log(Math.min(...minimumPriceArray));
-        console.log(minimumPriceArray);
-        console.log(typeArray);
-        console.log(dataAddress);
-        console.log(expectedProfitArray);
-        console.log(progressPercentage);
+        // console.log(statusArray);
+        // console.log(companiesArray);
+        // // console.log(expectedProfitArray[0]);
+        // console.log(Math.max(...minimumPriceArray));
+        // console.log(Math.min(...minimumPriceArray));
+        // console.log(minimumPriceArray);
+        // console.log(typeArray);
+        // console.log(dataAddress);
+        // console.log(expectedProfitArray);
+        // console.log(progressPercentage);
 
         get(route('properties'));
     };

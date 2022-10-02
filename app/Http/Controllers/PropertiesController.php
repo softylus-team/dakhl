@@ -340,7 +340,81 @@ class PropertiesController extends Controller
         return $ex->getMessage();
     }
     }
-
+    public function viewpropertyAdmin($id, $locale = 'ar')
+    {
+        try{
+        $user = Auth::user();
+        $property= Properties::where('id', $id)->get();
+            // return $property;
+            return Inertia::render('Single-Property-admin', [
+                'property'=>$property[0] ,
+                'locale'=>$locale
+        
+        ]);
+        $contracts = Contract::where('property_id', $id)->get();
+            $Cids = array();
+            foreach ($contracts as $contract) {
+                array_push($Cids, $contract->id);
+            }
+        $invested = 0;
+            $stakes = Stake::whereIn('contract_id', $Cids)->get();
+            foreach ($stakes as $stake) {
+                $invested += $stake->value;
+            }
+            $Plan= FinancialPlan::where('property_id', $id)->get()->first();
+            // $invested_percent = ($invested / $Plan->price) * 100;
+            $properties = Properties::all();
+            foreach ($properties as $key => $property) {
+                // $propertyObj=Properties::findOrFail($id);
+                if (in_array($property->id, $propsIDs)) {
+                    $property['saved'] = true;
+                } else {
+                    $property['saved'] = false;
+    
+                }
+                $property['address'] = Address::where('property_id', $property->id)->get()->first();
+                $property['amenities'] = Amenity::where('property_id', $property->id)->get();
+            
+                $property['financialPlan'] = FinancialPlan::where('property_id', $property->id)->get()->first();
+                $property['photos'] = Photo::where('property_id', $property->id)->get();
+                $property['attachments'] = Attachment::where('property_id', $property->id)->get();
+                $property['constructionReport'] = ConstructionReport::where('property_id',  $property->id)->get();
+                $contracts = Contract::where('property_id', $property->id)->get();
+                $Cids = array();
+                foreach ($contracts as $contract) {
+                    array_push($Cids, $contract->id);
+                }
+                $invested = 0;
+                $property['stakes'] = Stake::whereIn('contract_id', $Cids)->get();
+                foreach ($property['stakes'] as $stake) {
+                    $stake['investments'] = Investment::where('contract_id', $stake->id)->get();
+                    $invested += $stake->value;
+                }
+                if (!$property['financialPlan']) {
+                    unset($properties[$key]);
+                }
+                $property['expected_return'] = 20;
+                $property['invested'] = $invested;
+                $stakesCount=Stake::where('property_id',$id)->count();
+                $property['totalStakesinvestment']=$stakesCount*$property->stake_amout;
+            }
+        return Inertia::render('Single-Property-admin', [
+            'Property' => Properties::findOrFail($id),
+            'Address' => Address::where('property_id', $id)->get()->first(),
+            'Plan' => $Plan,
+            'Photos' => Photo::where('property_id', $id)->get(),
+            'Attachments' => Attachment::where('property_id', $id)->get(),
+            'Amenity' => Amenity::where('property_id', $id)->get(),
+            'CReport' => ConstructionReport::where('property_id', $id)->get(),
+            'expected_return' => 20,
+            'invested'=> $invested,
+            'properties'=> $properties,
+            'locale' => $locale,
+        ]);
+    }catch(Exception $ex ){
+        return $ex->getMessage();
+    }
+    }
     public function savePropertyEP(Request $request)
     {
         try{

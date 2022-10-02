@@ -10,11 +10,12 @@ import Dropdown from '@/Components/Dropdown';
 export default function Users(props) {
     // // console.log(props.auth.user);
     const Users = props.Users;
-    console.log(Users);
-    console.log(props);
+    // console.log(Users);
+    // console.log(Users);
     // console.log(Users[0].created_at.toLocaleDateString());
     let strings = new LocalizedStrings(stringss);
     strings.setLanguage(props.locale);
+    
     return (
         <Authenticated
             locale={props.locale}
@@ -27,6 +28,11 @@ export default function Users(props) {
             <Head title="Users List" />
             <Container>
                 <div className="max-w-6xl mx-auto mt-6 mb-6 sm:px-6 lg:px-8">
+                <div className='flex'>
+                    <Link href={route('allUsers')} className='m-4 p-2 rounded-md px-4 font-bold' style={{backgroundColor:"#E1EDF3" ,color:"#02044F"}}>{strings.users} </Link>
+                    <Link href={route('Add-Admin')} className='m-4 p-2'>{strings.addAdmin} </Link>
+                    </div>
+                    <hr className='mb-4'/>
                     <table className="table-auto w-full">
                         <thead>
                             <tr  className={ ` ${props.locale == 'ar' ? "text-center" : "text-left"} hidden sm:table-row`}>
@@ -62,13 +68,26 @@ export default function Users(props) {
                                                 </div>
                                             </Dropdown.Trigger>
                                             <Dropdown.Content width={'56'} align= "ar" >
-                                                <Dropdown.Link href={route('disableUser', User.id)} method="get" as="button">
+                                                {(User.isVerified_login==1)?
+                                                    <Dropdown.Link href={route('disableUser', User.id)} method="get" as="button" >
+                                                        <div className='disable-button' onClick={() => { if (window.confirm('Are you sure you wish to disable this user?') ) console.log("ddd");else post(route('inableUser',User.id)) } } >
+                                                        <div className='py-2 flex border-b border-gray-100'>
+                                                            <div className=''>
+                                                                <p className='text-blue'>{strings.disable} </p>
+                                                            </div>
+                                                            </div>
+                                                        </div>
+                                                    </Dropdown.Link>
+                                                    :
+                                                    <Dropdown.Link href={route('inableUser', User.id)} method="get" as="button">
                                                     <div className='py-2 flex border-b border-gray-100'>
                                                         <div className=''>
-                                                            <p className='text-blue'>{strings.disable} </p>
+                                                            <p className='text-blue'>{strings.inable} </p>
                                                         </div>
                                                     </div>
-                                                </Dropdown.Link>
+                                                    </Dropdown.Link>
+                                                }
+                                                
                                                 <Dropdown.Link href={route('deleteUser', User.id)} method="get" as="button">
                                                     <div className='py-2 flex border-b border-gray-100'>
                                                         <div className=''>

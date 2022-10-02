@@ -301,6 +301,7 @@ export default function UpdateProperty(props) {
             header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Update Property: {data.name}</h2>}
             menu={props.menu}
             strings={strings}
+            locale={props.locale}
         >
             <Head title="Update Property" />
             <div className="max-w-6xl mx-auto mt-6 mb-6 sm:px-6 lg:px-8">
